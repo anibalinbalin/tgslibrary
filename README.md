@@ -1,3 +1,6 @@
+#michelle liu
+
+Personal portfolio website. Designed in Figma, built with Next.js.
 
   # Develop Project Overlay
 
