@@ -276,6 +276,20 @@ p a:hover {
   color: #3b82f6; /* blue-500 */
 }
 
+/* Project card hover effect for title and description */
+@media (min-width: 768px) {
+  .project-card-text {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  }
+  
+  .group:hover .project-card-text {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Social link icon hover gradient */
 @keyframes social-gradient {
   0% {

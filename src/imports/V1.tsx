@@ -86,7 +86,7 @@ export default function V() {
                     {`Previously at `}
                   </span>
                   <span className="font-['Figtree',sans-serif] text-[#374151]" style={{ fontVariationSettings: "'wdth' 100" }}>
-                    
+                    
                   </span>
                   <span className="font-['Figtree',sans-serif] text-[#9ca3af]">{`, `}</span>
                   <span className="font-['Figtree',sans-serif] text-[#374151]">Roblox</span>
@@ -114,116 +114,116 @@ export default function V() {
           </div>
         </div>
         <div className="gap-[16px] grid-cols-[repeat(2,_fit-content(100%))] grid-rows-[repeat(4,_fit-content(100%))] inline-grid px-0 py-[16px] relative shrink-0">
-          <div className="[grid-area:1_/_1] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:1_/_1] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/178dbff1fec6d1345d7a772692731154947b7aef" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`Apple `}</span>
                 <span className="text-[#9ca3af]">• 2025</span>
               </p>
-              <p className="relative shrink-0 text-[#9ca3af] w-full">Designing new features to drive engagement and user delight.</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">Designing new features to drive engagement and user delight.</p>
             </div>
           </div>
-          <div className="[grid-area:1_/_2] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:1_/_2] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/ec4f5676616e35a7cfffe3caab293e4284f6b764" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`Roblox `}</span>
                 <span className="text-[#9ca3af]">• 2024</span>
               </p>
-              <p className="relative shrink-0 text-[#9ca3af] w-full">Reimagining the future of social gameplay and user communication.</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">Reimagining the future of social gameplay and user communication.</p>
             </div>
           </div>
-          <div className="[grid-area:2_/_1] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:2_/_1] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/7ff3f920282132ea0b7ed8c097d7da8b417608f9" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`Adobe `}</span>
                 <span className="text-[#9ca3af]">• 2023</span>
               </p>
-              <p className="relative shrink-0 text-[#9ca3af] w-full">Product strategy to drive user acquisition on college campuses.</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">Product strategy to drive user acquisition on college campuses.</p>
             </div>
           </div>
-          <div className="[grid-area:2_/_2] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:2_/_2] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/bd0c1e028203c96d4237a50961da25ddc671fc3f" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`NASA JPL `}</span>
                 <span className="text-[#9ca3af]">• 2023-24</span>
               </p>
-              <p className="relative shrink-0 text-[#9ca3af] w-full">{`Daring (& designing) mighty things at NASA’s in-house DesignLab.`}</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">{`Daring (& designing) mighty things at NASA's in-house DesignLab.`}</p>
             </div>
           </div>
-          <div className="[grid-area:3_/_1] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:3_/_1] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/e1a08fc1de0f94dc450713914a82ab3fefd8c902" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`Polaroid Studio `}</span>
                 <span className="text-[#9ca3af]">• 2025</span>
               </p>
-              <p className="opacity-0 relative shrink-0 text-[#9ca3af] w-full">Designing new features to drive engagement and user delight.</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">Designing new features to drive engagement and user delight.</p>
             </div>
           </div>
-          <div className="[grid-area:3_/_2] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:3_/_2] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/c9388f3c9f7f89cdcd536abfedfaf06c9f677b0b" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`Screentime Receipt `}</span>
                 <span className="text-[#9ca3af]">• 2025</span>
               </p>
-              <p className="opacity-0 relative shrink-0 text-[#9ca3af] w-full">Designing new features to drive engagement and user delight.</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">Designing new features to drive engagement and user delight.</p>
             </div>
           </div>
-          <div className="[grid-area:4_/_1] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:4_/_1] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/a7d89d5e0ec7653d5a65dc73a8c637d966cb3295" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`Digital Sketchbook `}</span>
                 <span className="text-[#9ca3af]">• 2024</span>
               </p>
-              <p className="opacity-0 relative shrink-0 text-[#9ca3af] w-full">Designing new features to drive engagement and user delight.</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">Designing new features to drive engagement and user delight.</p>
             </div>
           </div>
-          <div className="[grid-area:4_/_2] content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
+          <div className="[grid-area:4_/_2] group content-stretch flex flex-col gap-[12px] items-start relative self-start shrink-0 w-[678px]" data-name="Project Card">
             <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full" data-name="Image">
               <AppleCoverBackgroundImage>
                 <source src="/_videos/v1/2f11cff5870795617ad1ebfe3cbd1f3281c493fd" />
               </AppleCoverBackgroundImage>
             </div>
             <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-medium items-start leading-[1.4] px-[13px] py-0 relative shrink-0 text-[16px]">
-              <p className="relative shrink-0 text-[#111827] w-full">
+              <p className="relative shrink-0 text-[#111827] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">
                 <span>{`Personal Library `}</span>
                 <span className="text-[#9ca3af]">• 2025</span>
               </p>
-              <p className="opacity-0 relative shrink-0 text-[#9ca3af] w-full">Designing new features to drive engagement and user delight.</p>
+              <p className="relative shrink-0 text-[#9ca3af] w-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out">Designing new features to drive engagement and user delight.</p>
             </div>
           </div>
         </div>
@@ -245,7 +245,7 @@ export default function V() {
                     <span>{`Built with Next.js & `}</span>
                     <a className="[text-underline-position:from-font] cursor-pointer decoration-solid underline" href="https://www.rockysmatcha.com/">
                       <span className="[text-underline-position:from-font] decoration-solid leading-[28px]" href="https://www.rockysmatcha.com/">
-                        rocky’s matcha
+                        rocky's matcha
                       </span>
                     </a>
                     <span>{` lattes.`}</span>
@@ -259,7 +259,7 @@ export default function V() {
                   </div>
                   <div className="content-stretch flex flex-col gap-[44px] items-start relative shrink-0">
                     <div className="content-stretch flex flex-col font-['Figtree',sans-serif] font-normal items-start relative shrink-0 text-[#9ca3af] w-[326px]">
-                      <p className="leading-[24px] relative shrink-0 text-[16px] w-full">Let’s work together!</p>
+                      <p className="leading-[24px] relative shrink-0 text-[16px] w-full">Let's work together!</p>
                       <p className="leading-[24px] relative shrink-0 text-[0px] text-[16px] w-full">
                         <span>{`michelletheresaliu@gmail.com `}</span>
                         <span className="font-['Figtree',sans-serif] font-bold">↗</span>
