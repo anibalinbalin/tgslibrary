@@ -371,3 +371,13 @@ p a:hover {
 .duration-400 {
   transition-duration: 400ms;
 }
+
+/* Hide scrollbar utility for horizontal scrolling galleries */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

@@ -14,6 +14,45 @@ export interface SanityImage {
   };
 }
 
+// ============================================
+// ART PAGE TYPES
+// ============================================
+
+export interface SanityImageWithKey extends SanityImage {
+  _key: string;
+  caption?: string;
+}
+
+export type ArtType = "painting" | "conceptual" | "graphite";
+
+export interface ArtPiece {
+  _id: string;
+  title: string;
+  artType: ArtType;
+  image: SanityImage;
+  medium?: string;
+  size?: string;
+  year?: string;
+  description?: string;
+}
+
+export interface Sketchbook {
+  _id: string;
+  title: string;
+  date: string;
+  description?: string;
+  images: SanityImageWithKey[];
+}
+
+export interface Mural {
+  _id: string;
+  title: string;
+  location: string;
+  date: string;
+  description?: string;
+  images: SanityImageWithKey[];
+}
+
 export interface MetadataItem {
   _key: string;
   label: string;

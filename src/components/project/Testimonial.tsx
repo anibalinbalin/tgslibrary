@@ -117,15 +117,15 @@ export default function Testimonial({
     <div
       ref={sectionRef}
       className={clsx(
-        "content-stretch flex flex-col items-start justify-center py-16 relative scroll-mt-8",
-        isDesktop && "px-[175px] w-[1440px]",
-        isMobile && "px-8 w-[640px]"
+        "content-stretch flex flex-col items-start justify-center py-16 relative scroll-mt-8 w-full",
+        isDesktop && "px-8 md:px-16 lg:px-[175px] max-w-[1440px]",
+        isMobile && "px-6 sm:px-8 max-w-[640px]"
       )}
     >
       <div
         className={clsx(
           "content-stretch flex flex-col relative shrink-0 w-full transition-all duration-400 ease-out",
-          isDesktop && "gap-[100px] items-start",
+          isDesktop && "gap-12 md:gap-16 lg:gap-[100px] items-start",
           isMobile && "gap-16 items-center justify-center"
         )}
       >
@@ -142,17 +142,17 @@ export default function Testimonial({
         {/* Quote Section */}
         <div
           className={clsx(
-            "content-stretch flex items-start relative shrink-0 transition-all duration-400 ease-out",
-            isDesktop && "justify-between px-[111px] py-0 w-full",
-            isMobile && "flex-col gap-16 w-[378px]"
+            "content-stretch flex items-start relative shrink-0 transition-all duration-400 ease-out w-full",
+            isDesktop && "flex-col md:flex-row gap-8 md:gap-12 lg:gap-16 px-0 md:px-8 lg:px-[111px] py-0",
+            isMobile && "flex-col gap-16 max-w-[378px]"
           )}
         >
           {/* Author Info */}
           <div
             className={clsx(
               "content-stretch flex relative shrink-0 transition-all duration-400 ease-out",
-              isDesktop && "flex-col gap-6 items-start w-[202px]",
-              isMobile && "gap-8 items-center w-[264px]"
+              isDesktop && "flex-col gap-6 items-start w-full md:w-auto md:min-w-[180px] lg:w-[202px]",
+              isMobile && "gap-8 items-center w-full max-w-[264px]"
             )}
           >
             {/* Avatar */}
@@ -179,7 +179,7 @@ export default function Testimonial({
           {/* Quote Content */}
           <div
             className={clsx(
-              "content-stretch flex flex-col gap-6 relative shrink-0 transition-all duration-400 ease-out",
+              "content-stretch flex flex-col gap-6 relative transition-all duration-400 ease-out flex-1 min-w-0 w-full md:w-auto",
               isDesktop && isExpanded && "items-end justify-end",
               isDesktop && !isExpanded && "items-start justify-center",
               isMobile && "items-start justify-center w-full"
@@ -188,9 +188,9 @@ export default function Testimonial({
             {/* Quote Text Container with smooth height transition */}
             <div
               className={clsx(
-                "relative overflow-hidden",
-                isDesktop && "w-[424px]",
-                isMobile && "min-w-full w-full"
+                "relative overflow-hidden w-full",
+                isDesktop && "md:max-w-[424px]",
+                isMobile && "min-w-full"
               )}
             >
               {/* Short Quote */}
@@ -234,7 +234,7 @@ export default function Testimonial({
                 isExpanded
                   ? "size-6 hover:opacity-70"
                   : "leading-5 text-[#9ca3af] text-base hover:text-[#6b7280] text-left",
-                isDesktop && !isExpanded && "w-[424px]"
+                isDesktop && !isExpanded && "w-full md:max-w-[424px]"
               )}
             >
               {!isExpanded ? (

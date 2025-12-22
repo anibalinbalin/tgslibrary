@@ -9,6 +9,24 @@ import VideoPlayer from "./components/VideoPlayer";
 import AppleProjectModal from "./components/project/AppleProjectModal";
 import Footer from "./components/Footer";
 import { ProjectModal as SanityProjectModal } from "./components/project";
+import ArtPage from "./components/art/ArtPage";
+
+// CSS for fade up animation
+const fadeUpStyles = `
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fadeUp 400ms ease-out forwards;
+}
+`;
 
 // Text Scramble Component
 type TextScrambleProps = {
@@ -183,8 +201,8 @@ const projects: Project[] = [
     title: "Roblox",
     year: "2024",
     description: "Reimagining the future of social gameplay and user communication.",
-    imageSrc: "https://image.mux.com/01FcKJdkUWAarvsEU6iti801x025X2gTxxYCqhRflroCL8/thumbnail.png",
-    videoSrc: "https://stream.mux.com/01FcKJdkUWAarvsEU6iti801x025X2gTxxYCqhRflroCL8.m3u8",
+    imageSrc: "https://image.mux.com/I6q7LcqND5RlqmjJPrusNZ0101sm7POhbjcLSEhxvR7C8/thumbnail.png",
+    videoSrc: "https://stream.mux.com/I6q7LcqND5RlqmjJPrusNZ0101sm7POhbjcLSEhxvR7C8.m3u8",
   },
   {
     id: "adobe",
@@ -342,11 +360,13 @@ function LinksBackgroundImageAndText({ text }: LinksBackgroundImageAndTextProps)
 type TagBackgroundImageAndTextProps = {
   text: string;
   active?: boolean;
+  onClick?: () => void;
 };
 
-function TagBackgroundImageAndText({ text, active = false }: TagBackgroundImageAndTextProps) {
+function TagBackgroundImageAndText({ text, active = false, onClick }: TagBackgroundImageAndTextProps) {
   return (
     <button
+      onClick={onClick}
       className={clsx(
         "content-stretch flex items-center justify-center px-4 py-1 relative rounded-full shrink-0 cursor-pointer hover:bg-gray-100 transition-colors",
         active && "bg-[rgba(107,114,128,0.1)]"
@@ -673,6 +693,9 @@ function HomePage() {
 
   return (
     <div className="bg-white content-stretch flex flex-col items-center relative size-full min-h-screen">
+      {/* Inject fade up animation styles */}
+      <style>{fadeUpStyles}</style>
+      
       {/* SVG Gradient Definition for Social Icons */}
       <svg width="0" height="0" className="absolute">
         <defs>
@@ -724,7 +747,7 @@ function HomePage() {
                 <p className="font-['Figtree',sans-serif] font-medium leading-normal relative shrink-0 text-[#374151] text-6xl w-full max-md:text-5xl">
                   michelle liu
                 </p>
-                <p className="font-['Figtree',sans-serif] font-normal leading-7 max-md:leading-6 tracking-wide not-italic relative shrink-0 text-[#6b7280] text-[1.2rem] w-full max-md:text-[1.13rem] -mt-2 max-md:mt-1">
+                <p className="font-['Figtree',sans-serif] font-normal leading-7 max-md:leading-6 tracking-wide not-italic relative shrink-0 text-[#6b7280] text-[1.2rem] w-full max-md:text-[1.13rem] -mt-2 max-md:mt-1 animate-fade-up">
                   <span className="font-['Figtree',sans-serif] text-[#9ca3af]">
                     Designing useful products to spark moments of{" "}</span>
                     <br className="md:hidden" />
@@ -791,7 +814,7 @@ function HomePage() {
             <div className="content-stretch flex flex-col gap-3 items-start pb-0 pt-4 px-16 max-md:px-8 relative w-full">
               <div className="content-stretch flex gap-1 items-start relative shrink-0">
                 <TagBackgroundImageAndText text="Work" active />
-                <TagBackgroundImageAndText text="Art" />
+                <TagBackgroundImageAndText text="Art" onClick={() => navigate("/art")} />
                 <TagBackgroundImageAndText text="About" />
               </div>
             </div>
@@ -868,6 +891,9 @@ export default function App() {
       
       {/* Project fullscreen/expanded view */}
       <Route path="/project/:slug/:mode" element={<HomePage />} />
+      
+      {/* Art page */}
+      <Route path="/art" element={<ArtPage />} />
     </Routes>
   );
 }
