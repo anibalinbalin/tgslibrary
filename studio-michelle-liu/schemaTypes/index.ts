@@ -1,5 +1,8 @@
 // Document types
 import {project} from './project'
+import {artPiece} from './artPiece'
+import {sketchbook} from './sketchbook'
+import {mural} from './mural'
 
 // Object types (used in documents)
 import {metadataItem} from './objects/metadataItem'
@@ -14,6 +17,9 @@ import {testimonialSection} from './objects/testimonialSection'
 export const schemaTypes = [
   // Documents
   project,
+  artPiece,
+  sketchbook,
+  mural,
   
   // Objects (must be registered for use in arrays)
   metadataItem,

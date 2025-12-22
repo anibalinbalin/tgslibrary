@@ -5,7 +5,9 @@ import { client, urlFor } from "../../sanity/client";
 import { PROJECT_BY_COMPANY_QUERY } from "../../sanity/queries";
 import type { Project, ContentSection } from "../../sanity/types";
 import Footer from "../Footer";
+import VideoPlayer from "../VideoPlayer";
 import lockIcon from "../../assets/lock.svg";
+import expandIcon from "../../assets/Expand.svg";
 import quoteGraphic from "../../assets/quote gray 200.png";
 
 // Close icon SVG
@@ -18,16 +20,9 @@ const CloseIcon = () => (
   </svg>
 );
 
-// Back arrow icon SVG
+// Back arrow icon - uses Expand.svg
 const BackArrowIcon = () => (
-  <svg className="block size-full" fill="none" viewBox="0 0 20 20">
-    <path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M14.7803 14.7803C14.4874 15.0732 14.0126 15.0732 13.7197 14.7803L6.5 7.56066V13.25C6.5 13.6642 6.16421 14 5.75 14C5.33579 14 5 13.6642 5 13.25V5.75C5 5.33579 5.33579 5 5.75 5H13.25C13.6642 5 14 5.33579 14 5.75C14 6.16421 13.6642 6.5 13.25 6.5H7.56066L14.7803 13.7197C15.0732 14.0126 15.0732 14.4874 14.7803 14.7803Z"
-      fill="currentColor"
-    />
-  </svg>
+  <img src={expandIcon} alt="Expand" className="block size-full" />
 );
 
 // Arrow right icon SVG (for password input submit button)
@@ -67,10 +62,10 @@ function PasswordInput({ expectedPassword }: { expectedPassword: string }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-[313px]">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-[313px]">
       <div className={clsx(
-        "bg-white border border-solid content-stretch flex items-center justify-between pl-4 pr-3 py-2 relative rounded-full shrink-0 w-full transition-colors",
-        error ? "border-red-300" : "border-[#e5e7eb]"
+        "bg-white border border-solid content-stretch flex items-center justify-between pl-4 pr-3 py-2 relative rounded-full shrink-0 w-full transition-colors duration-200",
+        error ? "border-[#f87171]" : "border-[#e5e7eb]"
       )}>
         <input
           type="password"
@@ -85,6 +80,17 @@ function PasswordInput({ expectedPassword }: { expectedPassword: string }) {
         >
           <ArrowRightIcon />
         </button>
+      </div>
+      {/* Error Message with smooth animation */}
+      <div 
+        className={clsx(
+          "overflow-hidden transition-all duration-300 ease-out",
+          error ? "max-h-6 opacity-100" : "max-h-0 opacity-0"
+        )}
+      >
+        <p className="text-[#f87171] text-sm leading-5 px-2">
+          Please try again!
+        </p>
       </div>
     </form>
   );
@@ -252,9 +258,9 @@ export default function ProjectModal({
             {/* Back/Expand button */}
             <button
               onClick={handleExpandToFullscreen}
-              className="content-stretch flex items-center justify-center relative shrink-0 size-6 cursor-pointer rounded-full hover:bg-[#F3F4F6] transition-colors duration-200 ease-out text-[#4b5563]"
+              className="content-stretch flex items-center justify-center relative shrink-0 size-6 cursor-pointer rounded-sm hover:bg-[#F3F4F6] transition-colors duration-200 ease-out text-[#4b5563]"
             >
-              <div className="relative shrink-0 size-5">
+              <div className="relative shrink-0 size-[18px]">
                 <BackArrowIcon />
               </div>
             </button>
@@ -316,7 +322,7 @@ export default function ProjectModal({
           {!loading && !error && project && (
             <>
               {/* Project Hero Header */}
-              <div className="content-stretch flex flex-col gap-8 items-start justify-center px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+              <div className="content-stretch flex flex-col gap-8 items-start justify-center px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
                 {/* Logo */}
                 {project.logo && (
                   <div className="relative shrink-0 size-20 rounded-[16px] overflow-hidden">
@@ -369,8 +375,31 @@ export default function ProjectModal({
                 {/* Separator Line */}
                 <Line />
 
-                {/* Hero Image */}
-                {project.heroImage && (
+                {/* Hero Video or Image */}
+                {project.heroVideo ? (
+                  <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full">
+                    <div className="aspect-[1090/591] relative rounded-[26px] shrink-0 w-full overflow-hidden bg-gray-100">
+                      {/* Fallback image while video loads */}
+                      {project.heroImage && (
+                        <img
+                          className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[26px] size-full"
+                          alt=""
+                          src={urlFor(project.heroImage).width(1200).url()}
+                        />
+                      )}
+                      {/* Hero video */}
+                      <VideoPlayer
+                        src={`https://stream.mux.com/${project.heroVideo}.m3u8`}
+                        className="absolute inset-0 max-w-none object-cover rounded-[26px] size-full"
+                        autoPlay
+                        muted
+                        loop
+                        controls={false}
+                        poster={project.heroImage ? urlFor(project.heroImage).width(1200).url() : undefined}
+                      />
+                    </div>
+                  </div>
+                ) : project.heroImage ? (
                   <div className="content-stretch flex flex-col items-start overflow-clip relative rounded-[26px] shrink-0 w-full">
                     <div className="aspect-[1090/591] relative rounded-[26px] shrink-0 w-full">
                       <img
@@ -380,7 +409,7 @@ export default function ProjectModal({
                       />
                     </div>
                   </div>
-                )}
+                ) : null}
               </div>
 
               {/* Dynamic Content Sections */}
@@ -390,7 +419,7 @@ export default function ProjectModal({
 
               {/* Also Check Out Section */}
               {project.relatedProjects && project.relatedProjects.length > 0 && (
-                <div className="content-stretch flex flex-col gap-16 items-start justify-center px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+                <div className="content-stretch flex flex-col gap-16 items-start justify-center px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
                   <div className="content-stretch flex flex-col gap-8 items-start relative shrink-0 w-full">
                     {/* Section Title */}
                     <p className="font-normal leading-7 relative shrink-0 text-[#6b7280] text-xl w-full whitespace-pre-wrap">
@@ -559,7 +588,7 @@ function TestimonialBlock({
   return (
     <div 
       ref={sectionRef}
-      className="content-stretch flex flex-col items-start justify-center px-[175px] max-md:px-8 py-16 relative shrink-0 w-full scroll-mt-8"
+      className="content-stretch flex flex-col items-start justify-center px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full scroll-mt-8"
     >
       <div className="content-stretch flex flex-col gap-[100px] max-md:gap-16 items-start relative shrink-0 w-full">
         {/* Header Section */}
@@ -747,7 +776,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
       // Centered layout when image is provided
       if (hasImage) {
         return (
-          <div className="flex flex-col items-center px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+          <div className="flex flex-col items-center px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
             {/* Label + Title */}
             <div className="flex flex-col gap-5 items-center text-center w-[410px] max-md:w-full">
               <p className="leading-5 text-[#9ca3af] text-base">
@@ -796,7 +825,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
       // Original layout (no image)
       return (
         <div className={clsx(
-          "content-stretch items-start px-[175px] max-md:px-8 py-16 relative shrink-0 w-full",
+          "content-stretch items-start px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full",
           // Use flex column layout when no description
           !hasDescription && "flex flex-col gap-5 justify-center",
           // Use grid layout when there is description (two-column)
@@ -805,14 +834,14 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
           {/* Left: Label + Title */}
           <div className={clsx(
             "content-stretch flex flex-col gap-5 items-start relative",
-            // When no description, constrain title width to 646px (per Figma)
-            !hasDescription && "w-[646px] max-md:w-full",
+            // When no description, constrain title width to max 646px (per Figma) but allow shrinking
+            !hasDescription && "max-w-[646px] w-full",
             hasDescription && "col-start-1"
           )}>
             <p className="leading-5 relative shrink-0 text-[#9ca3af] text-base">
               {section.sectionLabel || "The Mission"}
             </p>
-            <p className="leading-7 min-w-full relative shrink-0 text-2xl text-black whitespace-pre-wrap">
+            <p className="leading-7 w-full relative shrink-0 text-2xl text-black whitespace-pre-wrap text-pretty">
               {renderTitle(section.missionTitle, section.highlightedText, section.highlightColor)}
             </p>
           </div>
@@ -829,7 +858,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
     case "protectedSection":
       const hasPassword = !!(section.showPasswordProtection && section.password);
       return (
-        <div className="content-stretch flex flex-col items-start px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col items-start px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
           <div className="bg-[#f9fafb] content-stretch flex flex-col items-center justify-center overflow-clip p-16 max-md:p-8 relative rounded-[26px] shrink-0 w-full">
             <div className={clsx(
               "content-stretch flex flex-col items-start relative shrink-0 w-full",
@@ -884,7 +913,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
           ? "grid-cols-3"
           : "grid-cols-4";
       return (
-        <div className="content-stretch flex flex-col gap-4 px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col gap-4 px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
           {/* Image Grid */}
           <div
             className={`content-stretch grid gap-4 items-center relative w-full max-md:grid-cols-2 ${colsClass}`}
@@ -917,7 +946,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
     case "textSection":
       if (section.layout === "two-col") {
         return (
-          <div className="content-stretch grid grid-cols-[2fr_1fr_2fr] items-start px-[175px] max-md:px-8 py-16 relative shrink-0 w-full max-md:flex max-md:flex-col max-md:gap-8">
+          <div className="content-stretch grid grid-cols-[2fr_1fr_2fr] items-start px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full max-md:flex max-md:flex-col max-md:gap-8">
             <div className="content-stretch flex flex-col gap-5 items-start relative col-start-1">
               {section.label && (
                 <p className="leading-5 relative shrink-0 text-[#9ca3af] text-base">
@@ -937,7 +966,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
         );
       }
       return (
-        <div className="content-stretch flex flex-col gap-4 items-start px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col gap-4 items-start px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
           {section.label && (
             <p className="leading-5 relative shrink-0 text-[#9ca3af] text-base">
               {section.label}
@@ -958,7 +987,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
 
     case "imageSection":
       return (
-        <div className="content-stretch flex flex-col items-start px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col items-start px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
           <div
             className={`overflow-hidden w-full ${
               section.rounded !== false ? "rounded-[26px]" : ""
@@ -978,13 +1007,14 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
 
     case "videoSection":
       return (
-        <div className="content-stretch flex flex-col items-start px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col items-start px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
           {section.title && (
             <p className="mb-4 text-lg text-gray-900">{section.title}</p>
           )}
           {section.videoType === "mux" && section.muxPlaybackId && (
             <div className="aspect-video w-full overflow-hidden rounded-[26px] bg-black">
-              <video
+              <VideoPlayer
+                src={`https://stream.mux.com/${section.muxPlaybackId}.m3u8`}
                 className="w-full h-full"
                 controls
                 autoPlay={section.autoplay}
@@ -994,12 +1024,7 @@ function ContentBlock({ section, isFullscreen = false }: { section: ContentSecti
                     ? urlFor(section.posterImage).width(1200).url()
                     : `https://image.mux.com/${section.muxPlaybackId}/thumbnail.png`
                 }
-              >
-                <source
-                  src={`https://stream.mux.com/${section.muxPlaybackId}.m3u8`}
-                  type="application/x-mpegURL"
-                />
-              </video>
+              />
             </div>
           )}
           {section.caption && (

@@ -15,6 +15,69 @@ export const PROJECTS_QUERY = `
   }
 `;
 
+// ============================================
+// ART PAGE QUERIES
+// ============================================
+
+// Query for all art pieces (gallery)
+export const ART_PIECES_QUERY = `
+  *[_type == "artPiece" && isPublished == true] | order(year desc, order asc) {
+    _id,
+    title,
+    artType,
+    image,
+    medium,
+    size,
+    year,
+    description
+  }
+`;
+
+// Query for art pieces by type (painting, conceptual, graphite)
+export const ART_PIECES_BY_TYPE_QUERY = `
+  *[_type == "artPiece" && isPublished == true && artType == $artType] | order(year desc, order asc) {
+    _id,
+    title,
+    artType,
+    image,
+    medium,
+    size,
+    year,
+    description
+  }
+`;
+
+// Query for all sketchbooks
+export const SKETCHBOOKS_QUERY = `
+  *[_type == "sketchbook" && isPublished == true] | order(order asc) {
+    _id,
+    title,
+    date,
+    description,
+    images[] {
+      _key,
+      asset,
+      caption
+    }
+  }
+`;
+
+// Query for all murals
+export const MURALS_QUERY = `
+  *[_type == "mural" && isPublished == true] | order(order asc) {
+    _id,
+    title,
+    location,
+    date,
+    description,
+    images[] {
+      _key,
+      asset,
+      caption
+    }
+  }
+`;
+
 // Query for a single project by slug (with all content)
 export const PROJECT_BY_SLUG_QUERY = `
   *[_type == "project" && slug.current == $slug][0] {
