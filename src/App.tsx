@@ -580,6 +580,18 @@ function ProjectModal({ project, onClose }: ProjectModalProps) {
     return () => clearTimeout(timer);
   }, []);
 
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleClose = () => {
     setIsClosing(true);
     setIsVisible(false);
@@ -844,7 +856,7 @@ function HomePage() {
   const handleBadgeMouseLeave = () => {
     badgeTimeoutRef.current = setTimeout(() => {
       setBadgeHovered(false);
-    }, 600);
+    }, 100);
   };
 
   // Memoize to prevent ProjectCard re-renders when other state changes

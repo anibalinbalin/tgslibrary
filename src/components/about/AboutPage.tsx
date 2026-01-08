@@ -547,7 +547,7 @@ export default function AboutPage() {
         </ScrollReveal>
 
         {/* Divider line */}
-        <div className="px-17 max-md:px-8 w-full pt-3">
+        <div className="px-16 max-md:px-8 w-full pt-3">
           <div className="bg-zinc-100 h-px shrink-0 w-full" />
         </div>
       </div>

@@ -26,9 +26,9 @@ type ArtSidebarProps = {
 
 // Fine Art subcategories (indented)
 const FINE_ART_CATEGORIES: { id: ArtCategory; label: string }[] = [
-  { id: "painting", label: "PAINTING" },
-  { id: "conceptual", label: "CONCEPTUAL" },
-  { id: "graphite", label: "GRAPHITE" },
+  { id: "painting", label: "Painting" },
+  { id: "conceptual", label: "Conceptual" },
+  { id: "graphite", label: "Graphite" },
 ];
 
 export default function ArtSidebar({
@@ -76,7 +76,7 @@ export default function ArtSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 text-left transition-colors",
+            "text-base font-medium tracking-normal leading-5 text-left transition-colors",
             isActive ? "text-blue-500" : "text-gray-400 hover:text-gray-500"
           )}
         >
@@ -90,7 +90,7 @@ export default function ArtSidebar({
   };
 
   return (
-    <div className={clsx("flex flex-col gap-4 items-start", className)}>
+    <div className={clsx("flex flex-col gap-3 items-start", className)}>
       {/* FINE ART Header - clickable, darker when a fine art subcategory is active */}
       <button
         onClick={() => onCategoryClick("painting")}
@@ -98,19 +98,19 @@ export default function ArtSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 transition-colors",
+            "text-base font-medium tracking-normal leading-5 transition-colors",
             isFineArtActive ? "text-gray-500" : "text-gray-400 hover:text-gray-500"
           )}
         >
-          FINE ART
+          Fine Art
         </span>
       </button>
 
       {/* Fine Art Subcategories (indented) - with smooth collapse/expand animation */}
       <div
         className={clsx(
-          "flex flex-col gap-4 overflow-hidden transition-all duration-300 ease-in-out",
-          isFineArtActive ? "max-h-40 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-4"
+          "flex flex-col gap-3 overflow-hidden transition-all duration-300 ease-in-out",
+          isFineArtActive ? "max-h-40 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-3"
         )}
       >
         {FINE_ART_CATEGORIES.map((category) =>
@@ -125,19 +125,19 @@ export default function ArtSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 transition-colors",
+            "text-base font-medium tracking-normal leading-5 transition-colors",
             isSketchbookActive ? "text-gray-500" : "text-gray-400 hover:text-gray-500"
           )}
         >
-          SKETCHBOOK
+          Sketchbook
         </span>
       </button>
 
       {/* Sketchbook Subcategories (indented) - with smooth collapse/expand animation */}
       <div
         className={clsx(
-          "flex flex-col gap-4 overflow-hidden transition-all duration-300 ease-in-out",
-          isSketchbookActive ? "max-h-96 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-4"
+          "flex flex-col gap-3 overflow-hidden transition-all duration-300 ease-in-out",
+          isSketchbookActive ? "max-h-96 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-3"
         )}
       >
         {sketchbookLabels.map((label, index) => {
@@ -150,7 +150,7 @@ export default function ArtSidebar({
             >
               <span
                 className={clsx(
-                  "text-base font-semibold tracking-wide leading-5 text-left transition-colors",
+                  "text-base font-medium tracking-normal leading-5 text-left transition-colors",
                   activeSketchbookIndex === index ? "text-blue-500" : "text-gray-400 hover:text-gray-500"
                 )}
               >
@@ -171,19 +171,19 @@ export default function ArtSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 transition-colors",
+            "text-base font-medium tracking-normal leading-5 transition-colors",
             isMuralsActive ? "text-gray-500" : "text-gray-400 hover:text-gray-500"
           )}
         >
-          MURALS
+          Murals
         </span>
       </button>
 
       {/* Murals Subcategories (indented) - with smooth collapse/expand animation */}
       <div
         className={clsx(
-          "flex flex-col gap-4 overflow-hidden transition-all duration-300 ease-in-out",
-          isMuralsActive ? "max-h-96 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-4"
+          "flex flex-col gap-2 overflow-hidden transition-all duration-300 ease-in-out",
+          isMuralsActive ? "max-h-96 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-3"
         )}
       >
         {muralLabels.map((label, index) => (
@@ -194,7 +194,7 @@ export default function ArtSidebar({
           >
             <span
               className={clsx(
-                "text-base font-semibold tracking-wide text-left transition-colors",
+                "text-base font-medium tracking-normal text-left transition-colors",
                 activeMuralIndex === index ? "text-blue-500" : "text-gray-400 hover:text-gray-500"
               )}
             >

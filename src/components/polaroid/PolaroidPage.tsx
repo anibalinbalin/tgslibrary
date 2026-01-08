@@ -628,7 +628,7 @@ export default function PolaroidPage() {
                               <line x1="12" y1="3" x2="12" y2="15" />
                             </svg>
                             <span className="font-['SF_Pro','-apple-system',sans-serif] text-[17px] text-[rgba(60,60,67,0.6)] whitespace-nowrap">
-                              Upload Your Own
+                              Upload New
                             </span>
                           </div>
                         </button>

@@ -64,6 +64,20 @@ export default function InfoButton({ project }: InfoButtonProps) {
     }
   }, [showModal]);
 
+  // Handle ESC key to close modal
+  useEffect(() => {
+    if (!showModal) return;
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [showModal]);
+
   const handleOpen = () => {
     setShowModal(true);
     setIsClosing(false);
