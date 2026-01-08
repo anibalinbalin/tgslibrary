@@ -47,13 +47,13 @@ export default function ExperienceCard({ className, data }: ExperienceCardProps)
         <p className="whitespace-pre-wrap text-base text-lg font-medium leading-[1.4] text-gray-700">
           {data.company}
         </p>
-        <div className="flex items-start gap-1 text-base font-normal leading-[1.4]">
+        <div className="flex flex-wrap items-baseline gap-1 text-base font-normal leading-[1.4]">
           <span className="text-gray-500">
             {data.role}
             {data.period && <span className="text-gray-400">,</span>}
           </span>
           {data.period && (
-            <span className="text-gray-400">{data.period}</span>
+            <span className="text-gray-400 whitespace-nowrap">{data.period}</span>
           )}
         </div>
       </div>

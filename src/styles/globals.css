@@ -512,3 +512,22 @@ p a:hover {
 .tooltip[data-instant] {
   transition-duration: 0ms;
 }
+
+/* ==========================================
+   HIDE VIDEO PLAY BUTTON ON MOBILE
+   ========================================== */
+@media (max-width: 767px) {
+  /* Hide native video play button */
+  video::-webkit-media-controls-start-playback-button {
+    display: none !important;
+  }
+  
+  video::-webkit-media-controls-play-button {
+    display: none !important;
+  }
+  
+  /* Hide play button overlay on video elements */
+  video::--webkit-media-controls-overlay-play-button {
+    display: none !important;
+  }
+}
