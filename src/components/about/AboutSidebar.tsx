@@ -8,9 +8,9 @@ export type ShelfSubcategory = "books" | "music" | "movies";
 
 // Shelf subcategories (indented under SHELF)
 const SHELF_SUBCATEGORIES: { id: ShelfSubcategory; label: string }[] = [
-  { id: "books", label: "BOOKS" },
-  { id: "music", label: "MUSIC" },
-  { id: "movies", label: "MOVIES" },
+  { id: "books", label: "Books" },
+  { id: "music", label: "Music" },
+  { id: "movies", label: "Movies" },
 ];
 
 // Community item from Sanity (for sidebar display)
@@ -47,8 +47,8 @@ export default function AboutSidebar({
   shelfCounts,
 }: AboutSidebarProps) {
   const categoriesBeforeCommunity: { id: AboutCategory; label: string }[] = [
-    { id: "hi", label: "HI!" },
-    { id: "experience", label: "EXPERIENCE" },
+    { id: "hi", label: "Hi!" },
+    { id: "experience", label: "Experience" },
   ];
 
   // Check if community is active
@@ -60,7 +60,7 @@ export default function AboutSidebar({
   const visibleCommunities = communityItems.filter(c => c.sidebarName);
 
   return (
-    <nav className="flex flex-col gap-4 items-start">
+    <nav className="flex flex-col gap-3 items-start">
       {/* Main categories before COMMUNITY */}
       {categoriesBeforeCommunity.map((cat) => (
         <button
@@ -70,7 +70,7 @@ export default function AboutSidebar({
         >
           <span
             className={clsx(
-              "text-base font-semibold tracking-wide leading-5 transition-colors",
+              "text-base font-medium tracking-normal leading-5 transition-colors",
               activeCategory === cat.id
                 ? "text-blue-500"
                 : "text-gray-400 hover:text-gray-500"
@@ -94,11 +94,11 @@ export default function AboutSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 transition-colors",
+            "text-base font-medium tracking-normal leading-5 transition-colors",
             isCommunityActive ? "text-gray-500" : "text-gray-400 hover:text-gray-500"
           )}
         >
-          COMMUNITY
+          Community
         </span>
       </button>
 
@@ -106,8 +106,8 @@ export default function AboutSidebar({
       {visibleCommunities.length > 0 && (
         <div
           className={clsx(
-            "flex flex-col gap-4 overflow-hidden transition-all duration-300 ease-in-out",
-            isCommunityActive ? "max-h-96 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-4"
+            "flex flex-col gap-3 overflow-hidden transition-all duration-300 ease-in-out",
+            isCommunityActive ? "max-h-96 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-3"
           )}
         >
           {visibleCommunities.map((community) => {
@@ -124,7 +124,7 @@ export default function AboutSidebar({
               >
                 <span
                   className={clsx(
-                    "text-base font-semibold tracking-wide leading-5 text-left transition-colors",
+                    "text-base font-medium tracking-normal leading-5 text-left transition-colors",
                     isActive ? "text-blue-500" : "text-gray-400 hover:text-gray-500"
                   )}
                 >
@@ -143,13 +143,13 @@ export default function AboutSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 transition-colors",
+            "text-base font-medium tracking-normal leading-5 transition-colors",
             activeCategory === "philosophy"
               ? "text-blue-500"
               : "text-gray-400 hover:text-gray-500"
           )}
         >
-          PHILOSOPHY
+          Philosophy
         </span>
       </button>
 
@@ -164,19 +164,19 @@ export default function AboutSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 transition-colors",
+            "text-base font-medium tracking-normal leading-5 transition-colors",
             isShelfActive ? "text-gray-500" : "text-gray-400 hover:text-gray-500"
           )}
         >
-          SHELF
+          Shelf
         </span>
       </button>
 
       {/* Shelf Subcategories (indented) - with smooth collapse/expand animation */}
       <div
         className={clsx(
-          "flex flex-col gap-4 overflow-hidden transition-all duration-300 ease-in-out",
-          isShelfActive ? "max-h-40 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-4"
+          "flex flex-col gap-3 overflow-hidden transition-all duration-300 ease-in-out",
+          isShelfActive ? "max-h-40 opacity-100 mt-0" : "max-h-0 opacity-0 -mt-3"
         )}
       >
         {SHELF_SUBCATEGORIES.map((subcat) => {
@@ -195,7 +195,7 @@ export default function AboutSidebar({
             >
               <span
                 className={clsx(
-                  "text-base font-semibold tracking-wide leading-5 text-left transition-colors",
+                  "text-base font-medium tracking-normal leading-5 text-left transition-colors",
                   isActive ? "text-blue-500" : "text-gray-400 hover:text-gray-500"
                 )}
               >
@@ -216,13 +216,13 @@ export default function AboutSidebar({
       >
         <span
           className={clsx(
-            "text-base font-semibold tracking-wide leading-5 transition-colors",
+            "text-base font-medium tracking-normal leading-5 transition-colors",
             activeCategory === "lore"
               ? "text-blue-500"
               : "text-gray-400 hover:text-gray-500"
           )}
         >
-          LORE
+          Lore
         </span>
       </button>
     </nav>

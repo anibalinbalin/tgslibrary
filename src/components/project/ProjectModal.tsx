@@ -594,6 +594,20 @@ export default function ProjectModal({
     return () => observer.disconnect();
   }, [isFullscreen, project]);
 
+  // Handle ESC key to close modal (only in popup mode, not fullscreen)
+  useEffect(() => {
+    if (isFullscreen) return; // Don't close fullscreen with ESC
+    
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isFullscreen]);
+
   const handleClose = () => {
     setIsClosing(true);
     setIsVisible(false);
