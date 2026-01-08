@@ -639,17 +639,15 @@ export default function ProjectModal({
       }, 50);
     } else {
       // Already in fullscreen - scroll to top after content re-renders
-      // Use requestAnimationFrame to wait for the next paint cycle
-      requestAnimationFrame(() => {
+      // Use setTimeout to wait for React to re-render the new content
+      setTimeout(() => {
         if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTo({ top: 0, behavior: 'instant' });
+          scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         }
-        window.scrollTo({ top: 0, behavior: 'instant' });
-      });
+      }, 100);
     }
   };
 
-  // Handle skip to final designs
   // Handle skip to final designs
   const handleSkipToFinalDesigns = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -732,7 +730,7 @@ export default function ProjectModal({
             href="#final-designs"
             onClick={handleSkipToFinalDesigns}
             className={clsx(
-              "fixed z-[100] font-medium text-gray-700 hover:text-blue-500 cursor-pointer leading-tight",
+              "fixed z-[100] font-medium text-gray-400 hover:text-blue-500 cursor-pointer leading-tight",
               "transition-all duration-300 ease-in-out",
               showSkipLink ? "opacity-100" : "opacity-0 pointer-events-none",
               isFullscreen ? "top-16 left-14 max-md:left-6" : "top-16 left-8"
@@ -1008,10 +1006,12 @@ export default function ProjectModal({
                     </div>
                   </div>
 
-                  {/* View All Button */}
-                  <ScrollReveal variant="fade" delay={200} className="w-full">
-                    <ViewAllProjectsButton onClick={onViewAllProjects} />
-                  </ScrollReveal>
+                  {/* View All Button - only show in fullscreen mode */}
+                  {isFullscreen && (
+                    <ScrollReveal variant="fade" delay={200} className="w-full">
+                      <ViewAllProjectsButton onClick={onViewAllProjects} />
+                    </ScrollReveal>
+                  )}
                 </div>
               )}
             </div>

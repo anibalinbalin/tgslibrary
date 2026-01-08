@@ -849,8 +849,16 @@ function HomePage() {
 
   // Memoize to prevent ProjectCard re-renders when other state changes
   const handleProjectClick = useCallback((projectId: string) => {
-    // Navigate to the project overlay URL
-    navigate(`/project/${projectId}`);
+    // On mobile, go straight to fullscreen (except for sketchbook)
+    const isMobile = window.innerWidth < 768;
+    const shouldGoFullscreen = isMobile && projectId !== 'sketchbook';
+    
+    if (shouldGoFullscreen) {
+      navigate(`/project/${projectId}/full`);
+    } else {
+      // Desktop or sketchbook: show popup modal
+      navigate(`/project/${projectId}`);
+    }
   }, [navigate]);
 
   const handleModalClose = () => {
