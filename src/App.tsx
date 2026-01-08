@@ -465,7 +465,7 @@ const ProjectCard = React.memo(function ProjectCard({ project, onProjectClick, f
                     <a 
                       href={project.id === 'polaroid' ? '/polaroid' : project.id === 'screentime' ? '/screentime' : '/library'}
                       onClick={(e) => e.stopPropagation()}
-                      className="text-blue-500 hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"
+                      className="text-blue-400 hover:text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"
                     >
                       Try It Out!
                     </a>
@@ -494,7 +494,7 @@ const ProjectCard = React.memo(function ProjectCard({ project, onProjectClick, f
                 <a 
                   href={project.id === 'polaroid' ? '/polaroid' : project.id === 'screentime' ? '/screentime' : '/library'}
                   onClick={(e) => e.stopPropagation()}
-                  className="text-blue-500 hover:text-blue-400"
+                  className="text-blue-400 hover:text-blue-300"
                 >
                   Try It Out!
                 </a>
@@ -532,7 +532,7 @@ const ProjectCard = React.memo(function ProjectCard({ project, onProjectClick, f
               <a 
                 href={project.id === 'polaroid' ? '/polaroid' : project.id === 'screentime' ? '/screentime' : '/library'}
                 onClick={(e) => e.stopPropagation()}
-                className="text-blue-500 hover:text-blue-400 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 ease-out"
+                className="text-blue-400 hover:text-blue-300 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 ease-out"
               >
                 Try It Out!
               </a>

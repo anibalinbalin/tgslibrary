@@ -74,17 +74,17 @@ function Tooltip({ label, children, offsetY = 0 }: { label: string; children: Re
       setIsVisible(true);
       setTooltipWarmup(true);
     } else {
-      // Show tooltip after 300ms delay
+      // Show tooltip after 800ms delay
       setIsInstant(false);
       hoverTimeoutRef.current = setTimeout(() => {
         setIsVisible(true);
         setTooltipWarmup(true);
-      }, 300);
+      }, 800);
     }
   };
   
   const handleMouseLeave = () => {
-    // Clear the timeout if user leaves before 300ms
+    // Clear the timeout if user leaves before 800ms
     if (hoverTimeoutRef.current) {
       clearTimeout(hoverTimeoutRef.current);
       hoverTimeoutRef.current = null;
