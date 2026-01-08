@@ -681,7 +681,7 @@ export default function AboutPage() {
           {/* Experience Section */}
           <section ref={experienceRef} className="flex flex-col gap-16 md:flex-row md:justify-between md:gap-0 w-full scroll-mt-8">
             <ScrollReveal variant="fade">
-              <div className="flex flex-col md:flex-row md:items-baseline md:gap-2 w-full md:w-auto">
+              <div className="flex flex-col">
                 <h2 className="font-['Figtree',sans-serif] font-medium text-gray-700 text-[40px] leading-normal shrink-0">
                   Experience
                 </h2>
