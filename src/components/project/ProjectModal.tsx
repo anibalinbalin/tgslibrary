@@ -761,7 +761,7 @@ export default function ProjectModal({
           "relative bg-white flex flex-col overflow-hidden transition-all duration-500 ease-out",
           isFullscreen
             ? "w-full h-full rounded-none"
-            : "rounded-[26px] w-[calc(100%*10/12)] max-md:w-full max-h-[80vh] sm:max-h-[90vh]",
+            : "rounded-[26px] w-[calc(100%*10/12)] max-md:w-full min-h-[50vh] max-h-[80vh] sm:max-h-[90vh]",
           isVisible
             ? "opacity-100 translate-y-0"
             : isClosing
@@ -858,7 +858,7 @@ export default function ProjectModal({
           )}
 
           {!loading && !error && project && (
-            <div className="flex flex-col pb-32">
+            <div className="flex flex-col pb-16">
               {/* Project Hero Header */}
               <div className="content-stretch flex flex-col gap-8 items-start justify-center px-8 md:px-[8%] xl:px-[175px] pt-32 pb-16 relative shrink-0 w-full">
                 {/* Logo */}
@@ -1025,7 +1025,7 @@ export default function ProjectModal({
                     projects={project.relatedProjects.map((related) => ({
                       id: related._id,
                       title: related.title,
-                      year: related.year,
+                      year: related.year || "",
                       description: related.shortDescription || "",
                       imageSrc: related.heroImage ? urlFor(related.heroImage).width(800).height(434).url() : "",
                     }))}
@@ -1457,11 +1457,11 @@ function ContentBlock({
                       <>
                         <a
                           href={`mailto:${section.contactEmail}`}
-                          className="text-[#4b5563] hover:text-blue-500 transition-colors"
+                          className="underline decoration-solid hover:text-blue-500 transition-colors"
                         >
                           email me
                         </a>
-                        <span className="text-[#9ca3af]">!</span>
+                        !
                       </>
                     ) : (
                       "email me!"
