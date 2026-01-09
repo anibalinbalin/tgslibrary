@@ -165,7 +165,7 @@ export default function MediaCard({
 
           {/* Quote Title */}
           {data?.quoteTitle && (
-            <p className="whitespace-pre-wrap font-['Figtree'] -mb-1 text-2xl tracking-[0.01em] font-semibold text-gray-600">
+            <p className="whitespace-pre-wrap font-['Figtree'] -mb-1 text-2xl tracking-[0.01em] font-medium text-gray-700">
               {data.quoteTitle}
             </p>
           )}
@@ -173,7 +173,7 @@ export default function MediaCard({
           {/* Quote Text & Author */}
           <div className="flex flex-col items-start text-base md:text-base">
             {data?.quoteText && (
-              <p className="font-['Figtree'] font-medium text-gray-500 mb-0.5">
+              <p className="font-['Figtree'] font-normal text-gray-500 mb-0.5">
                 <QuoteTextWithUnderline
                   text={data.quoteText}
                   underlinedText={data.quoteUnderlinedText}

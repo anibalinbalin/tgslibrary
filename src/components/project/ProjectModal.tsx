@@ -9,6 +9,7 @@ import type { Project, ContentSection } from "../../sanity/types";
 import Footer from "../Footer";
 import VideoPlayer from "../VideoPlayer";
 import ViewAllProjectsButton from "./ViewAllProjectsButton";
+import AlsoCheckOut from "./AlsoCheckOut";
 import ProjectCardSection from "./ProjectCardSection";
 import SideQuestSection from "./SideQuestSection";
 import { ScrollReveal } from "../ScrollReveal";
@@ -20,10 +21,10 @@ import quoteGraphic from "../../assets/quote gray 200.png";
 // Custom PortableText components for proper heading and spacing rendering
 const portableTextComponents: PortableTextComponents = {
   block: {
-    h1: ({ children }) => <h1 className="text-3xl font-semibold mb-4 mt-8 first:mt-0">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-2xl font-medium mb-3 mt-6 first:mt-0">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-xl font-medium mb-3 mt-5 first:mt-0">{children}</h3>,
-    h4: ({ children }) => <h4 className="text-lg font-medium mb-2 mt-4 first:mt-0">{children}</h4>,
+    h1: ({ children }) => <h1 className="text-3xl font-normal mb-4 mt-8 first:mt-0">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-2xl font-normal mb-3 mt-6 first:mt-0">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-xl font-normal mb-3 mt-5 first:mt-0">{children}</h3>,
+    h4: ({ children }) => <h4 className="text-lg font-normal mb-2 mt-4 first:mt-0">{children}</h4>,
     normal: ({ children }) => <p className="mb-4 last:mb-0">{children}</p>,
   },
   marks: {
@@ -349,10 +350,29 @@ const ArrowRightIcon = () => (
   </svg>
 );
 
+// Eye icon for showing password (gray-400 to match arrow)
+const EyeIcon = () => (
+  <svg className="block size-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 5.25C4.5 5.25 1.5 12 1.5 12C1.5 12 4.5 18.75 12 18.75C19.5 18.75 22.5 12 22.5 12C22.5 12 19.5 5.25 12 5.25Z" stroke="#9CA3AF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M12 15.75C14.0711 15.75 15.75 14.0711 15.75 12C15.75 9.92893 14.0711 8.25 12 8.25C9.92893 8.25 8.25 9.92893 8.25 12C8.25 14.0711 9.92893 15.75 12 15.75Z" stroke="#9CA3AF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+// Eye-off icon for hiding password (gray-400 to match arrow)
+const EyeOffIcon = () => (
+  <svg className="block size-full" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14.12 14.12C13.5646 14.6755 12.7998 14.9855 12 14.9855C11.2002 14.9855 10.4354 14.6755 9.88 14.12C9.32457 13.5646 9.0145 12.7998 9.0145 12C9.0145 11.2002 9.32457 10.4354 9.88 9.88" stroke="#9CA3AF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M4.5 4.5L19.5 19.5" stroke="#9CA3AF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M9.75 5.5C10.485 5.34 11.235 5.25 12 5.25C19.5 5.25 22.5 12 22.5 12C22.02 12.945 21.42 13.815 20.73 14.61" stroke="#9CA3AF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M17.94 17.94C16.23 19.17 14.16 19.875 12 19.875C4.5 19.875 1.5 13.125 1.5 13.125C2.505 11.205 3.975 9.54 5.775 8.355" stroke="#9CA3AF" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
 // Password input component with local state
 function PasswordInput({ expectedPassword, onUnlock }: { expectedPassword: string; onUnlock?: () => void }) {
   const [passwordValue, setPasswordValue] = useState("");
   const [error, setError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -375,6 +395,10 @@ function PasswordInput({ expectedPassword, onUnlock }: { expectedPassword: strin
     }
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-[313px]">
       <div className={clsx(
@@ -382,18 +406,32 @@ function PasswordInput({ expectedPassword, onUnlock }: { expectedPassword: strin
         error ? "border-[#f87171]" : "border-[#e5e7eb]"
       )}>
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           placeholder="Enter"
           value={passwordValue}
           onChange={handleInputChange}
           className="leading-5 relative shrink-0 text-black text-base bg-transparent border-none outline-none flex-1 placeholder:text-[#9ca3af]"
         />
-        <button
-          type="submit"
-          className="relative shrink-0 size-[14px] rotate-[-90deg] hover:opacity-70 transition-opacity"
-        >
-          <ArrowRightIcon />
-        </button>
+        <div className="flex items-center gap-2.5">
+          {/* Show/Hide password toggle - only visible when there's input */}
+          <button
+            type="button"
+            onClick={toggleShowPassword}
+            className={clsx(
+              "relative shrink-0 size-[18px] hover:opacity-70 transition-all duration-200",
+              passwordValue.length > 0 ? "opacity-100" : "opacity-0 pointer-events-none"
+            )}
+          >
+            {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+          </button>
+          {/* Submit arrow */}
+          <button
+            type="submit"
+            className="relative shrink-0 size-[14px] rotate-[-90deg] hover:opacity-70 transition-opacity"
+          >
+            <ArrowRightIcon />
+          </button>
+        </div>
       </div>
       {/* Error Message with smooth animation */}
       <div 
@@ -653,12 +691,22 @@ export default function ProjectModal({
       }, 50);
     } else {
       // Already in fullscreen - scroll to top after content re-renders
-      // Use setTimeout to wait for React to re-render the new content
-      setTimeout(() => {
+      // Use multiple attempts to ensure scroll happens after React re-renders
+      const scrollToTop = () => {
         if (scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollContainerRef.current.scrollTop = 0;
         }
-      }, 100);
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      };
+      
+      // Immediate scroll
+      scrollToTop();
+      // After short delay for initial re-render
+      setTimeout(scrollToTop, 50);
+      // After longer delay for content to fully load
+      setTimeout(scrollToTop, 150);
     }
   };
 
@@ -752,7 +800,7 @@ export default function ProjectModal({
           >
             <div className="flex flex-col gap-0.5 items-start">
               <span className="text-[0.8rem]">↓ SKIP TO</span>
-              <span className="text-[0.8rem]">FINAL DESIGNS</span>
+              <span className="text-[0.8rem]">DESIGNS</span>
             </div>
           </a>
 
@@ -810,7 +858,7 @@ export default function ProjectModal({
           )}
 
           {!loading && !error && project && (
-            <div className="flex flex-col pb-16">
+            <div className="flex flex-col pb-32">
               {/* Project Hero Header */}
               <div className="content-stretch flex flex-col gap-8 items-start justify-center px-8 md:px-[8%] xl:px-[175px] pt-32 pb-16 relative shrink-0 w-full">
                 {/* Logo */}
@@ -972,61 +1020,25 @@ export default function ProjectModal({
 
               {/* Also Check Out Section */}
               {project.relatedProjects && project.relatedProjects.length > 0 && (
-                <div className="flex flex-col items-start justify-center px-8 md:px-[8%] xl:px-[175px] py-10 w-full">
-                  <div className="flex flex-col gap-8 items-start w-full mb-10">
-                    {/* Section Title */}
-                    <ScrollReveal variant="fade">
-                      <p className="font-normal leading-7 text-[#6b7280] text-xl w-full">
-                        Also check out...
-                      </p>
-                    </ScrollReveal>
-
-                    {/* Projects Grid */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-6 w-full">
-                      {project.relatedProjects.map((related) => (
-                        <ScrollReveal key={related._id} className="w-full">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              e.preventDefault();
-                              handleProjectClick(related.company);
-                            }}
-                            className="flex flex-col gap-3 items-start cursor-pointer group text-left w-full"
-                          >
-                            {related.heroImage && (
-                              <div className="w-full overflow-hidden rounded-[26px] transition-transform duration-300 group-hover:scale-[0.99]">
-                                <div className="aspect-[678/367.625] w-full relative">
-                                  <img
-                                    className="absolute inset-0 object-cover rounded-[26px] w-full h-full"
-                                    alt=""
-                                    src={urlFor(related.heroImage).width(800).height(434).url()}
-                                  />
-                                </div>
-                              </div>
-                            )}
-                            <div className="flex flex-col font-medium items-start leading-[1.4] px-[13px] text-base w-full">
-                              <p className="text-[#111827] w-full">
-                                <span>{related.title} </span>
-                                <span className="text-[#9ca3af]">• {related.year}</span>
-                              </p>
-                              <p className="text-[#9ca3af] w-full font-normal project-card-text opacity-0 translate-y-1 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-y-0 max-md:opacity-100 max-md:translate-y-0">
-                                {related.shortDescription}
-                              </p>
-                            </div>
-                          </button>
-                        </ScrollReveal>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* View All Button - only show in fullscreen mode */}
-                  {isFullscreen && (
-                    <ScrollReveal variant="fade" delay={200} className="w-full">
-                      <ViewAllProjectsButton onClick={onViewAllProjects} />
-                    </ScrollReveal>
-                  )}
-                </div>
+                <ScrollReveal variant="fade">
+                  <AlsoCheckOut
+                    projects={project.relatedProjects.map((related) => ({
+                      id: related._id,
+                      title: related.title,
+                      year: related.year,
+                      description: related.shortDescription || "",
+                      imageSrc: related.heroImage ? urlFor(related.heroImage).width(800).height(434).url() : "",
+                    }))}
+                    onProjectClick={(proj) => {
+                      // Find the original related project to get the company name
+                      const relatedProject = project.relatedProjects?.find((r) => r._id === proj.id);
+                      if (relatedProject?.company) {
+                        handleProjectClick(relatedProject.company);
+                      }
+                    }}
+                    onViewAll={isFullscreen ? onViewAllProjects : undefined}
+                  />
+                </ScrollReveal>
               )}
             </div>
           )}
@@ -1445,11 +1457,11 @@ function ContentBlock({
                       <>
                         <a
                           href={`mailto:${section.contactEmail}`}
-                          className="underline decoration-solid hover:text-blue-500 transition-colors"
+                          className="text-[#4b5563] hover:text-blue-500 transition-colors"
                         >
                           email me
                         </a>
-                        !
+                        <span className="text-[#9ca3af]">!</span>
                       </>
                     ) : (
                       "email me!"
@@ -1727,7 +1739,7 @@ function ContentBlock({
                 </p>
               )}
             </div>
-            <div className="leading-normal relative max-w-120 text-[#4b5563] text-base whitespace-pre-wrap col-start-3 max-md:col-start-auto max-md:w-full prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0">
+            <div className="leading-normal relative max-w-120 text-[#4b5563] text-base whitespace-pre-wrap col-start-3 max-md:col-start-auto max-md:w-full max-md:pr-0 prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 prose-p:break-words">
               {section.body && <PortableText value={section.body} components={portableTextComponents} />}
             </div>
           </div>
@@ -2085,10 +2097,10 @@ function ContentBlock({
                 <div className="w-full h-full flex items-center justify-center">
                   {/* Video */}
                   {isVideo && section.muxPlaybackId && (
-                    <div className="w-full h-full max-w-[90%] max-h-[90%] flex items-center justify-center">
+                    <div className="w-full h-full max-w-[90%] max-h-[90%] flex items-center justify-center rounded-3xl overflow-hidden">
                     <VideoPlayer
                       src={`https://stream.mux.com/${section.muxPlaybackId}.m3u8`}
-                      className="w-full h-full object-contain rounded-3xl"
+                      className="w-full h-full object-contain"
                       controls={false}
                       autoPlay
                       muted
@@ -2102,7 +2114,7 @@ function ContentBlock({
                     <img
                       src={gifSrc}
                       alt=""
-                      className="max-h-[90%] max-w-[90%] object-contain"
+                      className="max-h-[90%] max-w-[90%] object-contain rounded-3xl"
                     />
                   )}
                 </div>
