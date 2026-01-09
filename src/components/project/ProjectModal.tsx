@@ -1097,16 +1097,11 @@ export default function ProjectModal({
                   return true;
                 };
                 
-                // When locked, also stop at protectedSection
-                if (!isUnlocked) {
-                  const protectedIndex = sections.findIndex(s => s._type === "protectedSection");
-                  if (protectedIndex !== -1) {
-                    sections = sections.slice(0, protectedIndex + 1);
-                  }
-                }
-                
-                // Filter by visibility
+                // Filter by visibility first
                 sections = sections.filter(shouldShowSection);
+                
+                // When locked, also include the protectedSection at its original position
+                // No longer truncating - just let visibility settings control everything
                 
                 return sections.map((section) => 
                   // Testimonials have interactive expand/collapse - skip ScrollReveal

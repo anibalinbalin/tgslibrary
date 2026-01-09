@@ -765,31 +765,27 @@ function ProjectModal({ project, onClose }: ProjectModalProps) {
             )}
           </div>
 
-          {/* View on X link - only shown if xLink exists */}
+          {/* View on X button - only shown if xLink exists */}
           {project.xLink && (
             <a
               href={project.xLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="content-stretch flex items-center relative shrink-0 group/xlink"
+              className="bg-blue-500 border border-blue-400 border-solid content-stretch flex gap-1 items-center justify-center px-4 py-1.5 relative rounded-full shrink-0 cursor-pointer hover:bg-blue-400 hover:border-blue-300 transition-colors duration-200 ease-out mt-1"
             >
-              <div className="content-stretch flex gap-[2px] items-center relative shrink-0">
-                <p className="font-['Figtree',sans-serif] font-normal leading-5 relative shrink-0 text-[#9ca3af] text-base group-hover/xlink:text-blue-500 transition-colors">
-                  View on
-                </p>
-                {/* X logo - small icon */}
-                <div className="content-stretch flex items-center justify-center px-[4.667px] py-[6.667px] relative shrink-0 -mr-0.5">
-                  <svg 
-                    className="block w-[16px] h-[16px] fill-[#9ca3af] group-hover/xlink:fill-blue-500 transition-colors" 
-                    viewBox="0 0 19 18"
-                  >
-                    <path d={svgPaths.p16308a80} />
-                  </svg>
-                </div>
-                <p className="font-['Figtree',sans-serif] font-normal leading-5 relative shrink-0 text-[#9ca3af] text-base group-hover/xlink:text-blue-500 transition-colors">
-                  <ArrowUpRight />
-                </p>
-              </div>
+              <span className="font-['Manrope',sans-serif] font-semibold leading-normal relative shrink-0 text-base text-white whitespace-nowrap">
+                View on
+              </span>
+              {/* X logo - white */}
+              <svg 
+                className="block w-[14px] h-[14px] fill-white" 
+                viewBox="0 0 19 18"
+              >
+                <path d={svgPaths.p16308a80} />
+              </svg>
+              <span className="text-white">
+                <ArrowUpRight />
+              </span>
             </a>
           )}
 
