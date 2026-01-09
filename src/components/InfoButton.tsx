@@ -175,67 +175,58 @@ export default function InfoButton({ project }: InfoButtonProps) {
                   </p>
                 </div>
 
-                {/* View on X link - top right (hidden on mobile) */}
+                {/* View on X button - top right (hidden on mobile) */}
                 {project.xLink && (
                   <a
                     href={project.xLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="hidden md:flex content-stretch items-center relative shrink-0 group/xlink"
+                    className="hidden md:flex bg-blue-500 border border-blue-400 border-solid gap-1 items-center justify-center px-3 py-1 relative rounded-full shrink-0 cursor-pointer hover:bg-blue-400 hover:border-blue-300 transition-colors duration-200 ease-out mt-1"
                   >
-                    <div className="content-stretch flex gap-[2px] items-center relative shrink-0">
-                      <p className="font-['Figtree',sans-serif] font-normal leading-5 relative shrink-0 text-[#9ca3af] text-base group-hover/xlink:text-blue-500 transition-colors">
-                        View on
-                      </p>
-                      <div className="content-stretch flex items-center justify-center px-[4.667px] py-[6.667px] relative shrink-0 -mr-0.5">
-                        <svg 
-                          className="block w-[13px] h-[13px] fill-[#9ca3af] stroke-[#9ca3af] group-hover/xlink:fill-blue-500 group-hover/xlink:stroke-blue-500 transition-colors" 
-                          viewBox="0 0 19 18"
-                          strokeWidth={0.8}
-                        >
-                          <path d={xLogoPath} />
-                        </svg>
-                      </div>
-                      <p className="font-['Figtree',sans-serif] font-normal pt-0.5 leading-5 relative shrink-0 text-[#9ca3af] text-base group-hover/xlink:text-blue-500 transition-colors">
-                        <ArrowUpRight />
-                      </p>
-                    </div>
+                    <span className="font-['Manrope',sans-serif] font-semibold leading-normal relative shrink-0 text-sm text-white whitespace-nowrap">
+                      View on
+                    </span>
+                    <svg 
+                      className="block w-[12px] h-[12px] fill-white" 
+                      viewBox="0 0 19 18"
+                    >
+                      <path d={xLogoPath} />
+                    </svg>
+                    <span className="text-white">
+                      <ArrowUpRight />
+                    </span>
                   </a>
                 )}
               </div>
 
               {/* Description */}
-              <div className="content-stretch flex gap-2 items-start relative w-full max-md:mt-0 -mt-1 mb-1">
+              <div className="content-stretch -mt-1.5 flex gap-2 items-start relative w-full max-md:mt-0 -mt-1 mb-1">
                 <p className="font-['Figtree',sans-serif] font-normal leading-5 relative text-[#6b7280] text-base">
                   {project.description}
                 </p>
               </div>
               </div>
 
-              {/* View on X link - under description (mobile only) */}
+              {/* View on X button - under description (mobile only) */}
               {project.xLink && (
                 <a
                   href={project.xLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="md:hidden content-stretch flex items-center relative shrink-0 group/xlink -mt-2 mb-1"
+                  className="md:hidden mb-2 bg-blue-500 border border-blue-400 border-solid flex gap-1 items-center justify-center px-3 py-1 relative rounded-full shrink-0 -mt-1 cursor-pointer hover:bg-blue-400 hover:border-blue-300 transition-colors duration-200 ease-out"
                 >
-                  <div className="content-stretch flex gap-[2px] items-center relative shrink-0">
-                    <p className="font-['Figtree',sans-serif] font-normal leading-5 relative shrink-0 text-[#9ca3af] text-base group-hover/xlink:text-blue-500 transition-colors">
-                      View on
-                    </p>
-                    <div className="content-stretch flex items-center justify-center px-[4.667px] py-[6.667px] relative shrink-0 -mr-0.5">
-                      <svg 
-                        className="block w-[14px] h-[14px] fill-[#9ca3af] group-hover/xlink:fill-blue-500 transition-colors" 
-                        viewBox="0 0 19 18"
-                      >
-                        <path d={xLogoPath} />
-                      </svg>
-                    </div>
-                    <p className="font-['Figtree',sans-serif] font-normal leading-5 relative shrink-0 text-[#9ca3af] text-base group-hover/xlink:text-blue-500 transition-colors">
-                      <ArrowUpRight />
-                    </p>
-                  </div>
+                  <span className="font-['Manrope',sans-serif] font-semibold leading-normal relative shrink-0 text-sm text-white whitespace-nowrap">
+                    View on
+                  </span>
+                  <svg 
+                    className="block w-[12px] h-[12px] fill-white" 
+                    viewBox="0 0 19 18"
+                  >
+                    <path d={xLogoPath} />
+                  </svg>
+                  <span className="text-white">
+                    <ArrowUpRight />
+                  </span>
                 </a>
               )}
 
@@ -245,7 +236,7 @@ export default function InfoButton({ project }: InfoButtonProps) {
               )}
 
               {/* Video/Image content area */}
-              <div className="relative rounded-[16px] w-full aspect-[1097/616] overflow-hidden bg-gray-100 shrink-0 mt-3">
+              <div className="relative rounded-[16px] border border-gray-100 border-solid w-full aspect-[1097/616] overflow-hidden bg-gray-100 shrink-0 mt-3">
                 <img
                   alt=""
                   className="absolute object-cover size-full rounded-[16px]"

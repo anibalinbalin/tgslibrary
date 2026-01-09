@@ -853,7 +853,7 @@ export default function PolaroidPage() {
             onClick={() => setShowShareModal(false)}
           />
           <div className="fixed bg-white left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-[26px] z-50 max-h-[calc(100vh-40px)] max-h-[calc(100dvh-40px)] overflow-y-auto w-[calc(100%-32px)] sm:w-auto sm:min-w-[400px] md:min-w-[530px]">
-            <div className="content-stretch flex flex-col gap-[24px] sm:gap-[32px] items-center overflow-clip px-[20px] sm:px-[28px] md:px-[36px] py-[24px] sm:py-[30px] relative rounded-[inherit] w-full sm:min-w-[400px] md:min-w-[530px]">
+            <div className="content-stretch flex flex-col gap-[24px] sm:gap-[32px] items-center overflow-clip px-[20px] sm:px-[28px] md:px-[36px] py-[24px] sm:py-[30px] pb-[32px] sm:pb-[40px] relative rounded-[inherit] w-full sm:min-w-[400px] md:min-w-[530px]">
               <div className="content-stretch flex flex-col gap-[36px] items-center relative shrink-0 w-full">
                 <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] min-w-full relative shrink-0 text-[22px] text-black tracking-[-0.26px] w-[min-content]" style={{ fontVariationSettings: "'wdth' 100" }}>
                   <p className="leading-[28px]">Share Polaroid</p>
