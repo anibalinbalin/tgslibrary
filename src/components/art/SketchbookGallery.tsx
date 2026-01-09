@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import clsx from "clsx";
 import { ChevronLeftIcon, ChevronRightIcon } from "./ChevronIcons";
 
@@ -25,10 +25,12 @@ type SketchbookGalleryProps = {
 // Individual image component with loading state
 function SketchbookImage({ 
   image, 
-  onClick 
+  onClick,
+  onLoad,
 }: { 
   image: SketchbookItem; 
   onClick?: () => void;
+  onLoad?: () => void;
 }) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
@@ -53,7 +55,10 @@ function SketchbookImage({
           imageLoaded ? "opacity-100" : "opacity-0"
         )}
         style={{ maxWidth: "unset" }}
-        onLoad={() => setImageLoaded(true)}
+        onLoad={() => {
+          setImageLoaded(true);
+          onLoad?.();
+        }}
       />
     </button>
   );
@@ -69,6 +74,7 @@ export default function SketchbookGallery({
   onImageClick 
 }: SketchbookGalleryProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const recenterRaf = useRef<number | null>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(data.images.length > 1);
   const [canScrollRight, setCanScrollRight] = useState(data.images.length > 1);
 
@@ -76,6 +82,21 @@ export default function SketchbookGallery({
     if (data.images.length <= 1) return data.images;
     return [...data.images, ...data.images, ...data.images];
   }, [data.images]);
+
+  const scheduleRecenter = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container || loopedImages.length <= data.images.length) return;
+
+    if (recenterRaf.current) cancelAnimationFrame(recenterRaf.current);
+    recenterRaf.current = requestAnimationFrame(() => {
+      recenterRaf.current = requestAnimationFrame(() => {
+        const totalWidth = container.scrollWidth;
+        if (!totalWidth) return;
+        const third = totalWidth / 3;
+        container.scrollLeft = third;
+      });
+    });
+  }, [data.images.length, loopedImages.length]);
 
   useEffect(() => {
     const hasMultipleImages = data.images.length > 1;
@@ -86,12 +107,6 @@ export default function SketchbookGallery({
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container || loopedImages.length <= data.images.length) return;
-
-    const recenter = () => {
-      const totalWidth = container.scrollWidth;
-      if (!totalWidth) return;
-      container.scrollLeft = totalWidth / 3;
-    };
 
     const handleScroll = () => {
       const totalWidth = container.scrollWidth;
@@ -106,15 +121,20 @@ export default function SketchbookGallery({
     };
 
     // Recenters after the layout stabilizes so the user starts in the middle copy
-    requestAnimationFrame(recenter);
+    scheduleRecenter();
 
     container.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", recenter);
+    window.addEventListener("resize", scheduleRecenter);
     return () => {
       container.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", recenter);
+      window.removeEventListener("resize", scheduleRecenter);
+      if (recenterRaf.current) cancelAnimationFrame(recenterRaf.current);
     };
-  }, [data.images.length, loopedImages.length]);
+  }, [data.images.length, loopedImages.length, scheduleRecenter]);
+
+  const handleImageLoad = () => {
+    scheduleRecenter();
+  };
 
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
@@ -159,6 +179,7 @@ export default function SketchbookGallery({
               key={`${image.id}-${index}`}
               image={image}
               onClick={() => onImageClick?.(image)}
+              onLoad={handleImageLoad}
             />
           ))}
         </div>

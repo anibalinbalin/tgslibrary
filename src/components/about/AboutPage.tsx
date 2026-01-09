@@ -20,6 +20,7 @@ import type { AboutCategory, ShelfSubcategory, CommunitySidebarItem } from "./Ab
 import profilePic from "../../assets/Website Profile Pic.png";
 import mapPinIcon from "../../assets/map-pin.svg";
 import academicCapIcon from "../../assets/academic-cap.svg";
+import heartIcon from "../../assets/HeartFill.svg";
 
 // Sanity
 import { client, urlFor } from "../../sanity/client";
@@ -689,7 +690,7 @@ export default function AboutPage() {
                   href="https://drive.google.com/file/d/1JPVZsAg6QSwS9He0bc2cMdVohcBQYD0W/view?usp=sharing"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-['Figtree',sans-serif] font-medium text-gray-400 text-lg hover:text-blue-500 transition-colors"
+                  className="font-['Figtree',sans-serif] tracking-wide font-normal text-gray-400 text-lg hover:text-blue-500 transition-colors"
                 >
                   Resume <ArrowUpRight />
                 </a>
@@ -720,8 +721,9 @@ export default function AboutPage() {
                 <h2 className="font-['Figtree',sans-serif] font-medium text-gray-600 text-[40px] leading-normal shrink-0">
                   My Communities
                 </h2>
-                <p className="font-['Figtree',sans-serif] font-medium text-gray-400 text-lg">
+                <p className="font-['Figtree',sans-serif] tracking-wide font-normal text-gray-400 text-lg flex items-center gap-1.5">
                   The people who make it all worth it
+                  <img src={heartIcon} alt="" className="w-[12px] h-[12px]" style={{ filter: 'brightness(0) saturate(100%) invert(83%) sepia(8%) saturate(293%) hue-rotate(177deg) brightness(91%) contrast(87%)' }} />
                 </p>
               </div>
             </ScrollReveal>
@@ -762,7 +764,7 @@ export default function AboutPage() {
                 <h2 className="font-['Figtree',sans-serif] font-medium text-gray-600 text-[40px] leading-normal shrink-0">
                   My Favorite Quotes
                 </h2>
-                <p className="font-['Figtree',sans-serif] font-medium text-gray-400 text-lg">
+                <p className="font-['Figtree',sans-serif] tracking-wide font-normal text-gray-400 text-lg">
                   a.k.a. my Design ( + Life ) Philosophy
                 </p>
               </div>
@@ -787,7 +789,7 @@ export default function AboutPage() {
                 <h2 className="font-['Figtree',sans-serif] font-medium text-gray-600 text-[40px] leading-normal shrink-0">
                   Shelf
                 </h2>
-                <p className="font-['Figtree',sans-serif] font-medium text-gray-400 text-lg">
+                <p className="font-['Figtree',sans-serif] tracking-wide font-normal text-gray-400 text-lg">
                   ★ - Favorites
                 </p>
               </div>
@@ -804,7 +806,7 @@ export default function AboutPage() {
                 <div ref={booksRef} className="scroll-mt-8">
                   <ScrollReveal delay={100}>
                     <ShelfSection
-                      title="★ BOOKS"
+                      title="★ Books"
                       count={bookItems.filter(item => item.isFeatured).length}
                       mediaType="book"
                       yearFilters={bookYears}
@@ -822,7 +824,7 @@ export default function AboutPage() {
                 <div ref={musicRef} className="scroll-mt-8">
                   <ScrollReveal delay={200}>
                     <ShelfSection
-                      title="★ MUSIC"
+                      title="★ Music"
                       count={musicItems.filter(item => item.isFeatured).length}
                       mediaType="music"
                       yearFilters={musicYears}
@@ -840,7 +842,7 @@ export default function AboutPage() {
                 <div ref={moviesRef} className="scroll-mt-8">
                   <ScrollReveal delay={300}>
                     <ShelfSection
-                      title="★ MOVIES"
+                      title="★ Movies"
                       count={movieItems.filter(item => item.isFeatured).length}
                       mediaType="movie"
                       yearFilters={movieYears}
@@ -868,7 +870,7 @@ export default function AboutPage() {
                 <h2 className="font-['Figtree',sans-serif] font-medium text-gray-600 text-[40px] leading-normal shrink-0">
                 Lore ⟡˙⋆
                 </h2>
-                <p className="font-['Figtree',sans-serif] font-medium text-gray-400 text-lg">
+                <p className="font-['Figtree',sans-serif] tracking-wide font-normal text-gray-400 text-lg">
                   Fun snippets from past lives
                 </p>
               </div>

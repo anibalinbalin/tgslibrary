@@ -324,22 +324,15 @@ const ProjectMedia = React.memo(function ProjectMedia({ imageSrc, videoSrc }: Pr
     return (
       <div 
         ref={containerRef}
-        className="aspect-[678/367.625] relative rounded-[26px] shrink-0 w-full overflow-hidden"
+        className="aspect-[678/367.625] relative rounded-[26px] shrink-0 w-full overflow-hidden bg-[#e5e7eb]"
       >
-        {/* Shimmer placeholder - visible while video is loading */}
-        <div 
-          className={clsx(
-            "absolute inset-0 rounded-[26px] transition-opacity duration-500 ease-out",
-            videoLoaded ? "opacity-0" : "opacity-100 animate-shimmer"
-          )}
-        />
-        {/* Actual video - plays full duration when visible */}
+        {/* Actual video - plays full duration when visible, hidden until loaded */}
         {isVisible && videoReady && (
           <VideoPlayer
             src={videoSrc}
             className={clsx(
               "absolute max-w-none object-cover rounded-[26px] size-full transition-opacity duration-500 ease-out",
-              videoLoaded ? "opacity-100" : "opacity-0"
+              videoLoaded ? "opacity-100" : "opacity-0 invisible"
             )}
             autoPlay
             muted
@@ -349,6 +342,25 @@ const ProjectMedia = React.memo(function ProjectMedia({ imageSrc, videoSrc }: Pr
             onLoaded={() => setVideoLoaded(true)}
           />
         )}
+        {/* Shimmer placeholder - on top, visible while video is loading */}
+        <div 
+          className={clsx(
+            "absolute inset-0 rounded-[26px] transition-opacity duration-500 ease-out bg-[#e5e7eb] z-10 pointer-events-none",
+            videoLoaded ? "opacity-0" : "opacity-100 animate-shimmer"
+          )}
+        />
+      </div>
+    );
+  }
+
+  // If no videoSrc yet (still loading from Sanity) and no imageSrc, show shimmer placeholder
+  if (!imageSrc) {
+    return (
+      <div 
+        ref={containerRef}
+        className="aspect-[678/367.625] relative rounded-[26px] shrink-0 w-full overflow-hidden bg-[#e5e7eb]"
+      >
+        <div className="absolute inset-0 rounded-[26px] bg-[#e5e7eb] animate-shimmer" />
       </div>
     );
   }
@@ -953,7 +965,7 @@ function HomePage() {
                     className={clsx(
                       "relative inline-flex items-center justify-center rounded-[999px] align-middle -translate-y-[2px] transition-all duration-300 ease-in-out [cursor:inherit] before:content-[''] before:absolute before:-inset-[2px] before:rounded-[999px] before:pointer-events-none",
                       "max-md:hidden",
-                      badgeHovered ? "gap-2 bg-[#ecfdf5] pl-1.5 pr-3.5 py-0.5 -my-0.5 md:ml-1" : "md:gap-0 md:bg-transparent md:p-0 md:ml-2"
+                      badgeHovered ? "gap-2 bg-[#ecfdf5] pl-1.5 pr-3.5 py-0.5 -my-0.5 md:ml-1" : "md:gap-0 md:bg-transparent md:p-0 md:ml-2.5"
                     )}
                     onMouseEnter={handleBadgeMouseEnter}
                     onMouseLeave={handleBadgeMouseLeave}
