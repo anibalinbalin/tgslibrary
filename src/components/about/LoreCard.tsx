@@ -72,10 +72,10 @@ export default function LoreCard({ className, data, onClick }: LoreCardProps) {
         {/* Headline row with arrow */}
         <div className="flex w-full items-start justify-between">
           <div className="flex flex-col md:flex-row md:gap-1 md:items-center md:flex-wrap">
-            <span className="text-gray-600 text-base font-normal md:text-lg">{data.headline}</span>
+            <span className="text-gray-600 text-base font-medium md:text-lg">{data.headline}</span>
             {data.date && (
               <>
-                <span className="hidden md:inline text-gray-400 text-sm font-normal md:text-base"> • {data.date}</span>
+                <span className="hidden md:inline text-gray-400 text-sm font-normal md:text-lg"> • {data.date}</span>
                 <span className="md:hidden text-gray-400 font-normal text-sm">{data.date}</span>
               </>
             )}

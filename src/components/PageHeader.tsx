@@ -37,18 +37,7 @@ export default function PageHeader({
 
   return (
     <div
-      className={clsx(
-        "content-stretch flex flex-col items-start relative shrink-0 w-full",
-        variant === "work" && "header-gradient"
-      )}
-      style={
-        variant !== "work"
-          ? {
-              backgroundImage:
-                "linear-gradient(16deg, rgba(255, 255, 255, 1) 60%, rgba(243, 218, 255, 1) 81%, rgba(192, 221, 254, 1) 98%, rgba(154, 226, 244, 1) 100%)",
-            }
-          : undefined
-      }
+      className="content-stretch flex flex-col items-start relative shrink-0 w-full header-gradient"
     >
       {/* Grain texture overlay - sits on top of gradient but below content */}
       <div

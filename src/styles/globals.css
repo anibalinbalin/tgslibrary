@@ -256,18 +256,18 @@ html {
 /* Animated gradient for header */
 @keyframes gradient-bg {
   0% {
-    background-position: 0% 48%;
+    background-position: 0% 49%;
   }
   50% {
-    background-position: 100% 52%;
+    background-position: 30% 51%;
   }
   100% {
-    background-position: 0% 48%;
+    background-position: 0% 49%;
   }
 }
 
 .header-gradient {
-  background: linear-gradient(190deg, #9AE2F4, #9AE2F4, #C0DDFE, #F3DAFF, #FDE3F9, #FFF2FB, #FFFEFF, #FFFEFF, #FFFEFF, #ffffff, #ffffff, #ffffff, #ffffff, #ffffff);
+  background: linear-gradient(190deg, #BACCFF 0%, #BACCFF 8%, #CCDAFF 15%, #F5E2FF 22%, #FDE9FA 28%, #FFF5FC 35%, #FFFEFF 42%, #ffffff 55%, #ffffff 100%);
   background-size: 120% 120%;
   animation: gradient-bg 8s ease infinite;
   position: relative;
