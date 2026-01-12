@@ -97,6 +97,7 @@ export interface FeatureSection {
   verticalPadding?: "normal" | "small" | "large";
   layout?: "side-by-side" | "stacked";
   mediaPosition?: "left" | "right";
+  verticalAlignment?: "center" | "top";
   sectionNumber?: string;
   sectionLabel?: string;
   problemLabel?: string;
@@ -104,6 +105,7 @@ export interface FeatureSection {
   highlightedText?: string;
   highlightColor?: string;
   mediaType?: "image" | "video";
+  mediaSize?: "small" | "medium" | "large";
   image?: SanityImage;
   externalImageUrl?: string;
   muxPlaybackId?: string;
@@ -326,6 +328,8 @@ export interface TwoColumnImageSection {
   layout?: "text-left" | "text-right" | "three-column" | "two-images";
   leftImageSize?: "small" | "medium" | "large";
   rightImageSize?: "small" | "medium" | "large";
+  leftImageCustomWidth?: string;
+  rightImageCustomWidth?: string;
   leftImage?: SanityImage;
   leftImageUrl?: string;
   leftImageCaption?: string;

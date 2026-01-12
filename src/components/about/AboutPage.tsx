@@ -791,7 +791,7 @@ export default function AboutPage() {
                 <span className="text-gray-400 text-sm">Loading...</span>
               </div>
             ) : loreItems.length > 0 ? (
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-6">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 md:gap-y-4 md:gap-x-6">
                 {loreItems.map((lore, index) => (
                   <ScrollReveal key={lore.id} delay={index * 80}>
                     <LoreCard

@@ -105,7 +105,7 @@ export default function SideQuestSection({
 
           {/* Tilted Image - clickable to expand */}
           {image && (
-            <div className="mt-8">
+            <div className="mt-8 px-4">
               <div 
                 className="relative inline-block transform -rotate-2 transition-transform hover:rotate-0 duration-300 cursor-pointer"
                 onClick={() => setIsExpanded(true)}
@@ -230,7 +230,7 @@ export default function SideQuestSection({
               {/* Caption - only shown in popup mode */}
               {imageCaption && (
                 <p
-                  className="mt-6 max-w-[600px] text-center font-['DM_Sans'] text-base font-normal leading-relaxed text-gray-600 animate-[fadeSlideUp_300ms_ease-out_100ms_both]"
+                  className="mt-6 max-w-[600px] text-center font-['Figtree'] text-base font-normal leading-relaxed text-gray-600 animate-[fadeSlideUp_300ms_ease-out_100ms_both]"
                   style={{ fontVariationSettings: "'opsz' 9" }}
                 >
                   {imageCaption}

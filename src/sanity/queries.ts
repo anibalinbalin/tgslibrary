@@ -314,9 +314,7 @@ export const SHELF_BOOKS_QUERY = `
 // Query to get all unique years from shelf books
 export const BOOK_YEARS_QUERY = `
   array::unique(*[_type == "shelfItem" && isPublished == true && mediaType == "book" && year != null].year) | order(@ desc)
-`;
-
-// ============================================
+`;// ============================================
 // EXPERIMENT PROJECT QUERIES
 // ============================================
 

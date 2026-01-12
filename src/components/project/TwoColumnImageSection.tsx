@@ -29,15 +29,15 @@ export function TwoColumnImageSectionComponent({
   const twoColGapMap = {
     small: 'gap-12',    // 3rem / 48px
     medium: 'gap-16',   // 4rem / 64px
-    large: 'gap-20',    // 5rem / 80px
+    large: 'gap-24',    // 5rem / 80px
   };
   const twoColImageGap = twoColGapMap[section.imageGap || 'medium'];
 
-  // Size maps for both images (20%, 40%, 60%)
+  // Size maps for both images (slightly reduced from 20/40/60)
   const imageSizeMap = {
-    small: 'w-1/5',   // 20%
-    medium: 'w-2/5',  // 40%
-    large: 'w-3/5',   // 60%
+    small: 'w-1/3',    // ~33%
+    medium: 'w-5/12',  // ~42%
+    large: 'w-7/12',   // ~58%
   };
   const leftImageWidth = imageSizeMap[section.leftImageSize || 'medium'];
   const rightImageWidth = imageSizeMap[section.rightImageSize || 'large'];
@@ -68,14 +68,17 @@ export function TwoColumnImageSectionComponent({
         )}>
           {/* Left Image */}
           {twoColLeftImageSrc && (
-            <div className="flex flex-col gap-3">
+            <div 
+              className="flex flex-col gap-3 w-full max-w-70"
+              style={section.leftImageCustomWidth ? { maxWidth: section.leftImageCustomWidth } : undefined}
+            >
               <div className={clsx(
-                "overflow-hidden h-60 flex items-center justify-center",
+                "overflow-hidden w-full flex items-center justify-center",
                 section.rounded !== false && "rounded-[26px]"
               )}>
                 <img
                   className={clsx(
-                    "max-w-full max-h-full object-contain",
+                    "w-full h-auto object-contain",
                     section.rounded !== false && "rounded-[26px]"
                   )}
                   alt=""
@@ -92,14 +95,17 @@ export function TwoColumnImageSectionComponent({
 
           {/* Right Image */}
           {twoColRightImageSrc && (
-            <div className="flex flex-col gap-3">
+            <div 
+              className="flex flex-col gap-3 w-full max-w-70"
+              style={section.rightImageCustomWidth ? { maxWidth: section.rightImageCustomWidth } : undefined}
+            >
               <div className={clsx(
-                "overflow-hidden h-60 flex items-center justify-center max-md:h-auto",
+                "overflow-hidden w-full flex items-center justify-center max-md:h-auto",
                 section.rounded !== false && "rounded-[26px]"
               )}>
                 <img
                   className={clsx(
-                    "max-w-full max-h-full object-contain",
+                    "w-full h-auto object-contain",
                     section.rounded !== false && "rounded-[26px]"
                   )}
                   alt=""
@@ -123,11 +129,11 @@ export function TwoColumnImageSectionComponent({
           {twoColLeftImageSrc && (
             <div className={clsx("flex flex-col gap-3", leftImageWidth)}>
               <div className={clsx(
-                "overflow-hidden w-full h-60 flex items-center justify-center",
+                "overflow-hidden w-full flex items-center justify-center",
                 section.rounded !== false && "rounded-[26px]"
               )}>
                 <img
-                  className="max-w-full max-h-full object-contain"
+                  className="w-full h-auto object-contain"
                   alt=""
                   src={twoColLeftImageSrc}
                 />
@@ -160,7 +166,7 @@ export function TwoColumnImageSectionComponent({
 
             {/* Description */}
             {section.description && section.description.length > 0 && (
-              <div className="leading-normal pb-1 text-[#4b5563] text-base whitespace-pre-wrap prose prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0">
+              <div className="leading-normal max-w-120 pb-1 text-[#4b5563] text-base whitespace-pre-wrap prose prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0">
                 <PortableText value={section.description} components={portableTextComponents} />
               </div>
             )}
@@ -170,11 +176,11 @@ export function TwoColumnImageSectionComponent({
           {twoColRightImageSrc && (
             <div className={clsx("flex flex-col gap-3", rightImageWidth)}>
               <div className={clsx(
-                "overflow-hidden w-full h-60 flex items-center justify-center max-md:h-auto max-md:w-full",
+                "overflow-hidden w-full flex items-center justify-center max-md:h-auto max-md:w-full",
                 section.rounded !== false && "rounded-[26px]"
               )}>
                 <img
-                  className="max-w-full max-h-full object-contain"
+                  className="w-full h-auto object-contain"
                   alt=""
                   src={twoColRightImageSrc}
                 />
@@ -214,20 +220,20 @@ export function TwoColumnImageSectionComponent({
 
             {/* Description */}
             {section.description && section.description.length > 0 && (
-              <div className="leading-normal pb-1 text-[#4b5563] text-base whitespace-pre-wrap prose prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0">
+              <div className="leading-normal pb-1 text-[#4b5563] max-w-120 text-base whitespace-pre-wrap prose prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0">
                 <PortableText value={section.description} components={portableTextComponents} />
               </div>
             )}
 
             {/* Left Image (in text column) */}
             {twoColLeftImageSrc && (
-              <div className="flex flex-col gap-3 w-full">
+              <div className="flex flex-col gap-3 max-w-120 w-full">
                 <div className={clsx(
-                  "overflow-hidden w-full h-60",
+                  "overflow-hidden w-full flex items-center justify-center",
                   section.rounded !== false && "rounded-[26px]"
                 )}>
                   <img
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto object-contain"
                     alt=""
                     src={twoColLeftImageSrc}
                   />
@@ -245,11 +251,11 @@ export function TwoColumnImageSectionComponent({
           {twoColRightImageSrc && (
             <div className={clsx("flex flex-col gap-3", rightImageWidth)}>
               <div className={clsx(
-                "overflow-hidden w-full h-60 justify-center max-md:h-auto max-md:w-full",
+                "overflow-hidden w-full flex items-center justify-center max-md:h-auto max-md:w-full",
                 section.rounded !== false && "rounded-[26px]"
               )}>
                 <img
-                  className="w-full h-full object-cover object-top"
+                  className="w-full h-auto object-contain"
                   alt=""
                   src={twoColRightImageSrc}
                 />
