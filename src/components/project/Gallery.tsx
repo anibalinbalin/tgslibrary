@@ -33,7 +33,7 @@ export default function Gallery({
     : "grid-cols-4";
 
   return (
-    <div className="content-stretch flex flex-col gap-4 px-[175px] max-md:px-8 py-16 relative shrink-0 w-full">
+    <div className="content-stretch flex flex-col gap-4 px-[175px] max-md:px-8 py-20 relative shrink-0 w-full">
       {/* Image Grid */}
       <div
         className={clsx(

@@ -73,6 +73,21 @@ export const featureSection = defineType({
       hidden: ({parent}) => parent?.layout !== 'side-by-side',
     }),
     defineField({
+      name: 'verticalAlignment',
+      title: 'Vertical Alignment',
+      type: 'string',
+      description: 'For side-by-side layout, align content vertically',
+      options: {
+        list: [
+          {title: 'Center', value: 'center'},
+          {title: 'Top', value: 'top'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'center',
+      hidden: ({parent}) => parent?.layout !== 'side-by-side',
+    }),
+    defineField({
       name: 'sectionNumber',
       title: 'Section Number',
       type: 'string',
@@ -122,6 +137,21 @@ export const featureSection = defineType({
         layout: 'radio',
       },
       initialValue: 'image',
+    }),
+    defineField({
+      name: 'mediaSize',
+      title: 'Media Size',
+      type: 'string',
+      description: 'Control the max width of the image or video',
+      options: {
+        list: [
+          {title: 'Small', value: 'small'},
+          {title: 'Medium', value: 'medium'},
+          {title: 'Large', value: 'large'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'medium',
     }),
     defineField({
       name: 'image',

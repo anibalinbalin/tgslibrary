@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import clsx from "clsx";
 import { PortableText } from "@portabletext/react";
 import type { PortableTextComponents } from "@portabletext/react";
@@ -88,17 +89,26 @@ function createPortableTextComponents(highlightedText?: string, highlightColor?:
 
   return {
     block: {
-      h1: ({ children }) => <h1 className="text-3xl font-semibold mb-4 mt-8 first:mt-0">{applyHighlight(children)}</h1>,
-      h2: ({ children }) => <h2 className="text-2xl font-medium mb-3 mt-6 first:mt-0">{applyHighlight(children)}</h2>,
-      h3: ({ children }) => <h3 className="text-xl font-medium mb-3 mt-5 first:mt-0">{applyHighlight(children)}</h3>,
+      h1: ({ children }) => <h1 className="text-3xl font-normal mb-4 mt-8 first:mt-0 text-gray-900">{applyHighlight(children)}</h1>,
+      h2: ({ children }) => <h2 className="text-2xl font-normal mb-3 mt-6 first:mt-0 text-gray-900">{applyHighlight(children)}</h2>,
+      h3: ({ children }) => <h3 className="text-xl font-normal mb-3 mt-5 first:mt-0 text-gray-900">{applyHighlight(children)}</h3>,
       h4: ({ children }) => {
         // If this h4 contains the highlight text, apply color to the whole element and remove text color class
         if (shouldHighlight(children)) {
-          return <h4 className="font-normal mb-2 mt-4 first:mt-0" style={{ fontSize: '1.125rem', lineHeight: '1.75rem', color }}>{children}</h4>;
+          return <h4 className="font-normal mb-2 mt-4 first:mt-0 text-gray-900" style={{ fontSize: '1.125rem', lineHeight: '1.75rem', color }}>{children}</h4>;
         }
-        return <h4 className="text-lg font-normal mb-2 mt-4 first:mt-0">{children}</h4>;
+        return <h4 className="text-lg font-normal mb-2 mt-4 first:mt-0 text-gray-900">{children}</h4>;
       },
-      normal: ({ children }) => <p className="mb-6 last:mb-0">{children}</p>,
+      normal: ({ children }) => {
+        // Check if the paragraph is empty (preserves multiple line breaks)
+        const textContent = getTextContent(children);
+        const isEmpty = !textContent || textContent.trim() === '';
+        if (isEmpty) {
+          // Render empty paragraph with height on both desktop and mobile
+          return <p className="mb-0 h-[0.75em]">&nbsp;</p>;
+        }
+        return <p className="mb-6 last:mb-0">{children}</p>;
+      },
     },
     marks: {
       strong: ({ children }) => {
@@ -460,6 +470,109 @@ const LaptopIcon = () => (
   </svg>
 );
 
+// Expandable image component with hover effect and popup
+interface ExpandableImageProps {
+  src: string;
+  alt?: string;
+  caption?: string;
+  className?: string;
+  containerClassName?: string;
+}
+
+function ExpandableImage({ src, alt = "", caption, className = "", containerClassName = "" }: ExpandableImageProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  // Lock body scroll when modal is open
+  useScrollLock(isExpanded);
+
+  // Handle escape key to close expanded view
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isExpanded) {
+        setIsExpanded(false);
+      }
+    };
+
+    if (isExpanded) {
+      document.addEventListener("keydown", handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isExpanded]);
+
+  return (
+    <>
+      {/* Clickable image with hover effect */}
+      <div
+        className={clsx(
+          "cursor-pointer transition-transform duration-300 hover:scale-[1.004]",
+          containerClassName
+        )}
+        onClick={() => setIsExpanded(true)}
+      >
+        <img
+          className={className}
+          alt={alt}
+          src={src}
+        />
+      </div>
+
+      {/* Expanded Image Modal - renders via portal to cover entire page */}
+      {isExpanded &&
+        createPortal(
+          <div
+            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-[fadeIn_200ms_ease-out]"
+            onClick={() => setIsExpanded(false)}
+          >
+            {/* Light grey translucent overlay */}
+            <div className="absolute inset-0 bg-gray-100/95" />
+
+            {/* Close button - fixed to top right of screen */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded(false);
+              }}
+              className="fixed right-4 top-4 z-[10000] flex h-10 w-10 items-center justify-center transition-all duration-200 hover:scale-110 animate-[fadeSlideDown_300ms_ease-out]"
+              aria-label="Close expanded image"
+            >
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 14 14"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M1 1L13 13M1 13L13 1"
+                  stroke="#9ca3af"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+
+            {/* Expanded image container */}
+            <div
+              className="relative z-10 flex max-h-[85vh] max-w-[90vw] flex-col items-center animate-[scaleIn_300ms_ease-out]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Image */}
+              <img
+                src={src}
+                alt={alt}
+                className="max-h-[85vh] w-auto object-contain rounded-3xl"
+              />
+            </div>
+          </div>,
+          document.body
+        )}
+    </>
+  );
+}
+
 // Password input component with local state
 function PasswordInput({ expectedPassword, onUnlock }: { expectedPassword: string; onUnlock?: () => void }) {
   const [passwordValue, setPasswordValue] = useState("");
@@ -616,11 +729,16 @@ export default function ProjectModal({
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
   const heroRef = React.useRef<HTMLDivElement>(null);
   const missionRef = React.useRef<HTMLDivElement>(null);
+  const tocRef = React.useRef<HTMLDivElement>(null);
   const skipStartRef = React.useRef<HTMLDivElement>(null);
   const skipEndRef = React.useRef<HTMLDivElement>(null);
   
   // Fullscreen state is controlled by URL via initialFullscreen prop
   const isFullscreen = initialFullscreen;
+  const [isPastTOC, setIsPastTOC] = useState(false);
+  const [tocItems, setTocItems] = useState<
+    { _key?: string; number?: string; title?: string; targetSectionId?: string }[]
+  >([]);
 
   // Fetch project data from Sanity (uses preloaded cache if available)
   useEffect(() => {
@@ -718,21 +836,22 @@ export default function ProjectModal({
     };
   }, [project, loading]);
 
-  // Observe when mission section leaves the viewport (for hiding breadcrumb)
+  // Observe when mission section (or hero as fallback) leaves the viewport (for hiding breadcrumb)
   useEffect(() => {
-    const missionElement = missionRef.current;
+    // Use mission section if available, otherwise fall back to hero
+    const targetElement = missionRef.current || heroRef.current;
     const scrollContainer = scrollContainerRef.current;
-    if (!missionElement || !scrollContainer || !isFullscreen) return;
+    if (!targetElement || !scrollContainer || !isFullscreen) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Check if mission has scrolled OUT OF VIEW (above the viewport)
-          const missionTop = entry.boundingClientRect.top;
+          // Check if element has scrolled OUT OF VIEW (above the viewport)
+          const elementTop = entry.boundingClientRect.top;
           const rootTop = entry.rootBounds?.top ?? 0;
           
-          // Mission is past when its bottom is above the visible area (scrolled up and out)
-          const isPast = !entry.isIntersecting && missionTop < rootTop;
+          // Element is past when its bottom is above the visible area (scrolled up and out)
+          const isPast = !entry.isIntersecting && elementTop < rootTop;
           setIsPastHero(isPast);
         });
       },
@@ -743,7 +862,33 @@ export default function ProjectModal({
       }
     );
 
-    observer.observe(missionElement);
+    observer.observe(targetElement);
+    return () => observer.disconnect();
+  }, [isFullscreen, project]);
+
+  // Observe when TOC leaves viewport to show sticky mini-sidebar
+  useEffect(() => {
+    const tocElement = tocRef.current;
+    const scrollContainer = scrollContainerRef.current;
+    if (!tocElement || !scrollContainer || !isFullscreen) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const tocTop = entry.boundingClientRect.top;
+          const rootTop = entry.rootBounds?.top ?? 0;
+          const isPast = !entry.isIntersecting && tocTop < rootTop;
+          setIsPastTOC(isPast);
+        });
+      },
+      {
+        root: scrollContainer,
+        threshold: 0,
+        rootMargin: "0px 0px 0px 0px",
+      }
+    );
+
+    observer.observe(tocElement);
     return () => observer.disconnect();
   }, [isFullscreen, project]);
 
@@ -976,8 +1121,8 @@ export default function ProjectModal({
 
           {!loading && !error && project && (
             <div className="flex flex-col pb-16">
-              {/* Mobile not available message - shown only after unlocking on mobile */}
-              {isUnlocked && isMobile && (
+              {/* Mobile not available message - shown only after unlocking on mobile (NASA is allowed) */}
+              {isUnlocked && isMobile && projectId !== 'nasa' && (
                 <div className="flex flex-col items-center justify-center min-h-[60vh] px-8 text-center">
                   <LaptopIcon />
                   <p className="text-[#6b7280] text-base leading-6 px-12 mt-4">
@@ -985,9 +1130,9 @@ export default function ProjectModal({
                   </p>
                 </div>
               )}
-              
-              {/* Project Hero Header - hidden on mobile when unlocked */}
-              {!(isUnlocked && isMobile) && (
+
+              {/* Project Hero Header - hidden on mobile when unlocked (NASA is allowed) */}
+              {!(isUnlocked && isMobile && projectId !== 'nasa') && (
               <>
               <div className="content-stretch flex flex-col gap-8 items-start justify-center px-8 md:px-[8%] xl:px-[175px] pt-32 pb-16 relative shrink-0 w-full">
                 {/* Logo */}
@@ -1089,6 +1234,34 @@ export default function ProjectModal({
               </div>
 
               {/* Dynamic Content Sections */}
+              {isFullscreen && !isMobile && tocItems.length > 0 && isPastTOC && (
+                <div className="fixed left-6 top-28 z-30 hidden">
+                  <div className="backdrop-blur-sm rounded-xl px-4 py-3 flex flex-col gap-2">                    <div className="flex flex-col gap-1">
+                      {tocItems.map((item) => (
+                        <button
+                          key={item._key || item.title}
+                          type="button"
+                          onClick={() => {
+                            if (item.targetSectionId && scrollContainerRef?.current) {
+                              const targetElement = scrollContainerRef.current.querySelector(
+                                `[data-section-number="${item.targetSectionId}"]`
+                              );
+                              if (targetElement) {
+                                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }
+                            }
+                          }}
+                          className="text-left text-[0.8rem] max-w-12 text-gray-700 hover:text-black transition-colors"
+                        >
+                          <span className="font-medium text-[#9ca3af] mr-2">{item.number}</span>
+                          <span>{item.title}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {(() => {
                 // Filter content based on unlock state and visibility settings
                 let sections = project.content || [];
@@ -1129,6 +1302,8 @@ export default function ProjectModal({
                       skipEndRef={skipEndRef}
                       scrollContainerRef={scrollContainerRef}
                       missionRef={missionRef}
+                      tocRef={tocRef}
+                      setTocItems={setTocItems}
                     />
                   ) : (
                     <ScrollReveal key={section._key}>
@@ -1142,6 +1317,8 @@ export default function ProjectModal({
                         scrollContainerRef={scrollContainerRef}
                         projectId={projectId}
                         missionRef={missionRef}
+                        tocRef={tocRef}
+                        setTocItems={setTocItems}
                       />
                     </ScrollReveal>
                   )
@@ -1428,7 +1605,9 @@ function ContentBlock({
   skipEndRef,
   scrollContainerRef,
   projectId,
-  missionRef
+  missionRef,
+  tocRef,
+  setTocItems,
 }: { 
   section: ContentSection; 
   isFullscreen?: boolean; 
@@ -1439,7 +1618,22 @@ function ContentBlock({
   scrollContainerRef?: React.RefObject<HTMLDivElement | null>;
   projectId?: string;
   missionRef?: React.RefObject<HTMLDivElement | null>;
+  tocRef?: React.RefObject<HTMLDivElement | null>;
+  setTocItems?: (items: { _key?: string; number?: string; title?: string; targetSectionId?: string }[]) => void;
 }) {
+  // Sync TOC items upward for sidebar (only when this block is TOC)
+  useEffect(() => {
+    if (section._type === "tableOfContentsSection") {
+      setTocItems?.(
+        (section as any).items?.map((it: any) => ({
+          _key: it._key,
+          number: it.number,
+          title: it.title,
+          targetSectionId: it.targetSectionId,
+        })) || []
+      );
+    }
+  }, [section, setTocItems]);
   const renderContent = () => {
     switch (section._type) {
       case "missionSection":
@@ -1592,20 +1786,28 @@ function ContentBlock({
       const featureImageSrc = section.externalImageUrl
         ? section.externalImageUrl
         : section.image
-          ? urlFor(section.image).width(2400).url()
+          ? urlFor(section.image).width(3200).quality(90).url()
           : null;
 
       const hasVideo = section.mediaType === 'video' && section.muxPlaybackId;
       const isStacked = section.layout === 'stacked';
       const mediaOnLeft = section.mediaPosition === 'left';
       
-      // Determine vertical padding
+      // Determine vertical padding (with mobile increase)
       const paddingMap = {
-        small: 'py-10',
-        normal: 'py-16',
-        large: 'py-20',
+        small: 'py-10 max-md:py-12',
+        normal: 'py-16 max-md:py-18',
+        large: 'py-20 max-md:py-20',
       };
       const verticalPadding = paddingMap[section.verticalPadding || 'normal'];
+
+      // Determine media width class based on mediaSize
+      const mediaSizeMap = {
+        small: 'max-w-[300px]',
+        medium: 'max-w-[600px]',
+        large: 'max-w-none',
+      };
+      const mediaWidthClass = mediaSizeMap[section.mediaSize || 'medium'];
 
       if (isStacked) {
         // Check if there's any text content
@@ -1621,9 +1823,9 @@ function ContentBlock({
               <div className={clsx("content-stretch flex flex-col justify-between relative shrink-0 w-full", verticalPadding)}>
                 {/* Text content in two-column grid - only render if there's text */}
                 {hasTextContent && (
-                  <div className="flex flex-row items-start gap-32 w-full max-md:flex max-md:flex-col max-md:gap-8 mb-8">
+                  <div className="flex flex-row items-start gap-20 w-full max-md:flex max-md:flex-col max-md:gap-8 mb-8">
                     {/* Left column: Labels and heading */}
-                    <div className="content-stretch flex w-120 flex-col gap-3 items-start relative col-start-1">
+                    <div className="w-[49%] shrink-0 content-stretch flex flex-col gap-3 items-start relative max-md:w-full">
                       {/* Section Number + Label */}
                       {(section.sectionNumber || section.sectionLabel) && (
                         <div className="flex items-center gap-2">
@@ -1657,7 +1859,7 @@ function ContentBlock({
 
                     {/* Right column: Description */}
                     {section.description && section.description.length > 0 && (
-                      <div className="leading-normal max-w-120 relative text-gray-500 text-base col-start-3 max-md:col-start-auto max-md:w-full prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 [&>p]:whitespace-pre-wrap">
+                      <div className="leading-normal max-w-120 relative text-gray-600 text-base col-start-3 max-md:col-start-auto max-md:w-full prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 [&>p]:whitespace-pre-wrap">
                         <PortableText value={section.description} components={createPortableTextComponents(section.descriptionHighlightedText, section.descriptionHighlightColor)} />
                       </div>
                     )}
@@ -1668,29 +1870,26 @@ function ContentBlock({
                 <div className="w-full">
                   {/* Video */}
                   {hasVideo && (
-                    <div className="w-full overflow-hidden rounded-[26px]">
-                      <div className="aspect-video w-full">
-                        <VideoPlayer
-                          src={`https://stream.mux.com/${section.muxPlaybackId}.m3u8`}
-                          className="w-full h-full object-cover"
-                          controls={false}
-                          autoPlay
-                          muted
-                          loop
-                        />
-                      </div>
+                    <div className={clsx("w-full overflow-hidden rounded-[26px] mx-auto", mediaWidthClass)}>
+                      <VideoPlayer
+                        src={`https://stream.mux.com/${section.muxPlaybackId}.m3u8`}
+                        className="w-full h-auto rounded-[26px]"
+                        controls={false}
+                        autoPlay
+                        muted
+                        loop
+                      />
                     </div>
                   )}
 
                   {/* Image */}
                   {!hasVideo && featureImageSrc && (
-                    <div className="overflow-hidden rounded-[26px] w-full">
-                      <img
-                        className="w-full object-cover"
-                        alt={section.imageAlt || ""}
-                        src={featureImageSrc}
-                      />
-                    </div>
+                    <ExpandableImage
+                      src={featureImageSrc}
+                      alt={section.imageAlt || ""}
+                      className="w-full h-auto object-contain rounded-[26px]"
+                      containerClassName={clsx("overflow-hidden rounded-[26px] w-full mx-auto", mediaWidthClass)}
+                    />
                   )}
                 </div>
               </div>
@@ -1703,6 +1902,9 @@ function ContentBlock({
       // Check if there's any text content
       const hasTextContent = section.sectionNumber || section.sectionLabel || section.problemLabel || section.heading || (section.description && section.description.length > 0);
       
+      // Determine vertical alignment
+      const verticalAlignClass = section.verticalAlignment === 'top' ? 'items-start' : 'items-center';
+      
       return (
         <div className="flex flex-col">
         <div
@@ -1710,7 +1912,8 @@ function ContentBlock({
           style={{ backgroundColor: section.backgroundColor || '#f9fafb' }}
         >
           <div className={clsx(
-            "content-stretch items-center flex flex-col gap-32 relative shrink-0 w-full md:flex-row max-md:gap-8",
+            "content-stretch flex flex-col gap-14 relative shrink-0 w-full md:flex-row md:gap-20",
+            verticalAlignClass,
             mediaOnLeft && "md:flex-row-reverse",
             verticalPadding,
             !hasTextContent && "justify-center"
@@ -1750,7 +1953,7 @@ function ContentBlock({
 
               {/* Description */}
             {section.description && section.description.length > 0 && (
-                <div className="pt-6 max-w-120 prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 text-gray-500 [&>p]:whitespace-pre-wrap">
+                <div className="pt-2 max-w-120 max-md:max-w-none prose prose-p:my-6 max-md:prose-p:mt-0 max-md:prose-p:mb-3 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 text-gray-600 [&>p]:whitespace-pre-wrap">
                   <PortableText value={section.description} components={createPortableTextComponents(section.descriptionHighlightedText, section.descriptionHighlightColor)} />
                 </div>
               )}
@@ -1758,32 +1961,29 @@ function ContentBlock({
             )}
 
             {/* Right: Image/Video and Description */}
-            <div className="leading-5 max-w-120 flex-items-center relative text-[#4b5563] text-base whitespace-pre-wrap items-center flex flex-col gap-8">
+            <div className="leading-5 flex-1 flex-items-center relative text-[#4b5563] text-base whitespace-pre-wrap items-center flex flex-col gap-8">
               {/* Video */}
               {hasVideo && (
-                <div className="w-full min-w-200 overflow-hidden rounded-[26px] ">
-                  <div className="aspect-video w-full">
-                    <VideoPlayer
-                      src={`https://stream.mux.com/${section.muxPlaybackId}.m3u8`}
-                      className="w-full h-full object-cover"
-                      controls={false}
-                      autoPlay
-                      muted
-                      loop
-                    />
-                  </div>
+                <div className={clsx("w-full overflow-hidden rounded-[26px] mx-auto", mediaWidthClass)}>
+                  <VideoPlayer
+                    src={`https://stream.mux.com/${section.muxPlaybackId}.m3u8`}
+                    className="w-full h-auto rounded-[26px]"
+                    controls={false}
+                    autoPlay
+                    muted
+                    loop
+                  />
                 </div>
               )}
               
               {/* Image */}
               {!hasVideo && featureImageSrc && (
-                <div className="overflow-hidden rounded-[26px] w-full">
-                  <img
-                    className="w-full object-cover"
-                    alt={section.imageAlt || ""}
-                    src={featureImageSrc}
-                  />
-                </div>
+                <ExpandableImage
+                  src={featureImageSrc}
+                  alt={section.imageAlt || ""}
+                  className="w-full h-auto object-contain rounded-[26px]"
+                  containerClassName={clsx("overflow-hidden rounded-[26px] w-full mx-auto", mediaWidthClass)}
+                />
               )}
               
               
@@ -1801,6 +2001,42 @@ function ContentBlock({
           : section.layout === "3-col"
           ? "grid-cols-3"
           : "grid-cols-4";
+
+      // Masonry layout: center images and let them keep natural width (up to a max)
+      if (section.layout === "masonry") {
+        return (
+          <div className="content-stretch flex flex-col gap-6 px-8 md:px-[8%] xl:px-[175px] py-16 relative shrink-0 w-full">
+            <div className="w-full flex flex-wrap justify-center gap-6 items-start">
+              {section.images?.map((image) => (
+                <div
+                  key={image._key}
+                  className="flex flex-col items-center rounded-[24px] shadow-[0px_2px_8px_0px_#eaeaea] overflow-hidden max-w-110 w-full"
+                >
+                  <img
+                    className="block w-full h-auto object-contain"
+                    alt={image.alt || ""}
+                    src={urlFor(image).width(2000).quality(90).url()}
+                  />
+                  {image.caption && (
+                    <p className="w-full px-4 py-3 text-sm text-gray-600 text-center">
+                      {image.caption}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Caption/Title below gallery */}
+            {section.title && (
+              <p className="font-normal pt-2 leading-5 relative shrink-0 text-gray-400 text-base text-center w-full">
+                {section.title}
+              </p>
+            )}
+          </div>
+        );
+      }
+
+      // Default grid layouts
       return (
         <div className="content-stretch flex flex-col gap-4 px-8 md:px-[8%] xl:px-[175px] py-10 relative shrink-0 w-full">
           {/* Image Grid */}
@@ -1810,15 +2046,13 @@ function ContentBlock({
             {section.images?.map((image) => (
               <div
                 key={image._key}
-                className="aspect-[200/300] content-stretch flex flex-[1_0_0] flex-col items-start min-h-px min-w-px overflow-clip relative rounded-[26px] shadow-[0px_2px_8px_0px_#eaeaea] shrink-0"
+                className="content-stretch flex flex-col items-start min-h-px min-w-px overflow-hidden relative rounded-[26px] shadow-[0px_2px_8px_0px_#eaeaea] shrink-0"
               >
-                <div className="flex-[1_0_0] min-h-px min-w-px relative rounded-[26px] shrink-0 w-full">
-                  <img
-                    className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[26px] size-full"
-                    alt={image.alt || ""}
-                    src={urlFor(image).width(400).height(600).url()}
-                  />
-                </div>
+                <img
+                  className="w-full h-auto object-contain"
+                  alt={image.alt || ""}
+                  src={urlFor(image).width(1600).quality(90).url()}
+                />
               </div>
             ))}
           </div>
@@ -1835,7 +2069,7 @@ function ContentBlock({
     case "textSection":
       if (section.layout === "two-col") {
         return (
-          <div className="flex gap-20 items-start px-8 md:px-[8%] xl:px-[175px] py-10 relative shrink-0 w-full max-md:flex-col max-md:gap-8">
+          <div className="flex gap-20 items-start px-8 md:px-[8%] xl:px-[175px] py-14 max-md:py-8 relative shrink-0 w-full max-md:flex-col max-md:gap-8">
             <div className="w-[49%] shrink-0 content-stretch flex flex-col gap-3 items-start relative max-md:w-full">
               {section.label && (
                 <p className="leading-5 relative uppercase shrink-0 text-[#9ca3af] text-base">
@@ -1843,12 +2077,12 @@ function ContentBlock({
                 </p>
               )}
               {section.heading && (
-                <p className="leading-7 relative shrink-0 text-2xl text-black whitespace-pre-wrap">
+                <p className={clsx("leading-7 relative shrink-0 text-2xl text-black", isFullscreen && "whitespace-pre-wrap")}>
                   {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
                 </p>
               )}
             </div>
-            <div className="flex-1 leading-normal relative text-[#4b5563] text-base whitespace-pre-wrap max-md:w-full prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0">
+            <div className="flex-1 leading-normal relative text-[#4b5563] text-base max-md:w-full prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 [&>p]:whitespace-pre-wrap">
               {section.body && <PortableText value={section.body} components={portableTextComponents} />}
             </div>
           </div>
@@ -1856,19 +2090,19 @@ function ContentBlock({
       }
       if (section.layout === "centered") {
         return (
-          <div className="content-stretch flex flex-col gap-4 items-center px-8 md:px-[8%] xl:px-[175px] py-10 relative shrink-0 w-full">
+          <div className="content-stretch flex flex-col gap-4 items-center px-8 md:px-[8%] xl:px-[175px] py-10 max-md:py-6 relative shrink-0 w-full">
             {section.label && (
               <p className="leading-5 relative shrink-0 uppercase text-[#9ca3af] text-base text-center">
                 {section.label}
               </p>
             )}
             {section.heading && (
-              <p className="leading-7 relative shrink-0 text-2xl text-black text-center whitespace-pre-line">
+              <p className={clsx("leading-7 relative shrink-0 text-2xl text-black text-center", isFullscreen && "whitespace-pre-line")}>
                 {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
               </p>
             )}
             {section.body && (
-              <div className="leading-normal relative text-[#4b5563] text-base whitespace-pre-wrap text-center prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 max-w-[600px]">
+              <div className="leading-normal relative text-[#4b5563] text-base text-center prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 max-w-[600px] [&>p]:whitespace-pre-wrap">
                 <PortableText value={section.body} components={portableTextComponents} />
               </div>
             )}
@@ -1877,7 +2111,7 @@ function ContentBlock({
       }
       if (section.layout === "single-col") {
         return (
-          <div className="content-stretch grid grid-cols-[2fr_1fr_2fr] items-start px-8 md:px-[8%] xl:px-[175px] py-10 relative shrink-0 w-full max-md:flex max-md:flex-col max-md:gap-8">
+          <div className="content-stretch grid grid-cols-[2fr_1fr_2fr] items-start px-8 md:px-[8%] xl:px-[175px] py-10 max-md:py-6 relative shrink-0 w-full max-md:flex max-md:flex-col max-md:gap-8">
             <div className="content-stretch flex flex-col gap-3 items-start relative col-start-1">
               {section.label && (
                 <p className="leading-5 relative shrink-0 uppercase text-[#9ca3af] text-base">
@@ -1885,12 +2119,12 @@ function ContentBlock({
                 </p>
               )}
               {section.heading && (
-                <p className="leading-7 min-w-full relative shrink-0 text-2xl text-black whitespace-pre-wrap">
+                <p className={clsx("leading-7 min-w-full relative shrink-0 text-2xl text-black", isFullscreen && "whitespace-pre-wrap")}>
                   {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
                 </p>
               )}
               {section.body && (
-                <div className="leading-normal pt-4 relative text-[#4b5563] max-w-100 text-base whitespace-pre-wrap prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 w-full">
+                <div className="leading-normal pt-4 relative text-[#4b5563] max-w-100 text-base prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 w-full [&>p]:whitespace-pre-wrap">
                   <PortableText value={section.body} components={portableTextComponents} />
                 </div>
               )}
@@ -1899,19 +2133,19 @@ function ContentBlock({
         );
       }
       return (
-        <div className="content-stretch flex flex-col gap-4 items-start px-8 md:px-[8%] xl:px-[175px] py-10 relative shrink-0 w-full">
+        <div className="content-stretch flex flex-col gap-4 items-start px-8 md:px-[8%] xl:px-[175px] py-10 max-md:py-6 relative shrink-0 w-full">
           {section.label && (
             <p className="leading-5 relative shrink-0 uppercase text-[#9ca3af] text-base">
               {section.label}
             </p>
           )}
           {section.heading && (
-            <p className="leading-7 relative shrink-0 text-2xl text-black whitespace-pre-line">
+            <p className={clsx("leading-7 relative shrink-0 text-2xl text-black", isFullscreen && "whitespace-pre-line")}>
               {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
             </p>
           )}
           {section.body && (
-            <div className="leading-normal relative text-[#4b5563] text-base whitespace-pre-wrap prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0">
+            <div className="leading-normal relative text-[#4b5563] text-base prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 [&>p]:whitespace-pre-wrap">
               <PortableText value={section.body} components={portableTextComponents} />
             </div>
           )}
@@ -1947,7 +2181,7 @@ function ContentBlock({
             className={clsx(
               "overflow-hidden",
               sizeClass,
-              section.rounded !== false && "rounded-[26px]"
+              section.rounded !== false && "rounded-3xl"
             )}
           >
             <img
@@ -2363,12 +2597,12 @@ function ContentBlock({
         const textImageSrc = section.imageUrl 
           ? section.imageUrl 
           : section.image 
-            ? urlFor(section.image).width(1200).url()
+            ? urlFor(section.image).width(2400).url()
             : null;
 
         return (
           <div
-            className="content-stretch flex flex-col py-8 max-md:flex-col w-full relative shrink-0"
+            className="content-stretch flex flex-col pt-14 py-8 max-md:flex-col w-full relative shrink-0"
           >
             {/* Left: Text Content */}
             <div className="max-md:w-full px-8 md:px-[8%] xl:px-[175px] flex flex-col ">
@@ -2579,7 +2813,7 @@ function ContentBlock({
                           {/* Headline */}
                           <h3 
                             className={clsx(
-                              card.headline.length < 5 ? "text-3xl" : "text-xl",
+                              card.headline.length < 5 ? "text-5xl" : "text-xl",
                               "font-normal leading-tight whitespace-pre-wrap"
                             )}
                             style={{ color: card.headlineColor || '#111827' }}
@@ -2612,8 +2846,8 @@ function ContentBlock({
                       {/* Headline */}
                       <h3 
                         className={clsx(
-                          card.headline.length < 5 ? "text-3xl" : "text-xl",
-                          "w-56 font-normal leading-normal whitespace-pre-wrap"
+                          card.headline.length < 5 ? "text-5xl" : "text-xl",
+                          "w-64 font-normal leading-normal whitespace-pre-wrap"
                         )}
                         style={{ color: card.headlineColor || '#111827' }}
                       >
@@ -2648,9 +2882,9 @@ function ContentBlock({
         
         // Image size classes
         const headerImageSizeMap = {
-          small: 'w-8 h-8',
-          medium: 'w-12 h-12',
-          large: 'w-16 h-16',
+          small: 'w-24',
+          medium: 'w-32',
+          large: 'w-40',
         };
         const headerImageSize = headerImageSizeMap[section.imageSize || 'medium'];
         
@@ -2686,11 +2920,11 @@ function ContentBlock({
             {/* Left side: Optional image + Number */}
             <div className="flex items-center gap-4">
               {headerLeftImgSrc && (
-                <div className={clsx("rounded-lg overflow-hidden shrink-0", headerImageSize)}>
+                <div className={clsx("rounded-lg object-contain overflow-hidden shrink-0", headerImageSize)}>
                   <img
                     src={headerLeftImgSrc}
                     alt=""
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto object-contain"
                   />
                 </div>
               )}
@@ -2725,11 +2959,11 @@ function ContentBlock({
                 </span>
               )}
               {headerRightImgSrc && (
-                <div className={clsx("rounded-lg overflow-hidden shrink-0", headerImageSize)}>
+                <div className={clsx("rounded-lg object-contain overflow-hidden shrink-0", headerImageSize)}>
                   <img
                     src={headerRightImgSrc}
                     alt=""
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto object-contain"
                   />
                 </div>
               )}
@@ -2741,10 +2975,11 @@ function ContentBlock({
         const tocBgColor = section.backgroundColor || '#f3f4f6';
         const tocAccentColor = section.accentColor || '#ec4899';
         const hasHeaderContent = section.sectionNumber || section.sectionTitle || section.subtitle || section.hintText || section.sectionDescription;
-        
+
         return (
-          <div 
-            className="content-stretch flex flex-col items-start gap-12 px-6 md:px-6 xl:px-[175px] py-16 relative shrink-0 w-full"
+          <div
+            ref={tocRef}
+            className="content-stretch flex flex-col items-start gap-6 md:gap-12 px-6 md:px-8 xl:px-[175px] py-10 md:py-16 relative shrink-0 w-full"
             style={{ backgroundColor: tocBgColor }}
           >
             {/* Only render header wrapper if there's content */}
@@ -2752,26 +2987,26 @@ function ContentBlock({
               <div className="w-full mx-auto gap-2 flex flex-col items-start">
                 {/* Header: Number + Title + Subtitle */}
                 {(section.sectionNumber || section.sectionTitle || section.subtitle) && (
-                  <div className="flex items-center gap-4">
+                  <div className="flex flex-wrap items-center gap-2 md:gap-4">
                     {section.sectionNumber && (
-                      <span 
-                        className="text-2xl font-normal"
+                      <span
+                        className="text-xl md:text-2xl font-normal"
                         style={{ color: tocAccentColor }}
                       >
                         {section.sectionNumber}
                       </span>
                     )}
                     {section.sectionTitle && (
-                      <span 
-                        className="text-2xl font-semibold"
+                      <span
+                        className="text-xl md:text-2xl font-semibold"
                         style={{ color: tocAccentColor }}
                       >
                         {section.sectionTitle}
                       </span>
                     )}
                     {section.subtitle && (
-                      <span 
-                        className="text-2xl font-normal"
+                      <span
+                        className="text-xl md:text-2xl font-normal"
                         style={{ color: tocAccentColor }}
                       >
                         {section.subtitle}
@@ -2783,7 +3018,7 @@ function ContentBlock({
                 {/* Hint Text */}
                 {section.hintText && (
                   <div className="flex items-center text-gray-500">
-                    <span className="text-base">{section.hintText}</span>
+                    <span className="text-sm md:text-base">{section.hintText}</span>
                   </div>
                 )}
 
@@ -2791,7 +3026,7 @@ function ContentBlock({
                 {section.sectionDescription && (
                   <>
                     <div className="w-full h-px bg-gray-300 mt-4" />
-                    <p className="text-base text-gray-400 mt-4 whitespace-pre-wrap">
+                    <p className="text-sm md:text-base text-gray-400 mt-4 whitespace-pre-wrap">
                       {section.sectionDescription}
                     </p>
                   </>
@@ -2801,7 +3036,7 @@ function ContentBlock({
 
             {/* TOC Items Grid */}
             {section.items && section.items.length > 0 && (
-              <div className="flex gap-12 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 w-full">
                 {section.items.map((item) => {
                   const itemImageSrc = item.externalImageUrl 
                     ? item.externalImageUrl 
@@ -2815,20 +3050,20 @@ function ContentBlock({
                       type="button"
                       onClick={() => {
                         // Scroll to target section if specified
-                        if (item.targetSectionId && scrollContainerRef?.current) {
-                          const targetElement = scrollContainerRef.current.querySelector(
-                            `[data-section-number="${item.targetSectionId}"]`
-                          );
-                          if (targetElement) {
-                            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                          }
-                        }
+                    if (item.targetSectionId && scrollContainerRef?.current) {
+                      const targetElement = scrollContainerRef.current.querySelector(
+                        `[data-section-number="${item.targetSectionId}"]`
+                      );
+                      if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                      }
+                    }
                       }}
-                      className="flex flex-col items-start gap-3 p-8 py-12 bg-white rounded-3xl shadow-default hover:shadow-2xl hover:scale-[1.005] transition-all duration-200 cursor-pointer text-left group flex-1"
+                      className="flex flex-col items-start gap-3 p-6 md:p-8 md:py-12 bg-white rounded-2xl md:rounded-3xl shadow-default hover:shadow-2xl hover:scale-[1.005] transition-all duration-200 cursor-pointer text-left group"
                     >
                       {/* Image/Icon */}
                       {itemImageSrc && (
-                        <div className="w-16 h-16 shadow-none rounded-xl overflow-hidden bg-gray-100">
+                        <div className="w-12 h-12 md:w-16 md:h-16 shadow-none rounded-xl overflow-hidden bg-gray-100">
                           <img
                             src={itemImageSrc}
                             alt=""
@@ -2837,16 +3072,16 @@ function ContentBlock({
                         </div>
                       )}
                       
-                      <div className="flex flex-col gap-1">
+                      <div className="flex flex-col gap-1 w-full min-w-0">
                       {/* Number */}
                       {item.number && (
-                        <span className="text-xl text-gray-400">
+                        <span className="text-lg md:text-xl text-gray-400">
                           {item.number}
                         </span>
                       )}
                       
                       {/* Title */}
-                      <span className="text-xl text-gray-900">
+                      <span className="text-lg md:text-xl text-gray-900 hyphens-auto" lang="en">
                         {item.title}
                       </span>
                       </div>

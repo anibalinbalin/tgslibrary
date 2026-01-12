@@ -109,6 +109,18 @@ export const twoColumnImageSection = defineType({
       initialValue: 'large',
     }),
     defineField({
+      name: 'leftImageCustomWidth',
+      title: 'Left Image Custom Width',
+      type: 'string',
+      description: 'CSS max-width value (e.g., "200px", "15rem", "50%"). Only applies to "Two Images Only" layout.',
+    }),
+    defineField({
+      name: 'rightImageCustomWidth',
+      title: 'Right Image Custom Width',
+      type: 'string',
+      description: 'CSS max-width value (e.g., "200px", "15rem", "50%"). Only applies to "Two Images Only" layout.',
+    }),
+    defineField({
       name: 'leftImage',
       title: 'Left Image',
       type: 'image',
