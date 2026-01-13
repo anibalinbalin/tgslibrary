@@ -241,8 +241,8 @@ export default function Testimonial({
                 "Read more"
               ) : (
                 <div className="relative shrink-0 size-5">
-                  {/* Desktop: up-left arrow, Mobile: down-right arrow */}
-                  {isDesktop ? <CollapseArrowIcon /> : <ExpandArrowIcon />}
+                  {/* Collapse arrow pointing northwest for both desktop and mobile */}
+                  <CollapseArrowIcon />
                 </div>
               )}
             </button>
