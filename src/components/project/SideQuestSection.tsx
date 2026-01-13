@@ -93,7 +93,7 @@ export default function SideQuestSection({
           {/* Header */}
           <div className="flex flex-col">
             {label && (
-              <p className="text-[#9ca3af] text-base pb-2">{label}</p>
+              <p className="text-[#9ca3af] uppercase text-base pb-2">{label}</p>
             )}
             {title && (
               <h3 className="text-2xl text-black">{renderHighlightedText(title, highlightedText, highlightColor)}</h3>
@@ -126,7 +126,7 @@ export default function SideQuestSection({
           {teamMembers && teamMembers.length > 0 && (
             <div className="flex flex-col gap-2">
               {teamLabel && (
-                <p className="text-[#9ca3af] text-base">{teamLabel}</p>
+                <p className="text-[#9ca3af] uppercase text-base">{teamLabel}</p>
               )}
               <div className="flex flex-col">
                 {teamMembers.map((member) => (

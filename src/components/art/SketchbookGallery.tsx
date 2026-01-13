@@ -37,24 +37,19 @@ function SketchbookImage({
   return (
     <button
       onClick={onClick}
-      className="flex-none inline-flex h-[200px] md:h-[300px] lg:h-96 rounded-xl overflow-hidden cursor-pointer items-center justify-center relative"
-      style={{ width: "auto", minWidth: "150px" }}
+      className="flex-none h-[200px] md:h-[300px] lg:h-96 rounded-xl overflow-hidden cursor-pointer relative w-fit"
     >
-      {/* Shimmer placeholder */}
-      <div 
-        className={clsx(
-          "absolute inset-0 rounded-xl transition-opacity duration-500 ease-out",
-          imageLoaded ? "opacity-0" : "opacity-100 animate-shimmer"
-        )}
-      />
+      {/* Shimmer placeholder - matches image size */}
+      {!imageLoaded && (
+        <div className="absolute inset-0 rounded-xl animate-shimmer" />
+      )}
       <img
         src={image.imageSrc}
         alt=""
         className={clsx(
-          "block h-[200px] md:h-[300px] lg:h-96 w-auto max-w-none object-contain transition-opacity duration-500 ease-out",
+          "block h-[200px] md:h-[300px] lg:h-96 w-auto object-contain rounded-xl transition-opacity duration-500 ease-out",
           imageLoaded ? "opacity-100" : "opacity-0"
         )}
-        style={{ maxWidth: "unset" }}
         onLoad={() => {
           setImageLoaded(true);
           onLoad?.();

@@ -715,14 +715,14 @@ export default function ProjectModal({
   const [error, setError] = useState<string | null>(null);
   // Check if project was previously unlocked in this session
   const [isUnlocked, setIsUnlocked] = useState(() => isProjectUnlocked(projectId));
-  const [isMobile, setIsMobile] = useState(false);
-  
-  // Detect mobile device
+  // Initialize isMobile with actual value to prevent animation flash on mobile
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
+
+  // Detect mobile device changes
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
@@ -1075,7 +1075,7 @@ export default function ProjectModal({
           {isFullscreen && (
             <div 
               className={clsx(
-                "content-stretch flex flex-col items-start px-14 max-md:px-6 relative shrink-0 w-full md:sticky md:top-0 z-10 transition-all duration-300 ease-out",
+                "content-stretch flex flex-col items-start px-16 max-md:px-8 relative shrink-0 w-full md:sticky md:top-0 z-10 transition-all duration-300 ease-out",
                 isScrolled ? "py-4" : "py-8"
               )}
               /*style={{ 
@@ -1135,9 +1135,9 @@ export default function ProjectModal({
               {!(isUnlocked && isMobile && projectId !== 'nasa') && (
               <>
               <div className="content-stretch flex flex-col gap-8 items-start justify-center px-8 md:px-[8%] xl:px-[175px] pt-32 pb-16 relative shrink-0 w-full">
-                {/* Logo */}
+                {/* Logo - skip animation for Apple on mobile since logo is visible from homepage */}
                 {project.logo && (
-                  <ScrollReveal variant="fade" rootMargin="0px">
+                  projectId === 'apple' && isMobile ? (
                     <div className="relative shrink-0 size-20 rounded-[16px] overflow-hidden">
                       <img
                         className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
@@ -1145,7 +1145,17 @@ export default function ProjectModal({
                         src={urlFor(project.logo).width(160).height(160).url()}
                       />
                     </div>
-                  </ScrollReveal>
+                  ) : (
+                    <ScrollReveal variant="fade" rootMargin="0px">
+                      <div className="relative shrink-0 size-20 rounded-[16px] overflow-hidden">
+                        <img
+                          className="absolute inset-0 max-w-none object-cover pointer-events-none size-full"
+                          alt=""
+                          src={urlFor(project.logo).width(160).height(160).url()}
+                        />
+                      </div>
+                    </ScrollReveal>
+                  )
                 )}
 
                 {/* Title and Metadata */}
@@ -1578,13 +1588,8 @@ function TestimonialBlock({
                 fullQuote && fullQuote.length > 0 ? "Read more" : null
               ) : (
                 <div className="relative shrink-0 size-5">
-                  {/* Desktop: up-left arrow, Mobile: down-right arrow */}
-                  <span className="hidden max-md:block">
-                    <ExpandArrowIcon />
-                  </span>
-                  <span className="block max-md:hidden">
-                    <CollapseArrowIcon />
-                  </span>
+                  {/* Northwest arrow for both desktop and mobile */}
+                  <CollapseArrowIcon />
                 </div>
               )}
             </button>
@@ -1795,8 +1800,8 @@ function ContentBlock({
       
       // Determine vertical padding (with mobile increase)
       const paddingMap = {
-        small: 'py-10 max-md:py-12',
-        normal: 'py-16 max-md:py-18',
+        small: 'py-10 max-md:py-10',
+        normal: 'py-16 max-md:py-14',
         large: 'py-20 max-md:py-20',
       };
       const verticalPadding = paddingMap[section.verticalPadding || 'normal'];
@@ -2068,8 +2073,12 @@ function ContentBlock({
 
     case "textSection":
       if (section.layout === "two-col") {
+        const hasBody = section.body && section.body.length > 0;
         return (
-          <div className="flex gap-20 items-start px-8 md:px-[8%] xl:px-[175px] py-14 max-md:py-8 relative shrink-0 w-full max-md:flex-col max-md:gap-8">
+          <div className={clsx(
+            "flex gap-20 items-start px-8 md:px-[8%] xl:px-[175px] py-14 max-md:py-8 relative shrink-0 w-full max-md:flex-col",
+            hasBody ? "max-md:gap-8" : "max-md:gap-0"
+          )}>
             <div className="w-[49%] shrink-0 content-stretch flex flex-col gap-3 items-start relative max-md:w-full">
               {section.label && (
                 <p className="leading-5 relative uppercase shrink-0 text-[#9ca3af] text-base">
@@ -2077,14 +2086,16 @@ function ContentBlock({
                 </p>
               )}
               {section.heading && (
-                <p className={clsx("leading-7 relative shrink-0 text-2xl text-black", isFullscreen && "whitespace-pre-wrap")}>
+                <p className={clsx("leading-7 relative shrink-0 text-2xl text-black max-md:max-w-[85%] max-md:text-left", isFullscreen && "whitespace-pre-wrap max-md:whitespace-normal")}>
                   {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
                 </p>
               )}
             </div>
-            <div className="flex-1 leading-normal relative text-[#4b5563] text-base max-md:w-full prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 [&>p]:whitespace-pre-wrap">
-              {section.body && <PortableText value={section.body} components={portableTextComponents} />}
-            </div>
+            {hasBody && (
+              <div className="flex-1 leading-normal relative text-[#4b5563] text-base max-md:w-full prose prose-p:my-6 prose-ul:list-disc prose-ul:ml-5 prose-ul:space-y-2 prose-ol:list-decimal prose-ol:ml-5 prose-ol:space-y-2 first:prose-p:mt-0 last:prose-p:mb-0 [&>p]:whitespace-pre-wrap">
+                <PortableText value={section.body} components={portableTextComponents} />
+              </div>
+            )}
           </div>
         );
       }
@@ -2097,7 +2108,7 @@ function ContentBlock({
               </p>
             )}
             {section.heading && (
-              <p className={clsx("leading-7 relative shrink-0 text-2xl text-black text-center", isFullscreen && "whitespace-pre-line")}>
+              <p className={clsx("leading-7 relative shrink-0 text-2xl text-black text-center max-md:text-left max-md:max-w-[85%] max-md:self-start", isFullscreen && "whitespace-pre-line max-md:whitespace-normal")}>
                 {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
               </p>
             )}
@@ -2119,7 +2130,7 @@ function ContentBlock({
                 </p>
               )}
               {section.heading && (
-                <p className={clsx("leading-7 min-w-full relative shrink-0 text-2xl text-black", isFullscreen && "whitespace-pre-wrap")}>
+                <p className={clsx("leading-7 min-w-full max-md:min-w-0 max-md:max-w-[85%] relative shrink-0 text-2xl text-black", isFullscreen && "whitespace-pre-wrap max-md:whitespace-normal")}>
                   {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
                 </p>
               )}
@@ -2140,7 +2151,7 @@ function ContentBlock({
             </p>
           )}
           {section.heading && (
-            <p className={clsx("leading-7 relative shrink-0 text-2xl text-black", isFullscreen && "whitespace-pre-line")}>
+            <p className={clsx("leading-7 relative shrink-0 text-2xl text-black max-md:max-w-[85%]", isFullscreen && "whitespace-pre-line max-md:whitespace-normal")}>
               {renderHighlightedText(section.heading, section.highlightedText, section.highlightColor)}
             </p>
           )}
