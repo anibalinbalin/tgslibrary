@@ -309,9 +309,7 @@ export const SHELF_BOOKS_QUERY = `
     review,
     dateRead
   }
-`;
-
-// Query to get all unique years from shelf books
+`;// Query to get all unique years from shelf books
 export const BOOK_YEARS_QUERY = `
   array::unique(*[_type == "shelfItem" && isPublished == true && mediaType == "book" && year != null].year) | order(@ desc)
 `;// ============================================
