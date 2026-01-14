@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Routes, Route, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import svgPaths from "./imports/svg-2tsxp86msm";
 import clsx from "clsx";
 import { imgGroup } from "./imports/svg-poktt";
@@ -1105,29 +1106,32 @@ export default function App() {
   }, []);
 
   return (
-    <Routes>
-      {/* Home page layout - stays mounted for all project modals */}
-      <Route path="/" element={<HomePage />}>
-        {/* These nested routes keep HomePage mounted when navigating between them */}
-        <Route index element={null} />
-        <Route path="project/:slug" element={null} />
-        <Route path="project/:slug/:mode" element={null} />
-      </Route>
-      
-      {/* Art page */}
-      <Route path="/art" element={<ArtPage />} />
-      
-      {/* About page */}
-      <Route path="/about" element={<AboutPage />} />
-      
-      {/* Polaroid Studio page */}
-      <Route path="/polaroid" element={<PolaroidPage />} />
+    <>
+      <Routes>
+        {/* Home page layout - stays mounted for all project modals */}
+        <Route path="/" element={<HomePage />}>
+          {/* These nested routes keep HomePage mounted when navigating between them */}
+          <Route index element={null} />
+          <Route path="project/:slug" element={null} />
+          <Route path="project/:slug/:mode" element={null} />
+        </Route>
+        
+        {/* Art page */}
+        <Route path="/art" element={<ArtPage />} />
+        
+        {/* About page */}
+        <Route path="/about" element={<AboutPage />} />
+        
+        {/* Polaroid Studio page */}
+        <Route path="/polaroid" element={<PolaroidPage />} />
 
-      {/* Library page */}
-      <Route path="/library" element={<LibraryPage />} />
+        {/* Library page */}
+        <Route path="/library" element={<LibraryPage />} />
 
-      {/* Screentime Receipt page */}
-      <Route path="/screentime" element={<ScreentimePage />} />
-    </Routes>
+        {/* Screentime Receipt page */}
+        <Route path="/screentime" element={<ScreentimePage />} />
+      </Routes>
+      <Analytics />
+    </>
   );
 }
