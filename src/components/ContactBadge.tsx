@@ -107,7 +107,7 @@ export default function ContactBadge({
         <span>Working on something cool? Get in</span>{" "}
         <a 
           href="mailto:michelletheresaliu@gmail.com" 
-          className="[text-decoration-skip-ink:none] [text-underline-position:from-font] font-semibold text-emerald-500 hover:!text-emerald-600 transition-colors"
+          className="[text-decoration-skip-ink:none] [text-underline-position:from-font] font-semibold text-emerald-500 hover:!text-blue-500 transition-colors"
         >
           touch
         </a>!
