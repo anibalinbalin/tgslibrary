@@ -314,9 +314,7 @@ export const BOOK_YEARS_QUERY = `
   array::unique(*[_type == "shelfItem" && isPublished == true && mediaType == "book" && year != null].year) | order(@ desc)
 `;// ============================================
 // EXPERIMENT PROJECT QUERIES
-// ============================================
-
-// Query for all experiment projects (side projects like Polaroid, Library, etc.)
+// ============================================// Query for all experiment projects (side projects like Polaroid, Library, etc.)
 export const EXPERIMENT_PROJECTS_QUERY = `
   *[_type == "experimentProject" && isPublished == true] | order(order asc) {
     _id,

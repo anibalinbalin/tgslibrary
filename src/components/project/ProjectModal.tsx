@@ -3070,7 +3070,7 @@ function ContentBlock({
                       }
                     }
                       }}
-                      className="flex flex-col items-start gap-3 p-6 md:p-8 md:py-12 bg-white rounded-2xl md:rounded-3xl shadow-default hover:shadow-2xl hover:scale-[1.005] transition-all duration-200 cursor-pointer text-left group"
+                      className="flex flex-col items-start gap-3 p-6 md:p-8 md:py-12 bg-white rounded-2xl md:rounded-3xl shadow-default shadow-default-hover hover:scale-[1.005] transition-all duration-200 cursor-pointer text-left group"
                     >
                       {/* Image/Icon */}
                       {itemImageSrc && (
