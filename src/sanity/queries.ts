@@ -330,9 +330,7 @@ export const EXPERIMENT_PROJECTS_QUERY = `
       tools
     }
   }
-`;
-
-// Query for a single experiment project by projectId
+`;// Query for a single experiment project by projectId
 export const EXPERIMENT_PROJECT_BY_ID_QUERY = `
   *[_type == "experimentProject" && projectId == $projectId][0] {
     _id,
