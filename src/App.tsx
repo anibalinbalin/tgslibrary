@@ -22,6 +22,7 @@ import { useScrollLock } from "./utils/useScrollLock";
 import { initCursorCompatibility } from "./utils/cursorCompat";
 import ContactBadge from "./components/ContactBadge";
 import NavigationTabs from "./components/NavigationTabs";
+import NotFound from "./components/NotFound";
 
 // CSS for fade up animation
 const fadeUpStyles = `
@@ -1134,6 +1135,9 @@ export default function App() {
 
       {/* Screentime Receipt page */}
       <Route path="/screentime" element={<ScreentimePage />} />
+
+      {/* 404 - catch all invalid routes */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }
