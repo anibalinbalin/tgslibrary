@@ -168,10 +168,22 @@ export default function LibraryPage() {
     }, 280);
   };
 
-  const handleAddBook = (title: string) => {
-    // Handle book suggestion submission
-    console.log("Book suggestion:", title);
-    // You could add this to a database or state here
+  const handleAddBook = async (title: string) => {
+    try {
+      const response = await fetch('/api/book-suggestion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ bookTitle: title }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to submit book suggestion');
+      }
+    } catch (error) {
+      console.error('Error submitting book suggestion:', error);
+    }
   };
 
   return (
