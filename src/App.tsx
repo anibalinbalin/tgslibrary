@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Routes, Route, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useParams, useNavigate, useLocation } from "react-router-dom";
 import svgPaths from "./imports/svg-2tsxp86msm";
 import clsx from "clsx";
 import { imgGroup } from "./imports/svg-poktt";
@@ -1135,6 +1135,10 @@ export default function App() {
 
       {/* Screentime Receipt page */}
       <Route path="/screentime" element={<ScreentimePage />} />
+
+      {/* Redirects */}
+      <Route path="/home" element={<Navigate to="/" replace />} />
+      <Route path="/work" element={<Navigate to="/" replace />} />
 
       {/* 404 - catch all invalid routes */}
       <Route path="*" element={<NotFound />} />
