@@ -24,7 +24,7 @@ export default function NotFound() {
           </p>
           <Link
             to="/"
-            className="font-['Figtree',sans-serif] text-lg text-blue-500 hover:text-blue-400 transition-colors duration-200 underline underline-offset-2"
+            className="font-['Figtree',sans-serif] text-lg text-blue-500 hover:text-blue-400 transition-colors duration-200"
           >
             return home
           </Link>
