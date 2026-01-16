@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Routes, Route, Navigate, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Routes, Route, useParams, useNavigate, useLocation } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import svgPaths from "./imports/svg-2tsxp86msm";
@@ -23,6 +24,7 @@ import { useScrollLock } from "./utils/useScrollLock";
 import { initCursorCompatibility } from "./utils/cursorCompat";
 import ContactBadge from "./components/ContactBadge";
 import NavigationTabs from "./components/NavigationTabs";
+import NotFound from "./components/NotFound";
 
 // CSS for fade up animation
 const fadeUpStyles = `
@@ -1134,6 +1136,16 @@ export default function App() {
         {/* Library page */}
         <Route path="/library" element={<LibraryPage />} />
 
+      {/* Screentime Receipt page */}
+      <Route path="/screentime" element={<ScreentimePage />} />
+
+      {/* Redirects */}
+      <Route path="/home" element={<Navigate to="/" replace />} />
+      <Route path="/work" element={<Navigate to="/" replace />} />
+
+      {/* 404 - catch all invalid routes */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
         {/* Screentime Receipt page */}
         <Route path="/screentime" element={<ScreentimePage />} />
       </Routes>
