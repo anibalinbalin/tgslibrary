@@ -224,7 +224,7 @@ function AddBookModal({ onClose, onAddBook }: { onClose: () => void; onAddBook: 
       <div className="absolute right-0 top-[calc(100%+12px)] z-50 bg-white rounded-[16px] w-[calc(100vw-40px)] sm:w-[420px] max-w-[420px] animate-in fade-in slide-in-from-top-2 duration-300">
         <div aria-hidden="true" className="absolute border border-[rgba(0,0,0,0.2)] border-solid inset-0 pointer-events-none rounded-[16px] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)]" />
         <div className="content-stretch flex flex-col gap-[23px] items-start p-[24px] relative w-full">
-          <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-[20px] tracking-[-0.45px] text-black w-full" style={{ fontVariationSettings: "'wdth' 100" }}>
+          <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-base tracking-[-0.45px] text-black w-full" style={{ fontVariationSettings: "'wdth' 100" }}>
             <p className="leading-[25px]">
               Have a book suggestion?
               <br />

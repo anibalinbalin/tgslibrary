@@ -41,12 +41,12 @@ export function AddBookModal({ onClose, onAddBook }: AddBookModalProps) {
       {/* Modal - positioned below the button, right-aligned with plus button */}
       <div className="absolute right-0 top-[calc(100%+12px)] z-50 bg-white rounded-[16px] w-[calc(100vw-40px)] sm:w-[420px] max-w-[420px] animate-modal-in">
         <div aria-hidden="true" className="absolute border border-gray-200 border-solid inset-0 pointer-events-none rounded-[16px] shadow-sm" />
-        <div className="content-stretch flex flex-col gap-4 items-start p-[24px] relative w-full">
-          <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-lg text-black w-full" style={{ fontVariationSettings: "'wdth' 100" }}>
-            <p className="leading-[25px]">
+        <div className="content-stretch flex flex-col gap-4 items-start p-5 py-5 relative w-full">
+          <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center relative shrink-0 text-base gap-0 text-black w-full" style={{ fontVariationSettings: "'wdth' 100" }}>
+            <p className="leading-normal">
               Have a book suggestion?
               <br />
-              <span className="text-gray-500">Drop it here! I'll check it out :) </span>
+              <span className="text-gray-500 font-normal">Drop it here! I'll check it out :) </span>
             </p>
           </div>
           
