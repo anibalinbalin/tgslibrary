@@ -121,11 +121,24 @@ function BookDetailModal({ book, onClose }: { book: Book; onClose: () => void })
         <div aria-hidden="true" className="absolute border border-[rgba(0,0,0,0.1)] border-solid inset-0 pointer-events-none rounded-[16px] sm:rounded-[18px] md:rounded-[20px] shadow-[0px_4px_36px_0px_rgba(0,0,0,0.15)]" />
         
         <div className="content-stretch flex flex-col sm:flex-row gap-[32px] sm:gap-[36px] md:gap-[44px] items-start relative shrink-0 w-full">
-          <div className="h-[219px] relative shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] shrink-0 w-[142.004px] group cursor-pointer mx-auto sm:mx-0">
-            <div className="absolute h-[219px] left-0 rounded-[6px] top-0 w-[142.004px] transition-transform duration-300 group-hover:rotate-[2.5deg]">
-              <img alt={`${book.title} by ${book.author}`} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={book.coverImage} />
+          {book.goodreadsUrl ? (
+            <a 
+              href={book.goodreadsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-[219px] relative shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] shrink-0 w-[142.004px] group cursor-pointer mx-auto sm:mx-0"
+            >
+              <div className="absolute h-[219px] left-0 rounded-[6px] top-0 w-[142.004px] transition-transform duration-300 group-hover:rotate-[2.5deg]">
+                <img alt={`${book.title} by ${book.author}`} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={book.coverImage} />
+              </div>
+            </a>
+          ) : (
+            <div className="h-[219px] relative shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] shrink-0 w-[142.004px] group mx-auto sm:mx-0">
+              <div className="absolute h-[219px] left-0 rounded-[6px] top-0 w-[142.004px]">
+                <img alt={`${book.title} by ${book.author}`} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={book.coverImage} />
+              </div>
             </div>
-          </div>
+          )}
           
           <div className="basis-0 content-stretch flex flex-col gap-[24px] sm:gap-[28px] md:gap-[32px] lg:gap-[36px] grow items-start min-h-px min-w-px relative shrink-0 w-full sm:w-auto">
             <div className="content-stretch flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal gap-[4px] items-start leading-[0] relative shrink-0 text-[24px] sm:text-[26px] md:text-[28px] tracking-[0.38px] max-w-full">
