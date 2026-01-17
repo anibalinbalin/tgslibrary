@@ -26,7 +26,7 @@ function ProjectCard({ project, className, onClick }: ProjectCardProps) {
         onClick?.();
       }}
       className={clsx(
-        "flex flex-col gap-3 items-start cursor-pointer group text-left w-full",
+        "flex flex-col gap-1.5 items-start cursor-pointer group text-left w-full",
         className
       )}
     >
@@ -39,7 +39,7 @@ function ProjectCard({ project, className, onClick }: ProjectCardProps) {
           />
         </div>
       </div>
-      <div className="flex flex-col font-medium items-start px-[13px] !text-lg w-full">
+      <div className="flex flex-col font-medium items-start px-2 !text-lg w-full">
         <p className="text-[#111827] w-full">
           <span>{project.title} </span>
           <span className="text-gray-400 font-normal">• {project.year}</span>

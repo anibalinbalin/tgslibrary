@@ -86,10 +86,18 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
         {/* Mobile layout */}
         <div className="flex flex-col gap-12 sm:hidden w-full">
           {/* Book cover - centered */}
-          <div className="w-[142px] h-[219px] shrink-0 mx-auto group cursor-pointer">
+          <div 
+            className={`w-[142px] h-[219px] shrink-0 mx-auto group ${book.goodreadsUrl ? 'cursor-pointer' : ''}`}
+            onClick={(e) => {
+              if (book.goodreadsUrl) {
+                e.stopPropagation();
+                window.open(book.goodreadsUrl, '_blank');
+              }
+            }}
+          >
             <img 
               alt={`${book.title} by ${book.author}`} 
-              className="w-full h-full object-cover rounded-md shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] transition-transform duration-300 group-hover:rotate-[1deg]" 
+              className={`w-full h-full object-cover rounded-md shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] ${book.goodreadsUrl ? 'transition-transform duration-300 group-hover:rotate-[2.5deg]' : ''}`}
               src={book.coverImage} 
             />
           </div>
@@ -178,6 +186,7 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
                 </span>
               </div>
             )}
+            
             </div>
           </div>
         </div>
@@ -185,10 +194,18 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
         {/* Desktop layout */}
         <div className="hidden sm:flex flex-row gap-9 md:gap-11 w-full">
           {/* Book cover */}
-          <div className="w-[142px] h-[219px] shrink-0 group cursor-pointer">
+          <div 
+            className={`w-[142px] h-[219px] shrink-0 group ${book.goodreadsUrl ? 'cursor-pointer' : ''}`}
+            onClick={(e) => {
+              if (book.goodreadsUrl) {
+                e.stopPropagation();
+                window.open(book.goodreadsUrl, '_blank');
+              }
+            }}
+          >
             <img 
               alt={`${book.title} by ${book.author}`} 
-              className="w-full h-full object-cover rounded-md shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] transition-transform duration-300 group-hover:rotate-[1deg]" 
+              className={`w-full h-full object-cover rounded-md shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] ${book.goodreadsUrl ? 'transition-transform duration-300 group-hover:rotate-[2.5deg]' : ''}`}
               src={book.coverImage} 
             />
           </div>
@@ -282,6 +299,7 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
                   </span>
                 </div>
               )}
+              
             </div>
           </div>
         </div>

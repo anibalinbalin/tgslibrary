@@ -266,19 +266,17 @@ export default function MediaCard({
     </>
   );
 
-  // Use anchor tag for external links (faster navigation, no about:blank delay)
+  // Use button with window.open for external links (instant navigation, no about:blank delay)
   if (externalUrl) {
     return (
-      <a
-        href={externalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={clsx(sharedClasses, "block")}
+      <button
+        onClick={() => window.open(externalUrl, '_blank')}
+        className={sharedClasses}
         title={data?.title}
         aria-label={data?.title || "Media item"}
       >
         {cardContent}
-      </a>
+      </button>
     );
   }
 
