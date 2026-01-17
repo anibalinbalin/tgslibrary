@@ -1113,8 +1113,7 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      <Routes>
+    <Routes>
         {/* Home page layout - stays mounted for all project modals */}
         <Route path="/" element={<HomePage />}>
           {/* These nested routes keep HomePage mounted when navigating between them */}
