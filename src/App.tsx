@@ -1113,6 +1113,7 @@ export default function App() {
   }, []);
 
   return (
+    <>
     <Routes>
         {/* Home page layout - stays mounted for all project modals */}
         <Route path="/" element={<HomePage />}>
@@ -1144,7 +1145,7 @@ export default function App() {
       {/* 404 - catch all invalid routes */}
       <Route path="*" element={<NotFound />} />
     </Routes>
-      <Analytics />
+    <Analytics />
     </>
   );
 }
