@@ -1144,7 +1144,7 @@ export default function App() {
       {/* 404 - catch all invalid routes */}
       <Route path="*" element={<NotFound />} />
     </Routes>
-      <Analytics />
+    <Analytics />
     </>
   );
 }
