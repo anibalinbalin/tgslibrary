@@ -597,7 +597,7 @@ export default function AboutPage() {
                   Experience
                 </h2>
                 <a
-                  href="https://drive.google.com/file/d/1JPVZsAg6QSwS9He0bc2cMdVohcBQYD0W/view?usp=sharing"
+                  href="https://drive.google.com/file/d/1lGpnG1mLRHQrY_hueHbn_2gesbNrVkyc/view?usp=sharing"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-['Figtree',sans-serif] tracking-wide font-normal text-gray-400 text-lg hover:text-blue-500 transition-colors"
