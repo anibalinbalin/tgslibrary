@@ -1113,6 +1113,7 @@ export default function App() {
   }, []);
 
   return (
+    <>
     <Routes>
         {/* Home page layout - stays mounted for all project modals */}
         <Route path="/" element={<HomePage />}>
