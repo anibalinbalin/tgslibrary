@@ -52,6 +52,8 @@ function transformShelfBook(item: ShelfBookData): Book {
     goodreadsUrl: item.goodreadsUrl,
     review: item.review,
     dateRead: item.dateRead,
+    dateStarted: item.dateStarted,
+    dateFinished: item.dateFinished,
   };
 }
 
@@ -337,7 +339,7 @@ export default function LibraryPage() {
             </div>
           ) : (
             <div 
-              className="grid grid-cols-[repeat(3,auto)] md:grid-cols-[repeat(6,auto)] gap-y-14 sm:gap-y-12 md:gap-y-8 justify-between"
+              className="grid grid-cols-4 md:grid-cols-[repeat(6,auto)] gap-x-8 gap-y-2 md:gap-x-0 md:gap-y-8 md:justify-between"
             >
               {filteredBooks.map((book) => (
                 <BookCard key={book.id} book={book} onClick={() => setSelectedBook(book)} />

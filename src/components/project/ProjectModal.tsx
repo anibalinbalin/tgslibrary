@@ -1036,7 +1036,7 @@ export default function ProjectModal({
           {/* Non-fullscreen header - absolutely positioned to float over content */}
           {!isFullscreen && (
             /* Modal header with expand button */
-            <div className="absolute top-0 left-0 right-0 flex items-start justify-start px-7 pt-6 pb-3 z-10">
+            <div className="absolute top-0 left-0 right-0 flex items-start justify-start pl-6 pr-7 pt-6 pb-3 z-10">
               {/* Expand button */}
               <button
                 onClick={handleExpandToFullscreen}

@@ -11,6 +11,8 @@ export interface Book {
   goodreadsUrl?: string;
   review?: string;
   dateRead?: string;
+  dateStarted?: string;
+  dateFinished?: string;
 }
 
 // Raw Sanity book data structure (legacy - uses book schema)
@@ -41,4 +43,6 @@ export interface ShelfBookData {
   goodreadsUrl?: string;
   review?: string;
   dateRead?: string;
+  dateStarted?: string;
+  dateFinished?: string;
 }
