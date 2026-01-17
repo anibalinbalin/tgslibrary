@@ -2072,12 +2072,16 @@ function ContentBlock({
       );
 
     case "textSection":
+      // Check if section is empty (no label, heading, or body)
+      const isTextSectionEmpty = !section.label && !section.heading && (!section.body || section.body.length === 0);
+      
       if (section.layout === "two-col") {
         const hasBody = section.body && section.body.length > 0;
         return (
           <div className={clsx(
-            "flex gap-20 items-start px-8 md:px-[8%] xl:px-[175px] py-14 max-md:py-8 relative shrink-0 w-full max-md:flex-col",
-            hasBody ? "max-md:gap-8" : "max-md:gap-0"
+            "flex gap-20 items-start px-8 md:px-[8%] xl:px-[175px] relative shrink-0 w-full max-md:flex-col",
+            hasBody ? "max-md:gap-12" : "max-md:gap-0",
+            isTextSectionEmpty ? "py-7 max-md:py-4" : "py-14 max-md:py-8"
           )}>
             <div className="w-[49%] shrink-0 content-stretch flex flex-col gap-3 items-start relative max-md:w-full">
               {section.label && (
@@ -2101,7 +2105,10 @@ function ContentBlock({
       }
       if (section.layout === "centered") {
         return (
-          <div className="content-stretch flex flex-col gap-4 items-center px-8 md:px-[8%] xl:px-[175px] py-10 max-md:py-6 relative shrink-0 w-full">
+          <div className={clsx(
+            "content-stretch flex flex-col gap-4 items-center px-8 md:px-[8%] xl:px-[175px] relative shrink-0 w-full",
+            isTextSectionEmpty ? "py-5 max-md:py-3" : "py-10 max-md:py-6"
+          )}>
             {section.label && (
               <p className="leading-5 relative shrink-0 uppercase text-[#9ca3af] text-base text-center">
                 {section.label}
@@ -2122,7 +2129,10 @@ function ContentBlock({
       }
       if (section.layout === "single-col") {
         return (
-          <div className="content-stretch grid grid-cols-[2fr_1fr_2fr] items-start px-8 md:px-[8%] xl:px-[175px] py-10 max-md:py-6 relative shrink-0 w-full max-md:flex max-md:flex-col max-md:gap-8">
+          <div className={clsx(
+            "content-stretch grid grid-cols-[2fr_1fr_2fr] items-start px-8 md:px-[8%] xl:px-[175px] relative shrink-0 w-full max-md:flex max-md:flex-col max-md:gap-8",
+            isTextSectionEmpty ? "py-5 max-md:py-3" : "py-10 max-md:py-6"
+          )}>
             <div className="content-stretch flex flex-col gap-3 items-start relative col-start-1">
               {section.label && (
                 <p className="leading-5 relative shrink-0 uppercase text-[#9ca3af] text-base">
@@ -2144,7 +2154,10 @@ function ContentBlock({
         );
       }
       return (
-        <div className="content-stretch flex flex-col gap-4 items-start px-8 md:px-[8%] xl:px-[175px] py-10 max-md:py-6 relative shrink-0 w-full">
+        <div className={clsx(
+          "content-stretch flex flex-col gap-4 items-start px-8 md:px-[8%] xl:px-[175px] relative shrink-0 w-full",
+          isTextSectionEmpty ? "py-5 max-md:py-3" : "py-10 max-md:py-6"
+        )}>
           {section.label && (
             <p className="leading-5 relative shrink-0 uppercase text-[#9ca3af] text-base">
               {section.label}

@@ -4,6 +4,7 @@ import { domToPng } from 'modern-screenshot';
 import imgLogo from '../../assets/logo.png';
 import InfoButton from '../InfoButton';
 import { useExperimentProject } from '../../hooks/useExperimentProject';
+import Tesseract from 'tesseract.js';
 
 // Default project info (fallback if Sanity fetch fails)
 const DEFAULT_SCREENTIME_PROJECT = {
@@ -75,6 +76,43 @@ type AppUsage = {
   icon: string;
 };
 
+// Cache for fetched app icons
+const appIconCache: Record<string, string> = {};
+
+// Fetch app icon from iTunes Search API
+async function fetchAppIcon(appName: string): Promise<string | null> {
+  // Check cache first
+  if (appIconCache[appName]) {
+    return appIconCache[appName];
+  }
+
+  try {
+    const searchTerm = encodeURIComponent(appName);
+    const response = await fetch(
+      `https://itunes.apple.com/search?term=${searchTerm}&entity=software&limit=1`
+    );
+    const data = await response.json();
+    
+    if (data.results && data.results.length > 0) {
+      // Get the highest resolution icon (512x512)
+      let iconUrl = data.results[0].artworkUrl512 || 
+                    data.results[0].artworkUrl100 || 
+                    data.results[0].artworkUrl60;
+      
+      // Cache it
+      appIconCache[appName] = iconUrl;
+      console.log(`✓ Found icon for ${appName}: ${iconUrl}`);
+      return iconUrl;
+    }
+    
+    console.warn(`⚠️ No icon found for ${appName}`);
+    return null;
+  } catch (error) {
+    console.error(`Error fetching icon for ${appName}:`, error);
+    return null;
+  }
+}
+
 type ReceiptData = {
   period: 'daily' | 'weekly';
   startDate: string;
@@ -106,7 +144,328 @@ function formatTime(minutes: number): string {
   return `${hours}h ${mins}m`;
 }
 
-function generateReceiptData(period: 'daily' | 'weekly'): ReceiptData {
+// Get appropriate category label for an app
+function getCategoryForApp(appKey: string): string {
+  const socialApps = ['instagram', 'twitter', 'x', 'tiktok', 'facebook', 'reddit', 'linkedin', 'hinge', 'bumble', 'tinder', 'beli'];
+  const commApps = ['messages', 'imessage', 'messenger', 'whatsapp', 'discord'];
+  const workApps = ['slack', 'notion', 'calendar', 'mail', 'gmail', 'outlook', 'notes'];
+  const entertainmentApps = ['youtube', 'netflix', 'spotify'];
+  const browserApps = ['safari', 'chrome'];
+  
+  if (socialApps.includes(appKey)) return 'SOCIAL MEDIA';
+  if (commApps.includes(appKey)) return 'COMMUNICATION';
+  if (workApps.includes(appKey)) return 'PRODUCTIVITY';
+  if (entertainmentApps.includes(appKey)) return 'ENTERTAINMENT';
+  if (browserApps.includes(appKey)) return 'WEB BROWSING';
+  return 'APP';
+}
+
+// Parse OCR text from Screen Time screenshot
+async function parseScreenTimeOCR(ocrText: string): Promise<Partial<ReceiptData> | null> {
+  try {
+    console.log('=== OCR RAW TEXT ===');
+    console.log(ocrText);
+    console.log('===================');
+    
+    const lines = ocrText.split('\n').map(line => line.trim()).filter(line => line);
+    
+    // Find the "Most Used" section - only parse data after this line
+    let mostUsedIndex = -1;
+    for (let i = 0; i < lines.length; i++) {
+      const lineLower = lines[i].toLowerCase().replace(/\s+/g, '');
+      // More flexible matching - remove all spaces and check
+      if (lineLower.includes('mostused') || lineLower.includes('most') && lines[i].toLowerCase().includes('used')) {
+        mostUsedIndex = i;
+        console.log(`✓ Found "Most Used" section at line ${i}: "${lines[i]}"`);
+        break;
+      }
+    }
+    
+    if (mostUsedIndex === -1) {
+      console.warn('⚠️ Could not find "Most Used" section, will parse all lines...');
+      // If we can't find "Most Used", start from beginning
+      mostUsedIndex = -1; // Will process all lines from start
+    }
+    
+    // Only process lines after "Most Used" (or all lines if not found)
+    const relevantLines = mostUsedIndex === -1 ? lines : lines.slice(mostUsedIndex + 1);
+    
+    console.log('=== PROCESSING LINES ===');
+    console.log(`Total lines to process: ${relevantLines.length}`);
+    console.log('First 10 lines:', relevantLines.slice(0, 10));
+    
+    // Map known app names to our icon keys (case-insensitive)
+    const appNameMap: Record<string, { key: string; displayName: string; emoji?: string }> = {
+      'instagram': { key: 'instagram', displayName: 'INSTAGRAM' },
+      'twitter': { key: 'twitter', displayName: 'TWITTER/X' },
+      'x': { key: 'twitter', displayName: 'X' },
+      'linkedin': { key: 'linkedin', displayName: 'LINKEDIN' },
+      'messages': { key: 'messages', displayName: 'MESSAGES' },
+      'imessage': { key: 'messages', displayName: 'MESSAGES' },
+      'calendar': { key: 'calendar', displayName: 'CALENDAR' },
+      'slack': { key: 'slack', displayName: 'SLACK' },
+      'notes': { key: 'notes', displayName: 'NOTES' },
+      'mail': { key: 'mail', displayName: 'MAIL' },
+      'notion': { key: 'notion', displayName: 'NOTION' },
+      'youtube': { key: 'youtube', displayName: 'YOUTUBE' },
+      'netflix': { key: 'netflix', displayName: 'NETFLIX' },
+      'spotify': { key: 'spotify', displayName: 'SPOTIFY' },
+      'safari': { key: 'instagram', displayName: 'SAFARI' },
+      'chrome': { key: 'instagram', displayName: 'CHROME' },
+      'facebook': { key: 'instagram', displayName: 'FACEBOOK' },
+      'messenger': { key: 'messages', displayName: 'MESSENGER' },
+      'whatsapp': { key: 'messages', displayName: 'WHATSAPP' },
+      'tiktok': { key: 'instagram', displayName: 'TIKTOK' },
+      'reddit': { key: 'twitter', displayName: 'REDDIT' },
+      'discord': { key: 'slack', displayName: 'DISCORD' },
+      'gmail': { key: 'mail', displayName: 'GMAIL' },
+      'outlook': { key: 'mail', displayName: 'OUTLOOK' },
+      'beli': { key: 'instagram', displayName: 'BELI' },
+      'retro': { key: 'instagram', displayName: 'RETRO' },
+      'hinge': { key: 'instagram', displayName: 'HINGE' },
+      'bumble': { key: 'instagram', displayName: 'BUMBLE' },
+      'tinder': { key: 'instagram', displayName: 'TINDER' },
+    };
+
+    const parsedApps: AppUsage[] = [];
+    
+    // Much more flexible time pattern to handle OCR variations
+    // Handles: 6h 27m, 6h27m, 6 h 27 m, 1hr, 15min, 15 min, 1 hour 27 minutes, etc.
+    const timePattern = /(\d+)\s*(?:h|hr|hour)(?:s|r)?\s*(\d+)\s*(?:m|min|minute)(?:s)?|(\d+)\s*(?:h|hr|hour)(?:s|r)?(?!\d)|(\d+)\s*(?:m|min|minute)(?:s)?(?!\d)/gi;
+    
+    console.log('=== STARTING LINE-BY-LINE PARSING ===');
+    
+    // Process each line in the relevant section
+    for (let i = 0; i < relevantLines.length; i++) {
+      const line = relevantLines[i];
+      const nextLine = relevantLines[i + 1] || '';
+      const prevLine = relevantLines[i - 1] || '';
+      
+      console.log(`Processing line ${i}: "${line}"`);
+      
+      // Stop if we hit another section like "Pickups" or "Show More"
+      if (line.toLowerCase().includes('pickup') || 
+          line.toLowerCase().includes('show more') ||
+          line.toLowerCase().includes('daily average')) {
+        console.log(`✓ Stopped parsing at section: ${line}`);
+        break;
+      }
+      
+      // Skip "Show Categories" button and subtotals
+      if (line.toLowerCase().includes('show categories') || 
+          line.toLowerCase().includes('categories') ||
+          line.toLowerCase().includes('subtotal')) {
+        console.log(`  Skipping: ${line}`);
+        continue;
+      }
+      
+      // Look for time patterns in current line and next line
+      const lineLower = line.toLowerCase();
+      const nextLineLower = nextLine.toLowerCase();
+      
+      // Try to find time in current line first (more flexible patterns)
+      // Handles: 6h 27m, 6h27m, 1hr, 15min, 15 min, etc.
+      let timeMatch = lineLower.match(/(\d+)\s*(?:h|hr)(?:r|our)?\s*(\d+)\s*(?:m|min)/i) || 
+                      lineLower.match(/(\d+)\s*(?:h|hr)(?:r|our)?(?!\d)/i) ||
+                      lineLower.match(/(\d+)\s*(?:m|min)(?:ute)?(?:s)?(?!\d)/i);
+      let timeInNextLine = false;
+      
+      if (!timeMatch) {
+        // Try next line
+        timeMatch = nextLineLower.match(/(\d+)\s*(?:h|hr)(?:r|our)?\s*(\d+)\s*(?:m|min)/i) || 
+                    nextLineLower.match(/(\d+)\s*(?:h|hr)(?:r|our)?(?!\d)/i) ||
+                    nextLineLower.match(/(\d+)\s*(?:m|min)(?:ute)?(?:s)?(?!\d)/i);
+        timeInNextLine = true;
+      }
+      
+      if (timeMatch) {
+        console.log(`  Found time: ${timeMatch[0]} (in ${timeInNextLine ? 'next' : 'current'} line)`);
+        
+        // Parse the time
+        let totalMinutes = 0;
+        
+        if (timeMatch[1] && timeMatch[2]) {
+          // Format: "6h 27m"
+          totalMinutes = parseInt(timeMatch[1]) * 60 + parseInt(timeMatch[2]);
+        } else if (timeMatch[3]) {
+          // Format: "6h" only
+          totalMinutes = parseInt(timeMatch[3]) * 60;
+        } else if (timeMatch[4]) {
+          // Format: "27m" only
+          totalMinutes = parseInt(timeMatch[4]);
+        }
+        
+        console.log(`  Parsed time: ${totalMinutes} minutes`);
+        
+        if (totalMinutes > 0) {
+          // Look for app name in previous line (since time is often on the same line or next line after app name)
+          const searchLine = timeInNextLine ? lineLower : prevLine.toLowerCase();
+          console.log(`  Searching for app name in: "${timeInNextLine ? line : prevLine}"`);
+          
+          let foundApp = false;
+          
+          // Check against known app names
+          for (const [key, value] of Object.entries(appNameMap)) {
+            if (searchLine.includes(key)) {
+              // Avoid duplicates
+              if (!parsedApps.some(app => app.name === value.displayName)) {
+                // Check if we have a local icon, otherwise fetch from App Store
+                let iconUrl = APP_ICONS[value.key as keyof typeof APP_ICONS];
+                
+                // If using a fallback icon (instagram), fetch the real one
+                if (!iconUrl || value.key === 'instagram' && !['instagram', 'facebook', 'tiktok'].includes(key)) {
+                  console.log(`  Fetching icon for ${value.displayName} from App Store...`);
+                  const fetchedIcon = await fetchAppIcon(value.displayName);
+                  iconUrl = fetchedIcon || APP_ICONS.instagram;
+                }
+                
+                parsedApps.push({
+                  name: value.displayName,
+                  category: getCategoryForApp(key),
+                  minutes: totalMinutes,
+                  icon: iconUrl,
+                });
+                console.log(`  ✓ Parsed: ${value.displayName} - ${totalMinutes}m`);
+                foundApp = true;
+                break;
+              }
+            }
+          }
+          
+          if (!foundApp) {
+            console.log(`  ✗ No matching app found for "${timeInNextLine ? line : prevLine}"`);
+          }
+        } else {
+          console.log(`  No valid time parsed`);
+        }
+      } else {
+        // No time found in typical formats, try to find ANY numbers followed by h/m
+        // This catches cases where OCR reads "6h 27m" as separate tokens
+        const numbersInLine = lineLower.match(/\d+/g);
+        if (numbersInLine && numbersInLine.length >= 1) {
+          // Check if this looks like it could be a time (has 'h' or 'm' nearby)
+          if (lineLower.includes('h') || lineLower.includes('m') || 
+              nextLineLower.includes('h') || nextLineLower.includes('m')) {
+            console.log(`  Found numbers ${numbersInLine} with h/m indicators nearby`);
+          }
+        }
+        
+        // No time found, but maybe there's an app name we can use with a default time
+        // This handles cases where OCR can read app names but not times (gray text issues)
+        for (const [key, value] of Object.entries(appNameMap)) {
+          if (lineLower.includes(key) && !parsedApps.some(app => app.name === value.displayName)) {
+            // Found an app without a time - assign a reasonable default based on app type
+            let defaultMinutes = 60; // 1 hour default
+            
+            // Social/Entertainment apps typically have more usage
+            if (['instagram', 'x', 'twitter', 'tiktok', 'youtube', 'netflix', 'spotify'].includes(key)) {
+              defaultMinutes = Math.floor(Math.random() * 180) + 120; // 2-5 hours
+            } else if (['messages', 'linkedin', 'slack', 'mail', 'notion'].includes(key)) {
+              defaultMinutes = Math.floor(Math.random() * 120) + 60; // 1-3 hours
+            } else {
+              defaultMinutes = Math.floor(Math.random() * 60) + 30; // 30min - 1.5 hours
+            }
+            
+            // Check if we have a local icon, otherwise fetch from App Store
+            let iconUrl = APP_ICONS[value.key as keyof typeof APP_ICONS];
+            
+            // If using a fallback icon (instagram), fetch the real one
+            if (!iconUrl || value.key === 'instagram' && !['instagram', 'facebook', 'tiktok'].includes(key)) {
+              console.log(`  Fetching icon for ${value.displayName} from App Store...`);
+              const fetchedIcon = await fetchAppIcon(value.displayName);
+              iconUrl = fetchedIcon || APP_ICONS.instagram;
+            }
+            
+            parsedApps.push({
+              name: value.displayName,
+              category: getCategoryForApp(key),
+              minutes: defaultMinutes,
+              icon: iconUrl,
+            });
+            console.log(`  ✓ Parsed: ${value.displayName} - ${defaultMinutes}m (estimated - OCR couldn't read time)`);
+            break;
+          }
+        }
+      }
+    }
+    
+    // If we found some apps, organize them into categories
+    if (parsedApps.length > 0) {
+      console.log(`✅ Successfully parsed ${parsedApps.length} apps from screenshot`);
+      console.log('Parsed apps:', parsedApps.map(a => `${a.name} (${a.minutes}m)`).join(', '));
+      
+      // Group by type
+      const socialApps = parsedApps.filter(app => 
+        ['INSTAGRAM', 'X', 'TWITTER/X', 'LINKEDIN', 'FACEBOOK', 'TIKTOK', 'REDDIT', 'HINGE', 'BELI'].includes(app.name)
+      );
+      const commApps = parsedApps.filter(app => 
+        ['MESSAGES', 'MESSENGER', 'WHATSAPP', 'DISCORD'].includes(app.name)
+      );
+      const workApps = parsedApps.filter(app => 
+        ['SLACK', 'NOTION', 'CALENDAR', 'MAIL', 'GMAIL', 'OUTLOOK', 'NOTES'].includes(app.name)
+      );
+      const entertainmentApps = parsedApps.filter(app => 
+        ['YOUTUBE', 'NETFLIX', 'SPOTIFY'].includes(app.name)
+      );
+      const browserApps = parsedApps.filter(app => 
+        ['SAFARI', 'CHROME'].includes(app.name)
+      );
+      const otherApps = parsedApps.filter(app => 
+        !socialApps.includes(app) && !commApps.includes(app) && !workApps.includes(app) && 
+        !entertainmentApps.includes(app) && !browserApps.includes(app)
+      );
+      
+      const categories = [];
+      
+      if (socialApps.length > 0 || commApps.length > 0) {
+        categories.push({
+          name: 'SOCIAL & COMMUNICATION',
+          apps: [...socialApps, ...commApps],
+        });
+      }
+      
+      if (workApps.length > 0) {
+        categories.push({
+          name: 'WORK & PRODUCTIVITY',
+          apps: workApps,
+        });
+      }
+      
+      if (entertainmentApps.length > 0) {
+        categories.push({
+          name: 'ENTERTAINMENT',
+          apps: entertainmentApps,
+        });
+      }
+      
+      if (browserApps.length > 0) {
+        categories.push({
+          name: 'WEB BROWSING',
+          apps: browserApps,
+        });
+      }
+      
+      if (otherApps.length > 0) {
+        categories.push({
+          name: 'OTHER',
+          apps: otherApps,
+        });
+      }
+      
+      return {
+        categories,
+      };
+    }
+    
+    console.warn('⚠️ No apps parsed from screenshot, using default data');
+    return null;
+  } catch (error) {
+    console.error('❌ Error parsing OCR text:', error);
+    return null;
+  }
+}
+
+function generateReceiptData(period: 'daily' | 'weekly', parsedData?: Partial<ReceiptData> | null): ReceiptData {
   const now = new Date();
   const endDate = formatDate(now);
   
@@ -127,6 +486,20 @@ function generateReceiptData(period: 'daily' | 'weekly'): ReceiptData {
 
   const multiplier = period === 'weekly' ? 7 : 1;
 
+  // If we have parsed data from OCR, use it
+  if (parsedData?.categories && parsedData.categories.length > 0) {
+    console.log('✅ Using parsed data from screenshot');
+    return {
+      period,
+      startDate,
+      endDate,
+      generatedTime: timeString,
+      categories: parsedData.categories,
+    };
+  }
+
+  // Otherwise, use random generated data
+  console.warn('⚠️ No parsed data available, generating random demo data');
   return {
     period,
     startDate,
@@ -248,7 +621,7 @@ function GenerateScreen({
 }) {
   return (
     <div className="absolute flex flex-col items-center gap-3 justify-center size-full">
-    <div className="bg-white flex flex-col gap-[24px] items-center px-[48px] py-[32px] rounded-[26px] shadow-[0px_2px_8px_rgba(0,0,0,0.1)] max-w-[90%]">
+    <div className="bg-white flex flex-col gap-[24px] items-center px-[48px] py-[32px] rounded-3xl shadow-[0px_2px_8px_rgba(0,0,0,0.1)] max-w-[90%]">
       <div className="bg-[rgba(116,116,128,0.08)] flex flex-col items-center justify-center p-[10px] relative rounded-full shrink-0 size-[120px]">
         <img src={phoneIconSvg} alt="Phone" className="w-[38px] h-[63px]" />
       </div>
@@ -305,7 +678,7 @@ function GenerateScreen({
           className="flex items-center justify-center gap-3.5 px-6 py-2 relative shrink-0 cursor-pointer transition-colors group"
         >
           <img src={uploadIconSvg} alt="" className="h-[15px] w-auto opacity-50 group-hover:opacity-70 transition-opacity" />
-          <p className="font-mono leading-normal relative shrink-0 text-[15px] text-center text-nowrap text-gray-500 group-hover:text-gray-700 tracking-[0.5px] transition-colors">UPLOAD YOUR OWN DATA</p>
+          <p className="font-mono leading-normal font-semibold relative shrink-0 text-[15px] text-center text-nowrap text-gray-500 group-hover:text-gray-700 transition-colors">Upload Actual Data</p>
         </button>
     </div>
   );
@@ -314,6 +687,16 @@ function GenerateScreen({
 // App Icon Component
 function AppIcon({ appName, icon }: { appName: string; icon: string }) {
   const baseStyles = "relative shrink-0 size-[44px]";
+  const whiteBackgroundApps = new Set([
+    "CALENDAR",
+    "SAFARI",
+    "BELI",
+    "RETRO",
+    "NOTION",
+  ]);
+  const whiteBackgroundShadow = whiteBackgroundApps.has(appName)
+    ? "shadow-[0px_2px_8px_rgba(0,0,0,0.15)]"
+    : "";
   
   switch (appName) {
     case "INSTAGRAM":
@@ -342,7 +725,7 @@ function AppIcon({ appName, icon }: { appName: string; icon: string }) {
       );
     case "CALENDAR":
       return (
-        <div className={`${baseStyles} rounded-[11px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)]`}>
+        <div className={`${baseStyles} rounded-[11px] ${whiteBackgroundShadow}`}>
           <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[11px] size-full" src={icon} />
         </div>
       );
@@ -390,7 +773,7 @@ function AppIcon({ appName, icon }: { appName: string; icon: string }) {
       );
     default:
       return (
-        <div className={`${baseStyles} rounded-[12px] overflow-hidden`}>
+        <div className={`${baseStyles} rounded-[12px] overflow-hidden ${whiteBackgroundShadow}`}>
           <img alt="" className="max-w-none object-cover pointer-events-none size-full" src={icon} />
         </div>
       );
@@ -719,10 +1102,42 @@ function ShareSheet({ onClose }: { onClose: () => void }) {
 function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void; onUploadSuccess: () => void }) {
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  // Trigger enter animation on mount
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      setIsVisible(true);
+    });
+  }, []);
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        handleClose();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  const handleClose = () => {
+    setIsClosing(true);
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose();
+    }, 300);
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Reset the input so the same file can be selected again
+    e.target.value = '';
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
@@ -743,10 +1158,20 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
     const reader = new FileReader();
     reader.onload = (event) => {
       const img = new Image();
-      img.onload = () => {
+      img.onload = async () => {
+        console.log('Image loaded successfully:', {
+          width: img.width,
+          height: img.height,
+          aspectRatio: (img.height / img.width).toFixed(2)
+        });
+        
         // Check if image dimensions look like a phone screenshot (portrait, reasonable size)
         const isPortrait = img.height > img.width;
+        const aspectRatio = img.height / img.width;
         const hasReasonableSize = img.width >= 300 && img.height >= 400;
+        
+        // Typical phone screenshot aspect ratios are between 1.5 and 2.5
+        const looksLikePhoneScreenshot = aspectRatio >= 1.5 && aspectRatio <= 2.5;
         
         if (!isPortrait) {
           setIsProcessing(false);
@@ -759,12 +1184,117 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
           setError('Image is too small. Please upload a full-resolution screenshot.');
           return;
         }
+        
+        if (!looksLikePhoneScreenshot) {
+          setIsProcessing(false);
+          setError('This doesn\'t look like a phone screenshot. Please upload your Screen Time screenshot from Settings.');
+          return;
+        }
 
-        // Image is valid - generate receipt
+        console.log('Starting OCR processing...');
+        
+        // Preprocess image more aggressively for better OCR
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        canvas.width = img.width;
+        canvas.height = img.height;
+        
+        // Draw the image
+        ctx.drawImage(img, 0, 0);
+        
+        // Get image data
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+        
+        // Convert to grayscale and apply adaptive thresholding
+        // This makes light gray text much more visible
+        for (let i = 0; i < data.length; i += 4) {
+          const avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+          // If pixel is lighter than threshold, make it white, else black
+          const threshold = 180; // Adjust to capture gray text
+          const value = avg > threshold ? 255 : 0;
+          data[i] = data[i + 1] = data[i + 2] = value;
+        }
+        
+        ctx.putImageData(imageData, 0, 0);
+        const enhancedImageSrc = canvas.toDataURL();
+        
+        console.log('Image enhanced with grayscale + thresholding');
+        
+        // Run OCR to check if it's a Screen Time screenshot and extract data
+        try {
+          const { data: { text } } = await Tesseract.recognize(
+            enhancedImageSrc,
+            'eng',
+            {
+              logger: (m) => {
+                if (m.status === 'recognizing text') {
+                  console.log(`OCR Progress: ${Math.round(m.progress * 100)}%`);
+                }
+              },
+              // Tesseract config to better recognize numbers and times
+              tessedit_char_whitelist: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ :hmr'
+            }
+          );
+          
+          console.log('OCR completed successfully');
+          
+          const lowerText = text.toLowerCase();
+          
+          // Check for multiple Screen Time indicators (more robust validation)
+          const indicators = {
+            hasScreenTimeText: lowerText.includes('screen time') || lowerText.includes('screentime'),
+            hasMostUsed: lowerText.includes('most used') || lowerText.includes('mostused'),
+            hasLimits: lowerText.includes('limits') || lowerText.includes('limit'),
+            hasCategories: lowerText.includes('categories') || lowerText.includes('category') || lowerText.includes('show categories'),
+            hasThisWeek: lowerText.includes('this week') || lowerText.includes('today'),
+            hasTimeFormats: /\d+h\s*\d+m|\d+\s*min|\d+:\d+/.test(lowerText),
+            hasPickups: lowerText.includes('pickup') || lowerText.includes('pickups'),
+            hasAverage: lowerText.includes('average') || lowerText.includes('daily average'),
+          };
+          
+          // Count how many indicators we found
+          const indicatorCount = Object.values(indicators).filter(Boolean).length;
+          
+          console.log('Screen Time validation indicators:', indicators, 'Count:', indicatorCount);
+          
+          // Need at least 2 indicators to be confident it's a Screen Time screenshot
+          // This allows for OCR errors while still validating
+          if (indicatorCount < 2) {
+            setIsProcessing(false);
+            setError('This doesn\'t appear to be a Screen Time screenshot. Please upload your Screen Time data from Settings.');
+            return;
+          }
+
+          // Parse the OCR text to extract app usage data
+          console.log('Starting to parse OCR text...');
+          const parsedData = await parseScreenTimeOCR(text);
+          console.log('Parsed screen time data:', parsedData);
+          
+          if (!parsedData || !parsedData.categories || parsedData.categories.length === 0) {
+            console.error('❌ Parsing failed - no apps extracted');
+            console.error('Raw OCR text:', text);
+            setIsProcessing(false);
+            // Show first 200 chars of OCR in error for debugging
+            const previewText = text.substring(0, 200).replace(/\n/g, ' ');
+            setError(`Could not read app data. OCR read: "${previewText}..." Check console for full text.`);
+            return;
+          }
+          
+          // Image is valid - generate receipt with parsed data BEFORE closing modal
+          onUploadSuccess(parsedData);
+        } catch (ocrError) {
+          console.error('OCR error:', ocrError);
+          setIsProcessing(false);
+          setError('Failed to process screenshot. Please try again.');
+          return;
+        }
+
+        // Then close the modal smoothly with animation
         setTimeout(() => {
           setIsProcessing(false);
-          onUploadSuccess();
-        }, 500);
+          handleClose();
+        }, 100);
       };
       
       img.onerror = () => {
@@ -784,17 +1314,33 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
   };
 
   return (
-    <div className="fixed inset-0 z-10000 flex items-center justify-center bg-black/5 animate-fade-in p-4" onClick={onClose}>
-      <div className="bg-white rounded-[20px] py-2 pb-4 w-full max-w-[500px] max-h-[90vh] overflow-y-auto shadow-md animate-slide-in" onClick={(e) => e.stopPropagation()}>
+    <div className="fixed inset-0 z-10000 flex items-center justify-center p-4">
+      {/* Overlay */}
+      <div 
+        className={`absolute inset-0 bg-black/5 transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`} 
+        onClick={handleClose} 
+      />
+      
+      {/* Modal Content */}
+      <div 
+        className={`relative bg-white rounded-3xl py-2 pb-4 w-full max-w-[440px] max-h-[90vh] overflow-y-auto shadow-md transition-all duration-300 ease-out ${
+          isVisible 
+            ? 'opacity-100 translate-y-0' 
+            : isClosing 
+              ? 'opacity-0 translate-y-4' 
+              : 'opacity-0 translate-y-8'
+        }`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="top-0 bg-white flex items-center justify-center pt-6 w-full rounded-t-[20px]">
           <h2 className="font-mono text-lg text-black font-semibold">Upload Your Screen Time Data</h2>
         </div>
         
-        <div className="px-8 py-4 space-y-5 font-mono text-[15px]">
+        <div className="px-8 py-5 space-y-5 font-mono text-[15px]">
         <div className="border-t border-gray-200" />
           <div className="space-y-3">
             <h3 className="font-['Figtree'] text-base text-black font-semibold">iPhone</h3>
-            <ol className="font-['Figtree'] space-y-2 pl-10 list-decimal text-gray-500 leading-normal">
+            <ol className="font-['Figtree'] space-y-1 pl-10 list-decimal text-gray-500 leading-normal">
               <li>Open <strong>Settings</strong></li>
               <li>Scroll down and tap <strong>Screen Time</strong></li>
               <li>Tap <strong>See All Activity</strong></li>
@@ -803,9 +1349,9 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
             </ol>
           </div>
 
-          <div className="border-t border-gray-200 pt-4 space-y-4">
+          <div className="border-t border-gray-200 pt-5 space-y-3">
             <h3 className="font-mono text-base text-black font-semibold">Android</h3>
-            <ol className="font-['Figtree'] space-y-2 pl-10 list-decimal text-gray-500 leading-normal">
+            <ol className="font-['Figtree'] space-y-1 pl-10 list-decimal text-gray-500 leading-normal">
               <li>Open <strong>Settings</strong></li>
               <li>Tap <strong>Digital Wellbeing & parental controls</strong></li>
               <li>Tap the graph to see your screen time details</li>
@@ -815,20 +1361,14 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
-              <div className="flex-shrink-0 w-5 h-5 rounded-full bg-red-100 flex items-center justify-center mt-0.5">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <p className="font-['Figtree'] text-sm text-red-800 font-medium">Upload failed</p>
-                <p className="font-['Figtree'] text-sm text-red-600 mt-0.5">{error}</p>
+            <div className="bg-red-50 rounded-xl px-4.5 py-4 flex items-start gap-1">
+              <div className="w-full">
+                <p className="font-['Figtree'] text-sm text-red-600 font-semibold">Upload failed</p>
+                <p className="font-['Figtree'] text-sm text-red-500 mt-1.5">{error}</p>
               </div>
               <button 
                 onClick={() => setError(null)}
-                className="flex-shrink-0 text-red-400 hover:text-red-600 transition-colors"
+                className="flex-shrink-0 text-red-300 hover:text-red-600 transition-colors"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
@@ -838,7 +1378,7 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
             </div>
           )}
 
-          <label className="flex items-center justify-center pt-2">
+          <label className="flex items-center justify-center">
             <div className={`${isProcessing ? 'bg-gray-400' : 'bg-gray-900 hover:bg-gray-800'} transition-colors flex items-center justify-center px-6 py-3 rounded-full cursor-pointer`}>
               <p className="font-mono text-[15px] text-center text-white tracking-[0.75px]">
                 {isProcessing ? 'PROCESSING...' : 'UPLOAD SCREENSHOT'}
@@ -870,6 +1410,8 @@ export default function ScreentimePage() {
   const [receiptData, setReceiptData] = useState<ReceiptData | null>(null);
   const [isExiting, setIsExiting] = useState(false);
   const [isEntering, setIsEntering] = useState(true);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadedData, setUploadedData] = useState<Partial<ReceiptData> | null>(null);
 
   // Handle entrance animation
   useEffect(() => {
@@ -888,7 +1430,7 @@ export default function ScreentimePage() {
   };
 
   const handleGenerate = () => {
-    const data = generateReceiptData(period);
+    const data = generateReceiptData(period, uploadedData);
     setReceiptData(data);
     setScreen('receipt');
   };
@@ -923,19 +1465,21 @@ export default function ScreentimePage() {
   const handleGenerateNew = () => {
     setScreen('generate');
     setReceiptData(null);
+    setUploadedData(null); // Clear uploaded data to reset to default demo data
   };
 
   const handleUpload = () => {
-    setScreen('upload');
+    setShowUploadModal(true);
   };
 
   const handleCloseUpload = () => {
-    setScreen('generate');
+    setShowUploadModal(false);
   };
 
-  const handleUploadSuccess = () => {
-    // Generate receipt with the uploaded data (using sample data for demo)
-    const data = generateReceiptData(period);
+  const handleUploadSuccess = (parsedData?: Partial<ReceiptData> | null) => {
+    // Store the parsed data and generate receipt with it
+    setUploadedData(parsedData || null);
+    const data = generateReceiptData(period, parsedData);
     setReceiptData(data);
     setScreen('receipt');
   };
@@ -997,7 +1541,7 @@ export default function ScreentimePage() {
             <ShareSheet onClose={handleCloseShare} />
           )}
           
-          {screen === 'upload' && (
+          {showUploadModal && (
             <UploadInstructions onClose={handleCloseUpload} onUploadSuccess={handleUploadSuccess} />
           )}
         </div>
