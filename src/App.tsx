@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Routes, Route, Navigate, useParams, useNavigate, useLocation } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import svgPaths from "./imports/svg-2tsxp86msm";
 import clsx from "clsx";
 import { imgGroup } from "./imports/svg-poktt";
@@ -1143,5 +1144,7 @@ export default function App() {
       {/* 404 - catch all invalid routes */}
       <Route path="*" element={<NotFound />} />
     </Routes>
+      <Analytics />
+    </>
   );
 }

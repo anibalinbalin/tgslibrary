@@ -307,7 +307,9 @@ export const SHELF_BOOKS_QUERY = `
     isLibraryFavorite,
     goodreadsUrl,
     review,
-    dateRead
+    dateRead,
+    dateStarted,
+    dateFinished
   }
 `;// Query to get all unique years from shelf books
 export const BOOK_YEARS_QUERY = `

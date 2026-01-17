@@ -81,12 +81,111 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
       
       {/* Modal */}
       <div 
-        className={`fixed left-1/2 top-1/2 z-50 flex flex-col gap-6 sm:gap-8 md:gap-10 p-6 sm:p-10 md:p-16 lg:p-20 rounded-2xl w-[calc(100vw-32px)] sm:w-[calc(100vw-80px)] md:w-[min(1137px,90vw)] max-h-[80vh] sm:max-h-[90vh] overflow-y-auto bg-white border border-[rgba(0,0,0,0.1)] shadow-[0px_4px_36px_0px_rgba(0,0,0,0.15)] ${isClosing ? 'animate-modal-scale-out' : 'animate-modal-scale-in'}`}
+        className={`fixed left-1/2 top-1/2 z-50 flex flex-col gap-6 sm:gap-8 md:gap-10 px-12 py-12 sm:p-10 md:p-16 lg:p-20 rounded-2xl w-[calc(100vw-32px)] sm:w-[calc(100vw-80px)] md:w-[min(1137px,90vw)] max-h-[80vh] sm:max-h-[90vh] overflow-y-auto bg-white border border-[rgba(0,0,0,0.1)] shadow-[0px_4px_36px_0px_rgba(0,0,0,0.15)] ${isClosing ? 'animate-modal-scale-out' : 'animate-modal-scale-in'}`}
       >
-        {/* Header: Cover + Info */}
-        <div className="flex flex-col sm:flex-row gap-8 sm:gap-9 md:gap-11 w-full">
+        {/* Mobile layout */}
+        <div className="flex flex-col gap-12 sm:hidden w-full">
+          {/* Book cover - centered */}
+          <div className="w-[142px] h-[219px] shrink-0 mx-auto group cursor-pointer">
+            <img 
+              alt={`${book.title} by ${book.author}`} 
+              className="w-full h-full object-cover rounded-md shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] transition-transform duration-300 group-hover:rotate-[1deg]" 
+              src={book.coverImage} 
+            />
+          </div>
+          
+          {/* Title, Author & Meta - grouped with smaller gap */}
+          <div className="flex flex-col gap-6">
+            {/* Title & Author - left aligned */}
+            <div className="flex flex-col gap-0.5">
+              <h2 
+                className="font-['SF_Pro:Regular',sans-serif] font-medium text-xl text-black"
+                style={{ fontVariationSettings: "'wdth' 100" }}
+              >
+                {book.title}
+              </h2>
+              <p 
+                className="font-['SF_Pro:Regular',sans-serif] text-lg text-gray-500"
+                style={{ fontVariationSettings: "'wdth' 100" }}
+              >
+                {book.author}
+              </p>
+            </div>
+            
+            {/* Meta info - two column layout with fixed label width */}
+            <div className="flex flex-col gap-3">
+            {/* Rating */}
+            {book.rating > 0 && (
+              <div className="flex items-center">
+                <span 
+                  className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 w-[100px] shrink-0"
+                  style={{ fontVariationSettings: "'wdth' 100" }}
+                >
+                  Rating
+                </span>
+                <span className="font-['DM_Sans:Medium','Noto_Sans_Symbols2:Regular',sans-serif] text-lg">
+                  <span className="text-gray-600">{"★".repeat(book.rating)}</span>
+                  <span className="text-gray-200">{"★".repeat(5 - book.rating)}</span>
+                </span>
+              </div>
+            )}
+            
+            {/* Shelf */}
+            {(book.isFavorite || book.year) && (
+              <div className="flex items-center">
+                <span 
+                  className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 w-[100px] shrink-0"
+                  style={{ fontVariationSettings: "'wdth' 100" }}
+                >
+                  Shelf
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {book.isFavorite && (
+                    <span className="bg-gray-100 px-3 py-1 rounded-full font-medium font-['SF_Pro:Regular',sans-serif] text-base text-gray-600" style={{ fontVariationSettings: "'wdth' 100" }}>
+                      favorites
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+            
+            {/* Dates Read */}
+            {(book.dateStarted || book.dateFinished || book.dateRead) && (
+              <div className="flex items-start">
+                <span 
+                  className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 w-[100px] shrink-0"
+                  style={{ fontVariationSettings: "'wdth' 100" }}
+                >
+                  {book.dateStarted && book.dateFinished ? 'Dates Read' : 'Date Read'}
+                </span>
+                <span 
+                  className="font-['SF_Pro:Regular',sans-serif] text-base text-gray-600"
+                  style={{ fontVariationSettings: "'wdth' 100" }}
+                >
+                  {book.dateStarted && book.dateFinished ? (
+                    <>
+                      {new Date(book.dateStarted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      {' → '}
+                      {new Date(book.dateFinished).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </>
+                  ) : (
+                    new Date(book.dateFinished || book.dateRead || '').toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })
+                  )}
+                </span>
+              </div>
+            )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Desktop layout */}
+        <div className="hidden sm:flex flex-row gap-9 md:gap-11 w-full">
           {/* Book cover */}
-          <div className="w-[142px] h-[219px] shrink-0 mx-auto sm:mx-0 group cursor-pointer">
+          <div className="w-[142px] h-[219px] shrink-0 group cursor-pointer">
             <img 
               alt={`${book.title} by ${book.author}`} 
               className="w-full h-full object-cover rounded-md shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] transition-transform duration-300 group-hover:rotate-[1deg]" 
@@ -95,7 +194,7 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
           </div>
           
           {/* Info section */}
-          <div className="flex flex-col gap-6 sm:gap-7 md:gap-8 flex-1 text-center sm:text-left">
+          <div className="flex flex-col gap-7 md:gap-8 flex-1">
             {/* Title & Author */}
             <div className="flex flex-col gap-0.5">
               <h2 
@@ -113,17 +212,17 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
             </div>
             
             {/* Meta info */}
-            <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-col gap-4">
               {/* Rating */}
               {book.rating > 0 && (
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 md:gap-8 lg:gap-10 items-center sm:items-center">
+                <div className="flex flex-row gap-6 md:gap-8 lg:gap-10 items-center">
                   <span 
-                    className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 sm:w-[88px] shrink-0"
+                    className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 w-[88px] shrink-0"
                     style={{ fontVariationSettings: "'wdth' 100" }}
                   >
                     Rating
                   </span>
-                  <span className="font-['DM_Sans:Medium','Noto_Sans_Symbols2:Regular',sans-serif] text-lg sm:text-[19px] md:text-xl">
+                  <span className="font-['DM_Sans:Medium','Noto_Sans_Symbols2:Regular',sans-serif] text-[19px] md:text-xl">
                     <span className="text-gray-600">{"★".repeat(book.rating)}</span>
                     <span className="text-gray-200">{"★".repeat(5 - book.rating)}</span>
                   </span>
@@ -132,21 +231,21 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
               
               {/* Shelf (favorites + year tags) */}
               {(book.isFavorite || book.year) && (
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 md:gap-8 lg:gap-10 items-center sm:items-center">
+                <div className="flex flex-row gap-6 md:gap-8 lg:gap-10 items-center">
                   <span 
-                    className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 sm:w-[88px] shrink-0"
+                    className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 w-[88px] shrink-0"
                     style={{ fontVariationSettings: "'wdth' 100" }}
                   >
                     Shelf
                   </span>
                   <div className="flex flex-wrap gap-2">
                     {book.isFavorite && (
-                      <span className="bg-gray-100 px-3 py-1 rounded-full font-medium font-['SF_Pro:Regular',sans-serif] text-base sm:text-[16px] text-gray-600" style={{ fontVariationSettings: "'wdth' 100" }}>
+                      <span className="bg-gray-100 px-3 py-1 rounded-full font-medium font-['SF_Pro:Regular',sans-serif] text-[16px] text-gray-600" style={{ fontVariationSettings: "'wdth' 100" }}>
                         favorites
                       </span>
                     )}
                     {book.year && (
-                      <span className="bg-gray-100 px-3 py-1 rounded-full font-medium font-['SF_Pro:Regular',sans-serif] text-base sm:text-[16px] text-gray-600" style={{ fontVariationSettings: "'wdth' 100" }}>
+                      <span className="bg-gray-100 px-3 py-1 rounded-full font-medium font-['SF_Pro:Regular',sans-serif] text-[16px] text-gray-600" style={{ fontVariationSettings: "'wdth' 100" }}>
                         {book.year}
                       </span>
                     )}
@@ -155,23 +254,31 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
               )}
               
               {/* Date Read */}
-              {book.dateRead && (
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 md:gap-8 lg:gap-10 items-center sm:items-center">
+              {(book.dateStarted || book.dateFinished || book.dateRead) && (
+                <div className="flex flex-row gap-6 md:gap-8 lg:gap-10 items-center">
                   <span 
-                    className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 sm:w-[88px] shrink-0"
+                    className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400 w-[88px] shrink-0"
                     style={{ fontVariationSettings: "'wdth' 100" }}
                   >
-                    Date Read
+                    {book.dateStarted && book.dateFinished ? 'Dates Read' : 'Date Read'}
                   </span>
                   <span 
                     className="font-['SF_Pro:Regular',sans-serif] text-base text-gray-600"
                     style={{ fontVariationSettings: "'wdth' 100" }}
                   >
-                    {new Date(book.dateRead).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
+                    {book.dateStarted && book.dateFinished ? (
+                      <>
+                        {new Date(book.dateStarted).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        {' → '}
+                        {new Date(book.dateFinished).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                      </>
+                    ) : (
+                      new Date(book.dateFinished || book.dateRead || '').toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })
+                    )}
                   </span>
                 </div>
               )}
@@ -186,7 +293,7 @@ export function BookDetailModal({ book, onClose }: BookDetailModalProps) {
         
         {/* Review */}
         {book.review && (
-          <div className="flex flex-col gap-4 -mt-2 sm:gap-6 w-full">
+          <div className="flex flex-col gap-3 sm:gap-6 w-full">
             <span 
               className="font-['SF_Pro:Medium',sans-serif] font-medium text-base text-gray-400"
               style={{ fontVariationSettings: "'wdth' 100" }}
