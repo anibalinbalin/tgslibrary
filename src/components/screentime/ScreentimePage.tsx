@@ -30,19 +30,19 @@ import sendIconSvg from '../../assets/receipt/Screen Time Receipt/src/assets/sen
 import savedCheckSvg from './saved.svg';
 import uploadIconSvg from '../../assets/Upload.svg';
 
-// Import app icons from the receipt assets folder (high-res originals)
-import imgInstagramIcon from '../../assets/receipt/Screen Time Receipt/src/assets/fcadb86f9e7ac3194098e501064eb43213cdfff1.png';
-import imgTwitterIcon from '../../assets/receipt/Screen Time Receipt/src/assets/a643fce02520f3d992e6b432fa72fab473a1ca7e.png';
-import imgLinkedInIcon from '../../assets/receipt/Screen Time Receipt/src/assets/f81f194aee98efdd62a97e659006efa986492874.png';
-import imgMessagesIcon from '../../assets/receipt/Screen Time Receipt/src/assets/dd3b1a5ed7db644c197314328f647774bd86226e.png';
-import imgCalendarIcon from '../../assets/receipt/Screen Time Receipt/src/assets/d215490446b5a00cb8bffe9167cdce65067a29ac.png';
-import imgSlackIcon from '../../assets/receipt/Screen Time Receipt/src/assets/6d01b65a3f6d80963e9f7bc16d4214b718f19e63.png';
-import imgNotesIcon from '../../assets/receipt/Screen Time Receipt/src/assets/a96b215a3998f46bd64e605040650bcf6eeedb40.png';
-import imgMailIcon from '../../assets/receipt/Screen Time Receipt/src/assets/ed242d6b65d5ccb5cf614e9ecb48eb47cf46d29b.png';
-import imgNotionIcon from '../../assets/receipt/Screen Time Receipt/src/assets/7e1b9c12f8851b2eb04dc3a6cde488912f9c1662.png';
-import imgYoutubeIcon from '../../assets/receipt/Screen Time Receipt/src/assets/b8fbffbd38baca46478d9cc48b9ea8682aec011f.png';
-import imgNetflixIcon from '../../assets/receipt/Screen Time Receipt/src/assets/d05a38e2f2b65e25e0e7c6f7fc308cfd490b8aef.png';
-import imgSpotifyIcon from '../../assets/receipt/Screen Time Receipt/src/assets/c5d11845c52c0f03f2dbc26a4acdc83f8e1c322d.png';
+// Import app icons - optimized versions (132x132, ~30-40KB each instead of 4-9MB)
+import imgInstagramIcon from '../../assets/receipt/icons-optimized/fcadb86f9e7ac3194098e501064eb43213cdfff1.png';
+import imgTwitterIcon from '../../assets/receipt/icons-optimized/IMG_6929.png';
+import imgLinkedInIcon from '../../assets/receipt/icons-optimized/IMG_6930.png';
+import imgMessagesIcon from '../../assets/receipt/icons-optimized/dd3b1a5ed7db644c197314328f647774bd86226e.png';
+import imgCalendarIcon from '../../assets/receipt/icons-optimized/IMG_6926.png';
+import imgSlackIcon from '../../assets/receipt/icons-optimized/IMG_6919.png';
+import imgNotesIcon from '../../assets/receipt/icons-optimized/a96b215a3998f46bd64e605040650bcf6eeedb40.png';
+import imgMailIcon from '../../assets/receipt/icons-optimized/IMG_6921.png';
+import imgNotionIcon from '../../assets/receipt/icons-optimized/IMG_6925.png';
+import imgYoutubeIcon from '../../assets/receipt/icons-optimized/IMG_6932.png';
+import imgNetflixIcon from '../../assets/receipt/icons-optimized/IMG_6933 1.png';
+import imgSpotifyIcon from '../../assets/receipt/icons-optimized/IMG_6931.png';
 
 const APP_ICONS = {
   instagram: imgInstagramIcon,
@@ -324,14 +324,14 @@ function AppIcon({ appName, icon }: { appName: string; icon: string }) {
       );
     case "TWITTER/X":
       return (
-        <div className="h-[44.379px] relative rounded-[11.379px] shrink-0 w-[44px] overflow-hidden">
-          <img alt="" className="absolute h-[1225.64%] left-[-39.66%] max-w-none top-[-671.79%] w-[568.97%]" src={icon} />
+        <div className={`${baseStyles} rounded-[11px]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[11px] size-full" src={icon} />
         </div>
       );
     case "LINKEDIN":
       return (
-        <div className={`${baseStyles} rounded-[11px] overflow-hidden`}>
-          <img alt="" className="absolute h-[1236.21%] left-[-168.97%] max-w-none top-[-256.03%] w-[568.97%]" src={icon} />
+        <div className={`${baseStyles} rounded-[11px]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[11px] size-full" src={icon} />
         </div>
       );
     case "MESSAGES":
@@ -342,14 +342,14 @@ function AppIcon({ appName, icon }: { appName: string; icon: string }) {
       );
     case "CALENDAR":
       return (
-        <div className={`${baseStyles} rounded-[10.891px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)] overflow-hidden`}>
-          <img alt="" className="absolute h-[1419.8%] left-[-500.99%] max-w-none top-[-301.98%] w-[653.47%]" src={icon} />
+        <div className={`${baseStyles} rounded-[11px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[11px] size-full" src={icon} />
         </div>
       );
     case "SLACK":
       return (
-        <div className="h-[44px] relative rounded-[11.759px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)] shrink-0 w-[44.379px] overflow-hidden">
-          <img alt="" className="absolute h-[1236.21%] left-[-167.52%] max-w-none top-[-115.52%] w-[564.1%]" src={icon} />
+        <div className={`${baseStyles} rounded-[12px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[12px] size-full" src={icon} />
         </div>
       );
     case "NOTES":
@@ -360,32 +360,32 @@ function AppIcon({ appName, icon }: { appName: string; icon: string }) {
       );
     case "MAIL":
       return (
-        <div className="h-[44px] relative shrink-0 w-[44.25px] overflow-hidden">
-          <img alt="" className="absolute h-[814.77%] left-[-16.95%] max-w-none top-[-107.95%] w-[372.88%]" src={icon} />
+        <div className={baseStyles}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none size-full" src={icon} />
         </div>
       );
     case "NOTION":
       return (
-        <div className={`${baseStyles} rounded-[11.327px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)] overflow-hidden`}>
-          <img alt="" className="absolute h-[1419.8%] left-[-351.49%] max-w-none top-[-301.98%] w-[653.47%]" src={icon} />
+        <div className={`${baseStyles} rounded-[11px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[11px] size-full" src={icon} />
         </div>
       );
     case "YOUTUBE":
       return (
-        <div className="h-[44px] relative rounded-[11.658px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)] shrink-0 w-[43.624px] overflow-hidden">
-          <img alt="" className="absolute h-[1225.64%] left-[-300%] max-w-none top-[-811.11%] w-[568.97%]" src={icon} />
+        <div className={`${baseStyles} rounded-[12px] shadow-[0px_2px_8px_rgba(0,0,0,0.15)]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[12px] size-full" src={icon} />
         </div>
       );
     case "NETFLIX":
       return (
-        <div className="h-[43.254px] relative rounded-[11.186px] shrink-0 w-[44px] overflow-hidden">
-          <img alt="" className="absolute h-[1236.21%] left-[-422.03%] max-w-none top-[-818.1%] w-[559.32%]" src={icon} />
+        <div className={`${baseStyles} rounded-[11px]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[11px] size-full" src={icon} />
         </div>
       );
     case "SPOTIFY":
       return (
-        <div className="h-[43.254px] relative rounded-[10.814px] shrink-0 w-[44px] overflow-hidden">
-          <img alt="" className="absolute h-[1236.21%] left-[-294.07%] max-w-none top-[-115.52%] w-[559.32%]" src={icon} />
+        <div className={`${baseStyles} rounded-[12px]`}>
+          <img alt="" className="absolute inset-0 object-cover pointer-events-none rounded-[12px] size-full" src={icon} />
         </div>
       );
     default:
@@ -786,15 +786,15 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
   return (
     <div className="fixed inset-0 z-10000 flex items-center justify-center bg-black/5 animate-fade-in p-4" onClick={onClose}>
       <div className="bg-white rounded-[20px] py-2 pb-4 w-full max-w-[500px] max-h-[90vh] overflow-y-auto shadow-md animate-slide-in" onClick={(e) => e.stopPropagation()}>
-        <div className="top-0 bg-white flex items-center justify-center px-12 pt-8 rounded-t-[20px]">
+        <div className="top-0 bg-white flex items-center justify-center pt-6 w-full rounded-t-[20px]">
           <h2 className="font-mono text-lg text-black font-semibold">Upload Your Screen Time Data</h2>
         </div>
         
-        <div className="px-12 py-6 space-y-6 font-mono text-[15px]">
+        <div className="px-8 py-4 space-y-5 font-mono text-[15px]">
         <div className="border-t border-gray-200" />
           <div className="space-y-3">
             <h3 className="font-['Figtree'] text-base text-black font-semibold">iPhone</h3>
-            <ol className="font-['Figtree'] space-y-3 pl-10 list-decimal text-gray-500 leading-normal">
+            <ol className="font-['Figtree'] space-y-2 pl-10 list-decimal text-gray-500 leading-normal">
               <li>Open <strong>Settings</strong></li>
               <li>Scroll down and tap <strong>Screen Time</strong></li>
               <li>Tap <strong>See All Activity</strong></li>
@@ -803,9 +803,9 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
             </ol>
           </div>
 
-          <div className="border-t border-gray-200 pt-6 space-y-3">
+          <div className="border-t border-gray-200 pt-4 space-y-4">
             <h3 className="font-mono text-base text-black font-semibold">Android</h3>
-            <ol className="font-['Figtree'] space-y-3 pl-10 list-decimal text-gray-500 leading-normal">
+            <ol className="font-['Figtree'] space-y-2 pl-10 list-decimal text-gray-500 leading-normal">
               <li>Open <strong>Settings</strong></li>
               <li>Tap <strong>Digital Wellbeing & parental controls</strong></li>
               <li>Tap the graph to see your screen time details</li>
@@ -838,8 +838,8 @@ function UploadInstructions({ onClose, onUploadSuccess }: { onClose: () => void;
             </div>
           )}
 
-          <label className="block">
-            <div className={`${isProcessing ? 'bg-gray-400' : 'bg-[#404040] hover:bg-[#333]'} transition-colors flex items-center justify-center px-[20px] py-[12px] rounded-full cursor-pointer`}>
+          <label className="flex items-center justify-center pt-2">
+            <div className={`${isProcessing ? 'bg-gray-400' : 'bg-gray-900 hover:bg-gray-800'} transition-colors flex items-center justify-center px-6 py-3 rounded-full cursor-pointer`}>
               <p className="font-mono text-[15px] text-center text-white tracking-[0.75px]">
                 {isProcessing ? 'PROCESSING...' : 'UPLOAD SCREENSHOT'}
               </p>
