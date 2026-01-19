@@ -220,4 +220,16 @@ export const structure = (S: StructureBuilder) =>
         .title('Quote')
         .schemaType('aboutQuote')
         .child(S.documentTypeList('aboutQuote').title('Quotes')),
+
+      S.divider(),
+
+      // Book Suggestions (from library suggestion box)
+      S.listItem()
+        .title('📬 Book Suggestions')
+        .schemaType('bookSuggestion')
+        .child(
+          S.documentTypeList('bookSuggestion')
+            .title('Book Suggestions')
+            .defaultOrdering([{field: 'submittedAt', direction: 'desc'}])
+        ),
     ])
