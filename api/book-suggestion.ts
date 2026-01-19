@@ -4,14 +4,6 @@ import { createClient } from '@sanity/client';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const sanityClient = createClient({
-  projectId: 'am3v0x1c',
-  dataset: 'production',
-  apiVersion: '2024-01-01',
-  token: process.env.SANITY_WRITE_TOKEN,
-  useCdn: false,
-});
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow POST requests
   if (req.method !== 'POST') {
@@ -25,13 +17,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Book title is required' });
     }
 
-    // Store in Sanity
-    const sanityDoc = await sanityClient.create({
-      _type: 'bookSuggestion',
-      bookTitle: bookTitle.trim(),
-      submittedAt: new Date().toISOString(),
-      status: 'new',
+    // Check if Sanity token is configured
+    if (!process.env.SANITY_WRITE_TOKEN) {
+      console.error('SANITY_WRITE_TOKEN is not configured');
+      return res.status(500).json({ error: 'Server configuration error: missing Sanity token' });
+    }
+
+    // Create Sanity client with token
+    const sanityClient = createClient({
+      projectId: 'am3v0x1c',
+      dataset: 'production',
+      apiVersion: '2024-01-01',
+      token: process.env.SANITY_WRITE_TOKEN,
+      useCdn: false,
     });
+
+    // Store in Sanity
+    let sanityDoc;
+    try {
+      sanityDoc = await sanityClient.create({
+        _type: 'bookSuggestion',
+        bookTitle: bookTitle.trim(),
+        submittedAt: new Date().toISOString(),
+        status: 'new',
+      });
+    } catch (sanityError) {
+      console.error('Sanity error:', sanityError);
+      return res.status(500).json({ error: 'Failed to save to database', details: String(sanityError) });
+    }
 
     // Send email notification
     const { data, error } = await resend.emails.send({
