@@ -8,6 +8,15 @@ export const client = createClient({
   useCdn: true, // Enable CDN caching for better performance
 });
 
+// Write client for mutations (book suggestions)
+export const writeClient = createClient({
+  projectId: "am3v0x1c",
+  dataset: "production",
+  apiVersion: "2026-01-06",
+  useCdn: false,
+  token: import.meta.env.VITE_SANITY_WRITE_TOKEN,
+});
+
 const builder = imageUrlBuilder(client);
 
 // Base urlFor for building custom image URLs
