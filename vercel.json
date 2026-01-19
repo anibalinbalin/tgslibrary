@@ -1,4 +1,5 @@
 {
+  "framework": "vite",
   "redirects": [
     { "source": "/home", "destination": "/", "permanent": true },
     { "source": "/work", "destination": "/", "permanent": true }
@@ -8,7 +9,8 @@
   ],
   "functions": {
     "api/book-suggestion.js": {
-      "runtime": "nodejs20.x"
+      "runtime": "nodejs20.x",
+      "includeFiles": "node_modules/@sanity/client/**,node_modules/resend/**"
     }
   }
 }
