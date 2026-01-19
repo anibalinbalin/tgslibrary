@@ -39,10 +39,10 @@ export default function VideoPlayer({
   playerName = "Portfolio Video Player",
   muxMetadata = {},
   className = "",
-  autoPlay = false,
-  muted = false,
-  loop = false,
-  controls = true,
+  autoPlay = true,
+  muted = true,
+  loop = true,
+  controls = false,
   onLoaded,
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -172,6 +172,12 @@ export default function VideoPlayer({
         // Safari native HLS support
         video.src = src;
         initMuxMonitoring();
+        if (autoPlayRef.current) {
+          video.muted = true;
+          video.play().catch((err) => {
+            console.log("Autoplay prevented by browser:", err);
+          });
+        }
       } else {
         console.error("HLS is not supported in this browser");
       }
@@ -179,6 +185,12 @@ export default function VideoPlayer({
       // Regular video file (MP4, WebM, etc.)
       video.src = src;
       initMuxMonitoring();
+      if (autoPlayRef.current) {
+        video.muted = true;
+        video.play().catch((err) => {
+          console.log("Autoplay prevented by browser:", err);
+        });
+      }
     }
 
     // Cleanup
