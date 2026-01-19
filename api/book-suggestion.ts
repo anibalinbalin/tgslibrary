@@ -1,8 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { Resend } from 'resend';
-import { createClient } from '@sanity/client';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow POST requests
@@ -22,6 +18,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.error('SANITY_WRITE_TOKEN is not configured');
       return res.status(500).json({ error: 'Server configuration error: missing Sanity token' });
     }
+
+    // Dynamic imports to avoid initialization issues
+    const { createClient } = await import('@sanity/client');
+    const { Resend } = await import('resend');
 
     // Create Sanity client with token
     const sanityClient = createClient({
@@ -47,6 +47,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Send email notification
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { data, error } = await resend.emails.send({
       from: 'Library <onboarding@resend.dev>',
       to: 'michelletheresaliu@gmail.com',
@@ -81,6 +82,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   } catch (error) {
     console.error('API error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    return res.status(500).json({ error: 'Internal server error', details: String(error) });
   }
 }
