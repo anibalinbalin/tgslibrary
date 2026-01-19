@@ -1,6 +1,3 @@
-const { createClient } = require('@sanity/client');
-const { Resend } = require('resend');
-
 module.exports = async function handler(req, res) {
   // Only allow POST requests
   if (req.method !== 'POST') {
@@ -14,10 +11,23 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Book title is required' });
     }
 
-    // Check if Sanity token is configured
-    if (!process.env.SANITY_WRITE_TOKEN) {
-      console.error('SANITY_WRITE_TOKEN is not configured');
-      return res.status(500).json({ error: 'Server configuration error: missing Sanity token' });
+    // Check environment variables
+    const envCheck = {
+      hasSanityToken: !!process.env.SANITY_WRITE_TOKEN,
+      hasResendKey: !!process.env.RESEND_API_KEY,
+    };
+
+    if (!envCheck.hasSanityToken) {
+      return res.status(500).json({ error: 'Missing SANITY_WRITE_TOKEN', envCheck });
+    }
+
+    // Dynamic require to catch import errors
+    let createClient, Resend;
+    try {
+      createClient = require('@sanity/client').createClient;
+      Resend = require('resend').Resend;
+    } catch (importError) {
+      return res.status(500).json({ error: 'Failed to import dependencies', details: String(importError) });
     }
 
     // Create Sanity client with token
@@ -39,7 +49,6 @@ module.exports = async function handler(req, res) {
         status: 'new',
       });
     } catch (sanityError) {
-      console.error('Sanity error:', sanityError);
       return res.status(500).json({ error: 'Failed to save to database', details: String(sanityError) });
     }
 
@@ -77,7 +86,6 @@ module.exports = async function handler(req, res) {
       sanityId: sanityDoc._id,
     });
   } catch (error) {
-    console.error('API error:', error);
-    return res.status(500).json({ error: 'Internal server error', details: String(error) });
+    return res.status(500).json({ error: 'Internal server error', details: String(error), stack: error.stack });
   }
 };
