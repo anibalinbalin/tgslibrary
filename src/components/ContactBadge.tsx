@@ -76,11 +76,11 @@ export default function ContactBadge({
         "relative inline-flex items-center justify-center rounded-[999px] transition-all ease-in-out w-fit bg-[#ecfdf5]",
         hoverMode && "align-middle -translate-y-[2px] [cursor:inherit] before:content-[''] before:absolute before:-inset-[2px] before:rounded-[999px] before:pointer-events-none",
         hoverMode && (isExpanded 
-          ? "gap-2 pl-1 pr-2.5 md:ml-2 duration-300" 
+          ? "gap-1.5 pl-1 pr-2.5 md:ml-2 duration-300" 
           : "md:gap-0 pl-1 md:pr-0 md:ml-2 duration-300"
         ),
         scrollExpandMode && (isExpanded 
-          ? "gap-1.5 pl-1.5 pr-2.5 py-0.5 duration-[800ms]" 
+          ? "gap-1 pl-1.5 pr-2.5 py-0.5 duration-[800ms]" 
           : "gap-0 p-1 duration-[800ms]"
         ),
         className

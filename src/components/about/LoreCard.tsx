@@ -56,12 +56,12 @@ export default function LoreCard({ className, data, onClick }: LoreCardProps) {
           <img
             src={data.imageSrc}
             alt={data.headline}
-            className="absolute inset-0 h-full w-full rounded-2xl sm:rounded-3xl object-cover transition-transform duration-200 ease-out group-hover:scale-[1.01]"
+            className="absolute inset-0 h-full w-full rounded-2xl sm:rounded-3xl object-cover transition-transform duration-200 ease-out group-hover:scale-[0.99]"
             loading="lazy"
           />
         ) : (
           <div
-            className="h-full w-full transition-transform duration-200 ease-out group-hover:scale-[1.01]"
+            className="h-full w-full transition-transform duration-200 ease-out group-hover:scale-[0.99]"
             style={{ backgroundColor: bgColor }}
           />
         )}
