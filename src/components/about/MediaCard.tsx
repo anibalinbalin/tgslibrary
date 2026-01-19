@@ -206,13 +206,31 @@ export default function MediaCard({
 
   const externalUrl = getExternalUrl();
 
-  // Image loading state
-  const [imageLoaded, setImageLoaded] = useState(false);
+  // Image loading state - check if already cached on mount
+  const [imageLoaded, setImageLoaded] = useState(() => {
+    if (!data?.imageSrc) return false;
+    // Check if image is already in browser cache
+    const img = new Image();
+    img.src = data.imageSrc;
+    return img.complete && img.naturalWidth > 0;
+  });
   const [imageError, setImageError] = useState(false);
   
   // Reset image loading state when imageSrc changes
   useEffect(() => {
-    setImageLoaded(false);
+    if (!data?.imageSrc) {
+      setImageLoaded(false);
+      setImageError(false);
+      return;
+    }
+    // Check if new image is already cached
+    const img = new Image();
+    img.src = data.imageSrc;
+    if (img.complete && img.naturalWidth > 0) {
+      setImageLoaded(true);
+    } else {
+      setImageLoaded(false);
+    }
     setImageError(false);
   }, [data?.imageSrc]);
 
@@ -255,10 +273,9 @@ export default function MediaCard({
           src={data.imageSrc}
           alt={data.title || "Media cover"}
           className={clsx(
-            "absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ease-out",
-            imageLoaded ? "opacity-100" : "opacity-0"
+            "absolute inset-0 h-full w-full object-cover",
+            imageLoaded ? "opacity-100" : "opacity-0 transition-opacity duration-300 ease-out"
           )}
-          loading="lazy"
           onLoad={handleImageLoad}
           onError={handleImageError}
         />

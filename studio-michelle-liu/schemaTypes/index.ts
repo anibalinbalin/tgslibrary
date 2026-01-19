@@ -12,6 +12,7 @@ import {community} from './community'
 import {shelfItem} from './shelfItem'
 import {loreItem} from './loreItem'
 import {aboutQuote} from './aboutQuote'
+import {bookSuggestion} from './bookSuggestion'
 
 // Object types (used in documents)
 import {metadataItem} from './objects/metadataItem'
@@ -52,6 +53,7 @@ export const schemaTypes = [
   shelfItem,
   loreItem,
   aboutQuote,
+  bookSuggestion,
   
   // Objects (must be registered for use in arrays)
   metadataItem,

@@ -1,7 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { Resend } from 'resend';
+import { createClient } from '@sanity/client';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+const sanityClient = createClient({
+  projectId: 'am3v0x1c',
+  dataset: 'production',
+  apiVersion: '2024-01-01',
+  token: process.env.SANITY_WRITE_TOKEN,
+  useCdn: false,
+});
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Only allow POST requests
@@ -15,6 +24,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (!bookTitle || typeof bookTitle !== 'string') {
       return res.status(400).json({ error: 'Book title is required' });
     }
+
+    // Store in Sanity
+    const sanityDoc = await sanityClient.create({
+      _type: 'bookSuggestion',
+      bookTitle: bookTitle.trim(),
+      submittedAt: new Date().toISOString(),
+      status: 'new',
+    });
 
     // Send email notification
     const { data, error } = await resend.emails.send({
@@ -41,10 +58,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (error) {
       console.error('Resend error:', error);
-      return res.status(500).json({ error: 'Failed to send email' });
+      // Still return success since we saved to Sanity
     }
 
-    return res.status(200).json({ success: true, id: data?.id });
+    return res.status(200).json({ 
+      success: true, 
+      emailId: data?.id,
+      sanityId: sanityDoc._id,
+    });
   } catch (error) {
     console.error('API error:', error);
     return res.status(500).json({ error: 'Internal server error' });
