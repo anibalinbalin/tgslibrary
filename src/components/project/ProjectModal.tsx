@@ -3060,7 +3060,7 @@ function ContentBlock({
 
             {/* TOC Items Grid */}
             {section.items && section.items.length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 w-full">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-6 w-full">
                 {section.items.map((item) => {
                   const itemImageSrc = item.externalImageUrl 
                     ? item.externalImageUrl 
