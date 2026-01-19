@@ -91,13 +91,13 @@ export default function PageHeader({
               <ScrollReveal variant="fade" rootMargin="0px" disabled={heroAnimationPlayed}>
                 {nameAddon ? (
                   <div className="flex gap-3 items-baseline w-full">
-                    <p className="font-['Figtree',sans-serif] tracking-[0.015em] font-medium leading-normal text-[#374151] text-4xl max-md:text-4xl">
+                    <p className="font-['Figtree',sans-serif] tracking-[0.0125em] font-medium leading-normal text-[#374151] text-4xl max-md:text-4xl">
                       michelle liu
                     </p>
                     {nameAddon}
                   </div>
                 ) : (
-                  <p className="font-['Figtree',sans-serif] tracking-[0.015em] font-medium leading-normal relative shrink-0 text-[#374151] text-4xl w-full max-md:text-4xl">
+                  <p className="font-['Figtree',sans-serif] tracking-[0.0125em] font-medium leading-normal relative shrink-0 text-[#374151] text-4xl w-full max-md:text-4xl">
                     michelle liu
                   </p>
                 )}
