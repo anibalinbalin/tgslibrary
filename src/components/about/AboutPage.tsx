@@ -264,6 +264,20 @@ export default function AboutPage() {
     fetchAboutData();
   }, []);
 
+  // Preload all shelf images in the background so tab switching is instant
+  useEffect(() => {
+    if (shelfItems.length === 0) return;
+    
+    const imageUrls = shelfItems
+      .map(item => item.imageSrc)
+      .filter((src): src is string => !!src);
+    
+    imageUrls.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [shelfItems]);
+
   // Set first community as active when communities load
   useEffect(() => {
     if (communities.length > 0 && !activeCommunityId) {
