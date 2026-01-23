@@ -187,3 +187,17 @@ Started: Fri Jan 23 00:24:18 -03 2026
   - Import from `@/components/ui` for clean imports: `import { Button, Card } from "@/components/ui"`
   - Barrel file enables tree-shaking - only used components get bundled
 ---
+
+## 2026-01-23 14:00 - US-017
+- Updated BookCard to use TGS design tokens
+- Changed rounded-[4px] → rounded-xl for cover and image
+- Changed shadow-[...] → shadow-sm base, shadow-lg on hover
+- Changed bg-gray-100 → bg-muted, text-gray-500 → text-muted-foreground
+- Changed text-black → text-foreground, text-[rgba(0,0,0,0.5)] → text-muted-foreground
+- Changed transition-opacity → transition-all for smoother hover effects
+- Files changed: src/app/library/page.tsx
+- **Learnings for future iterations:**
+  - TGS design tokens: bg-muted for placeholders, text-muted-foreground for secondary text
+  - shadow-sm base, shadow-lg hover is TGS pattern for elevated cards
+  - Use text-muted-foreground/40 for very subtle text (star outlines)
+---
