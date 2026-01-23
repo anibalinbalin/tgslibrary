@@ -17,7 +17,8 @@ const SHELF_BOOKS_QUERY = `
     rating,
     year,
     goodreadsUrl,
-    review
+    review,
+    review_en
   }
 `;
 
@@ -38,6 +39,7 @@ interface ShelfBookData {
   year?: string;
   goodreadsUrl?: string;
   review?: string;
+  review_en?: string;
 }
 
 interface Book {
@@ -49,6 +51,7 @@ interface Book {
   year?: string;
   goodreadsUrl?: string;
   review?: string;
+  review_en?: string;
 }
 
 // Transform Sanity shelf item to component format
@@ -70,6 +73,7 @@ function transformBook(item: ShelfBookData): Book {
     year: item.year,
     goodreadsUrl: item.goodreadsUrl,
     review: item.review,
+    review_en: item.review_en,
   };
 }
 
@@ -117,7 +121,8 @@ function BookCard({ book, onClick }: { book: Book; onClick: () => void }) {
 
 // BookDetailModal Component
 function BookDetailModal({ book, onClose }: { book: Book; onClose: () => void }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  const review = lang === 'en' ? (book.review_en || book.review) : book.review;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -214,13 +219,13 @@ function BookDetailModal({ book, onClose }: { book: Book; onClose: () => void })
                 </div>
               )}
 
-              {book.review && (
+              {review && (
                 <div className="pt-[8px] sm:pt-[12px] w-full">
                   <p
                     className="font-['SF_Pro:Regular',sans-serif] font-normal text-[15px] sm:text-[16px] md:text-[17px] text-[rgba(0,0,0,0.7)] leading-[1.5]"
                     style={{ fontVariationSettings: "'wdth' 100" }}
                   >
-                    {book.review}
+                    {review}
                   </p>
                 </div>
               )}
@@ -234,7 +239,7 @@ function BookDetailModal({ book, onClose }: { book: Book; onClose: () => void })
           className="absolute right-[16px] sm:right-[20px] md:right-[24px] top-[16px] sm:top-[20px] md:top-[24px] content-stretch flex gap-[8px] items-center justify-center rounded-[1000px] size-[32px] sm:size-[34px] md:size-[36px] transition-all hover:bg-[rgba(0,0,0,0.05)]"
         >
           <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-[18px] sm:text-[19px] md:text-[20px] text-[rgba(20,20,20,0.7)] text-center text-nowrap tracking-[-0.26px]" style={{ fontVariationSettings: "'wdth' 100" }}>
-            <p className="leading-[24px] sm:leading-[25px] md:leading-[26px]">􀆄</p>
+            <p className="leading-[24px] sm:leading-[25px] md:leading-[26px]">×</p>
           </div>
         </button>
       </div>
