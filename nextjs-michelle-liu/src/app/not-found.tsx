@@ -1,21 +1,20 @@
+"use client";
+
 import Link from "next/link";
-import ErrorMessage from "@/components/ErrorMessage";
+import { useLanguage } from "../i18n/LanguageContext";
 
 export default function NotFound() {
+  const { t } = useLanguage();
+
   return (
-    <ErrorMessage
-      title="Oops ... this page can't be found!"
-      description={
-        <>
-          Feel free to return{" "}
-          <Link
-            href="/"
-            className="underline decoration-slate-200 underline-offset-4 transition-colors text-[#111827] hover:text-[#111827]"
-          >
-            home.
-          </Link>
-        </>
-      }
-    />
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <h1 className="text-2xl font-medium mb-4">{t('notFound')}</h1>
+      <Link
+        href="/"
+        className="text-blue-600 hover:underline"
+      >
+        {t('goHome')}
+      </Link>
+    </div>
   );
 }

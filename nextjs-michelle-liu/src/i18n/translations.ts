@@ -1,0 +1,26 @@
+export const translations = {
+  en: {
+    library: "library",
+    books: "books",
+    loading: "Loading books...",
+    emptyShelf: "No books on this shelf yet.",
+    rating: "Rating",
+    viewOnBookshop: "View on Bookshop →",
+    error: "Something went wrong",
+    tryAgain: "Try again",
+    notFound: "Page not found",
+    goHome: "Go home",
+  },
+  es: {
+    library: "biblioteca",
+    books: "libros",
+    loading: "Cargando libros...",
+    emptyShelf: "No hay libros en este estante todavía.",
+    rating: "Calificación",
+    viewOnBookshop: "Ver en Bookshop →",
+    error: "Algo salió mal",
+    tryAgain: "Intentar de nuevo",
+    notFound: "Página no encontrada",
+    goHome: "Ir al inicio",
+  },
+};
