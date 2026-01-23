@@ -8,7 +8,7 @@ export default function NotFound() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-medium mb-4">{t('notFound')}</h1>
+      <h1 className="text-2xl font-medium mb-4 text-balance">{t('notFound')}</h1>
       <Link
         href="/"
         className="text-blue-600 hover:underline"

@@ -8,7 +8,7 @@ export function LanguageToggle() {
   return (
     <button
       onClick={() => setLang(lang === 'en' ? 'es' : 'en')}
-      className="font-['SF_Pro:Regular',sans-serif] text-[15px] text-[rgba(0,0,0,0.4)] hover:text-black transition-colors tracking-[-0.4px] uppercase"
+      className="font-['SF_Pro:Regular',sans-serif] text-[15px] text-[rgba(0,0,0,0.4)] hover:text-black transition-colors uppercase"
       style={{ fontVariationSettings: "'wdth' 100" }}
     >
       {lang === 'en' ? 'ES' : 'EN'}

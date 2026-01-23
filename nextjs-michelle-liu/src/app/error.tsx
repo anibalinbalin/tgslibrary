@@ -17,7 +17,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-2xl font-medium mb-4">{t('error')}</h1>
+      <h1 className="text-2xl font-medium mb-4 text-balance">{t('error')}</h1>
       <button
         onClick={reset}
         className="text-blue-600 hover:underline"
