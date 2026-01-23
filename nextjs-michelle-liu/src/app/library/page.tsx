@@ -258,15 +258,15 @@ export default function LibraryPage() {
 
   return (
     <>
-      <div className="relative min-h-screen w-full bg-white">
+      <div className="relative min-h-screen w-full bg-background">
         {/* Header */}
         <div className="pt-[32px] px-[60px]">
           <div className="flex justify-between items-start pb-[32px]">
             <div className="flex flex-col gap-2 items-start">
-              <p className="font-['SF_Pro:Regular',sans-serif] font-normal leading-[34px] text-[28px] text-black text-balance" style={{ fontVariationSettings: "'wdth' 100" }}>
+              <h1 className="font-sans text-3xl md:text-4xl text-foreground text-balance">
                 {t('library')}
-              </p>
-              <p className="font-['SF_Pro:Regular',sans-serif] font-normal leading-[22px] text-[17px] text-[rgba(0,0,0,0.4)] text-pretty" style={{ fontVariationSettings: "'wdth' 100" }}>
+              </h1>
+              <p className="text-base md:text-lg text-muted-foreground text-pretty">
                 {books.length} {t('books')}
               </p>
             </div>
@@ -280,12 +280,12 @@ export default function LibraryPage() {
             {isLoading ? (
               <div className="flex flex-wrap gap-x-[32px] gap-y-[80px]">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="w-[120px] h-[180px] rounded-[4px] bg-gray-100 animate-pulse" />
+                  <div key={i} className="w-[120px] h-[180px] rounded-xl bg-muted animate-pulse" />
                 ))}
               </div>
             ) : books.length === 0 ? (
               <div className="flex items-center justify-center min-h-[300px]">
-                <p className="font-['SF_Pro:Regular',sans-serif] text-[18px] text-[rgba(0,0,0,0.4)]">
+                <p className="text-lg text-muted-foreground">
                   {t('emptyShelf')}
                 </p>
               </div>
