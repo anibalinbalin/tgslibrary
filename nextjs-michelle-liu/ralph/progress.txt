@@ -149,3 +149,17 @@ Started: Fri Jan 23 00:24:18 -03 2026
   - Uses data-slot="textarea" attribute for styling selectors
   - Uses aria-invalid styling for form validation states
 ---
+
+## 2026-01-23 11:00 - US-014
+- Ported Dialog component from TGS
+- Installed @radix-ui/react-dialog
+- Implements Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose, DialogOverlay, DialogPortal
+- Uses bg-black/50 overlay with fade animation, zoom-in-95 content animation
+- Close button at top-4 right-4 with XIcon
+- Files changed: src/components/ui/dialog.tsx (new), package.json, pnpm-lock.yaml
+- **Learnings for future iterations:**
+  - Dialog uses @radix-ui/react-dialog for accessibility (focus trap, escape key, portal)
+  - showCloseButton prop controls built-in close button (default true)
+  - DialogContent auto-includes overlay via DialogPortal composition
+  - Uses data-[state=open/closed] for animation states
+---
