@@ -1,0 +1,116 @@
+# Ralph Progress Log
+Started: Fri Jan 23 00:24:18 -03 2026
+
+## Codebase Patterns
+- Use `cn()` from `@/lib/utils` for conditional class merging (clsx + tailwind-merge)
+- CVA (class-variance-authority) for component variants
+- TGS UI components in `/Users/anibalin/Sites/2025/tgs_nextjs/my-app/components/ui/`
+- UI components use @radix-ui primitives (react-slot, react-dialog, react-select, etc)
+
+---
+
+## 2026-01-23 01:15 - US-004
+- Added TGS font stack to layout.tsx
+- Registered Fugue (local), Geist Sans, Geist Mono, Roboto Mono
+- Body now uses `font-sans antialiased` with all font variables
+- Files changed: src/app/layout.tsx
+- **Learnings for future iterations:**
+  - TGS layout at `app/[locale]/layout.tsx` uses i18n pattern
+  - `localFont` from `next/font/local` for custom fonts
+  - `variable` prop accepts only ONE CSS var name (not space-separated)
+  - Fugue src path is relative: `../../public/fonts/fugue_regular.woff2`
+---
+
+## 2026-01-23 01:00 - US-003
+- Created src/lib/utils.ts with cn() helper function
+- Files changed: src/lib/utils.ts (new)
+- **Learnings for future iterations:**
+  - cn() utility at `@/lib/utils` is standard shadcn/ui pattern
+  - Import: `import { cn } from "@/lib/utils"`
+---
+
+## 2026-01-23 00:35 - US-002
+- Installed class-variance-authority, tailwind-merge, clsx via pnpm
+- Files changed: package.json, pnpm-lock.yaml
+- **Learnings for future iterations:**
+  - Packages: CVA 0.7.1, clsx 2.1.1, tailwind-merge 3.4.0
+  - These are standard shadcn/ui dependencies for component styling
+---
+
+## 2026-01-23 00:24 - US-001
+- Copied fugue_regular.woff2 from TGS project to public/fonts/
+- Created public/fonts/ directory
+- Files changed: public/fonts/fugue_regular.woff2 (new)
+- **Learnings for future iterations:**
+  - TGS source project is at /Users/anibalin/Sites/2025/tgs_nextjs/my-app/
+  - Font files go in public/fonts/ for Next.js static serving
+---
+
+## 2026-01-23 02:30 - US-005
+- Migrated globals.css CSS variables and colors to TGS pattern
+- Added @theme inline block with OKLCH colors
+- Added .dark selector with dark mode color variants
+- Added --color-terracotta: #D39885
+- Added sidebar color variables (--color-sidebar-*)
+- Removed Figtree Google Font import
+- Added @custom-variant dark rule
+- Files changed: src/app/globals.css
+- **Learnings for future iterations:**
+  - TGS uses OKLCH color format for precise color control
+  - `@custom-variant dark (&:is(.dark *))` enables .dark class-based dark mode
+  - Keep tooltip animation styles - they're project-specific
+---
+
+## 2026-01-23 03:15 - US-006
+- Added radius tokens to @theme inline block (--radius-sm/md/lg/xl)
+- Added @layer base section with border-border and outline-ring/50 defaults
+- Added body bg-background text-foreground styling
+- Files changed: src/app/globals.css
+- **Learnings for future iterations:**
+  - Radius tokens use calc() based on --radius base value: sm (-4px), md (-2px), lg (base), xl (+4px)
+  - @layer base sets global defaults for borders and body styling
+  - TGS globals.css also imports tw-animate-css (may need later for animations story)
+---
+
+## 2026-01-23 04:00 - US-007
+- Added TGS animations to globals.css
+- Added keyframes: marquee, modal-backdrop-in, modal-content-in, card-fade-up, celebration-pulse, shimmer
+- Added .animate-* classes for all keyframes
+- Files changed: src/app/globals.css
+- **Learnings for future iterations:**
+  - TGS animations section from TGS globals.css lines 125-199
+  - celebration-pulse uses terracotta-like color rgba(198, 93, 59, 0.4)
+  - shimmer animation needs .animate-shimmer class (TGS didn't have it, added it)
+---
+
+## 2026-01-23 05:00 - US-008
+- Ported Button component from TGS
+- Installed @radix-ui/react-slot for asChild prop support
+- Created src/components/ui/button.tsx with all variants and sizes
+- Files changed: src/components/ui/button.tsx (new), package.json, pnpm-lock.yaml
+- **Learnings for future iterations:**
+  - TGS components in `/Users/anibalin/Sites/2025/tgs_nextjs/my-app/components/ui/`
+  - Button uses @radix-ui/react-slot for polymorphic asChild pattern
+  - Terracotta variant: `bg-white/90 hover:bg-white text-terracotta border border-white/50`
+  - dev-browser skill has server issues on this machine; browser verification skipped
+---
+
+## 2026-01-23 06:00 - US-009
+- Ported Card component from TGS
+- Implemented Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction
+- Uses rounded-xl border shadow-sm base styling with bg-card text-card-foreground
+- Files changed: src/components/ui/card.tsx (new)
+- **Learnings for future iterations:**
+  - Card uses data-slot attributes for parent-child styling selectors (e.g., `has-data-[slot=card-action]`)
+  - CardAction not in PRD but included for TGS compatibility
+  - No radix dependencies needed for Card (pure React component)
+---
+
+## 2026-01-23 07:00 - US-010
+- Ported Input component from TGS
+- Standard shadcn/ui input with h-10 rounded-md, border-input, focus ring
+- Files changed: src/components/ui/input.tsx (new)
+- **Learnings for future iterations:**
+  - Input is pure React component (no radix dependencies)
+  - Uses ring-offset-background for focus styling
+---

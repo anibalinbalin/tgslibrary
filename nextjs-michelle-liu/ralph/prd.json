@@ -1,0 +1,303 @@
+{
+  "project": "michelle-liu",
+  "branchName": "ralph/tgs-styling-inheritance",
+  "description": "TGS Design System Inheritance - Migrate to TGS styling with Fugue font, OKLCH colors, terracotta accent, and shadcn/ui components",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Copy Fugue font file",
+      "description": "As a developer, I need the Fugue font file in the michelle-liu project so typography matches TGS.",
+      "acceptanceCriteria": [
+        "Copy fugue_regular.woff2 from /Users/anibalin/Sites/2025/tgs_nextjs/my-app/public/fonts/ to public/fonts/",
+        "Verify font file exists at public/fonts/fugue_regular.woff2",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-002",
+      "title": "Install required dependencies",
+      "description": "As a developer, I need CVA, tailwind-merge, and clsx for component variants and class merging.",
+      "acceptanceCriteria": [
+        "Install class-variance-authority",
+        "Install tailwind-merge",
+        "Install clsx",
+        "Verify pnpm install succeeds",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-003",
+      "title": "Create lib/utils.ts with cn() helper",
+      "description": "As a developer, I need the cn() utility function for merging Tailwind classes.",
+      "acceptanceCriteria": [
+        "Create src/lib/utils.ts",
+        "Export cn() function using clsx and tailwind-merge",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-004",
+      "title": "Update layout.tsx with TGS font stack",
+      "description": "As a developer, I need the same font registration as TGS so all fonts are available via CSS variables.",
+      "acceptanceCriteria": [
+        "Register Fugue via next/font/local with --font-sans variable (weight range 300-500)",
+        "Register Geist Sans via next/font/google with --font-geist-sans",
+        "Register Geist Mono with --font-geist-mono and --font-mono",
+        "Register Roboto Mono with --font-roboto-mono (weights 400, 500, 700)",
+        "Apply all font variables to body className",
+        "Body uses font-sans antialiased as default",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-005",
+      "title": "Migrate globals.css - CSS variables and colors",
+      "description": "As a developer, I need TGS CSS variables for colors so the color system is consistent.",
+      "acceptanceCriteria": [
+        "Add @theme inline block with OKLCH colors (background, foreground, primary, secondary, muted, accent, destructive)",
+        "Add dark mode color variants under .dark selector",
+        "Add --color-terracotta: #D39885",
+        "Add sidebar color variables (--color-sidebar-*)",
+        "Remove Figtree Google Font import",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-006",
+      "title": "Migrate globals.css - radius and base styles",
+      "description": "As a developer, I need TGS border radius tokens and base layer styles.",
+      "acceptanceCriteria": [
+        "Add border radius tokens (--radius: 0.625rem, --radius-sm/md/lg/xl)",
+        "Add @layer base with border-border and outline-ring/50 defaults",
+        "Add body bg-background text-foreground styling",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-007",
+      "title": "Migrate globals.css - animations",
+      "description": "As a developer, I need TGS animations for modals, cards, and other UI elements.",
+      "acceptanceCriteria": [
+        "Add marquee animation (30s linear infinite horizontal scroll)",
+        "Add modal-backdrop-in animation (250ms fade)",
+        "Add modal-content-in animation (250ms fade + scale)",
+        "Add card-fade-up animation (400ms fade + slide up)",
+        "Add celebration-pulse animation (2s box-shadow pulse)",
+        "Add shimmer animation (horizontal slide)",
+        "Add corresponding .animate-* classes",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-008",
+      "title": "Port Button component",
+      "description": "As a user, I want buttons styled consistently with TGS including the terracotta variant.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/button.tsx",
+        "Implement variants: default, destructive, outline, secondary, ghost, link, terracotta",
+        "Implement sizes: default, sm, lg, icon, icon-sm, icon-lg",
+        "Use CVA for variant management",
+        "Include focus-visible:ring-[3px] styling",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Browser verification skipped due to dev-browser server issues"
+    },
+    {
+      "id": "US-009",
+      "title": "Port Card component",
+      "description": "As a user, I want card containers styled with TGS patterns.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/card.tsx",
+        "Implement Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter",
+        "Use rounded-xl border shadow-sm base styling",
+        "Use bg-card text-card-foreground colors",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Also included CardAction from TGS. Browser verification skipped (no visible UI yet - standalone component)"
+    },
+    {
+      "id": "US-010",
+      "title": "Port Input component",
+      "description": "As a user, I want form inputs styled consistently with TGS.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/input.tsx",
+        "Use h-10 rounded-md border border-input bg-background styling",
+        "Include focus-visible ring styling",
+        "Include disabled:opacity-50 state",
+        "Typecheck passes"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": ""
+    },
+    {
+      "id": "US-011",
+      "title": "Port Label component",
+      "description": "As a developer, I need Label component for form accessibility.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/label.tsx",
+        "Use text-sm font-medium leading-none styling",
+        "Include peer-disabled:opacity-70",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-012",
+      "title": "Port Checkbox component",
+      "description": "As a user, I want checkboxes styled with TGS patterns.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/checkbox.tsx",
+        "Use h-4 w-4 rounded-sm border border-primary styling",
+        "Include checked state with bg-primary text-primary-foreground",
+        "Include focus-visible ring",
+        "Typecheck passes"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-013",
+      "title": "Port Textarea component",
+      "description": "As a user, I want textarea inputs styled consistently.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/textarea.tsx",
+        "Use min-h-16 w-full rounded-md border border-input bg-transparent styling",
+        "Include focus-visible ring",
+        "Include disabled:opacity-50 state",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-014",
+      "title": "Port Dialog component",
+      "description": "As a user, I want modals styled with TGS patterns including overlay and animations.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/dialog.tsx",
+        "Implement Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose",
+        "Use @radix-ui/react-dialog primitives (install if needed)",
+        "Use bg-black/50 overlay with fade animation",
+        "Use zoom-in-95 fade-in content animation",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-015",
+      "title": "Port Select component",
+      "description": "As a user, I want dropdown selects styled with TGS patterns.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/select.tsx",
+        "Implement Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel",
+        "Use @radix-ui/react-select primitives (install if needed)",
+        "Use portal for content positioning",
+        "Include zoom-in fade-in animations",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-016",
+      "title": "Add UI components barrel export",
+      "description": "As a developer, I need a barrel export for easy component imports.",
+      "acceptanceCriteria": [
+        "Create src/components/ui/index.ts",
+        "Export Button and buttonVariants",
+        "Export Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter",
+        "Export Input, Label, Checkbox, Textarea",
+        "Export Dialog components",
+        "Export Select components",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-017",
+      "title": "Update BookCard to use design tokens",
+      "description": "As a user, I want book cards to use the new design system with consistent shadows, radius, and hover states.",
+      "acceptanceCriteria": [
+        "Update BookCard to use rounded-xl (TGS radius token)",
+        "Use shadow-sm for base, enhanced shadow on hover",
+        "Use design token colors (bg-card, text-card-foreground) where applicable",
+        "Apply transition-all duration-200 for hover effects",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-018",
+      "title": "Update BookDetailModal styling",
+      "description": "As a user, I want the book detail modal to use the new Dialog component styling patterns.",
+      "acceptanceCriteria": [
+        "Update BookDetailModal overlay to use bg-black/50",
+        "Update content to use rounded-lg shadow-lg styling",
+        "Apply modal animations (fade-in, zoom-in-95)",
+        "Position close button at top-4 right-4",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "US-019",
+      "title": "Update page typography",
+      "description": "As a user, I want page headings and text to use the Fugue font and TGS typography scale.",
+      "acceptanceCriteria": [
+        "Headings use font-sans (Fugue) by default",
+        "Apply TGS heading sizes (text-4xl, text-3xl md:text-4xl lg:text-5xl)",
+        "Body text uses appropriate sizes (text-base, text-lg, text-sm)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
