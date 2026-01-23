@@ -6,6 +6,8 @@ Started: Fri Jan 23 00:24:18 -03 2026
 - CVA (class-variance-authority) for component variants
 - TGS UI components in `/Users/anibalin/Sites/2025/tgs_nextjs/my-app/components/ui/`
 - UI components use @radix-ui primitives (react-slot, react-dialog, react-select, etc)
+- lucide-react for icons (Check, ChevronDown, etc)
+- Empty interfaces trigger ESLint error - use type alias instead
 
 ---
 
@@ -113,4 +115,37 @@ Started: Fri Jan 23 00:24:18 -03 2026
 - **Learnings for future iterations:**
   - Input is pure React component (no radix dependencies)
   - Uses ring-offset-background for focus styling
+---
+
+## 2026-01-23 08:00 - US-011
+- Ported Label component from TGS
+- Installed @radix-ui/react-label
+- Uses CVA for variant management (even with single variant for extensibility)
+- Files changed: src/components/ui/label.tsx (new), package.json, pnpm-lock.yaml
+- **Learnings for future iterations:**
+  - Label uses @radix-ui/react-label for accessibility (htmlFor association)
+  - CVA used even for single-variant components to match TGS patterns
+---
+
+## 2026-01-23 09:00 - US-012
+- Ported Checkbox component from TGS
+- Installed @radix-ui/react-checkbox and lucide-react (for Check icon)
+- Uses peer selector for disabled styling, data-[state=checked] for checked state
+- Fixed pre-existing lint error in input.tsx (empty interface → type alias)
+- Files changed: src/components/ui/checkbox.tsx (new), src/components/ui/input.tsx, package.json, pnpm-lock.yaml
+- **Learnings for future iterations:**
+  - lucide-react is the icon library for TGS UI components
+  - Empty interfaces trigger ESLint error - use type alias instead
+  - Checkbox uses `data-[state=checked]:` prefix for checked styling
+---
+
+## 2026-01-23 10:00 - US-013
+- Ported Textarea component from TGS
+- Uses min-h-16, rounded-md, focus-visible ring, disabled:opacity-50
+- Includes field-sizing-content for auto-grow behavior
+- Files changed: src/components/ui/textarea.tsx (new)
+- **Learnings for future iterations:**
+  - Textarea is pure React component (no radix dependencies)
+  - Uses data-slot="textarea" attribute for styling selectors
+  - Uses aria-invalid styling for form validation states
 ---
