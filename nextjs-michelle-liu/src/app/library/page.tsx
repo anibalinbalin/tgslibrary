@@ -99,8 +99,8 @@ function BookCard({ book, onClick }: { book: Book; onClick: () => void }) {
         )}
       </div>
 
-      {/* Text content - appears on hover, centered below cover */}
-      <div className="absolute left-1/2 -translate-x-1/2 top-[186px] w-[160px] flex flex-col gap-[3px] items-center text-center opacity-0 transition-all duration-200 ease-out group-hover:opacity-100">
+      {/* Text content - appears on hover with blur transition (Jakub's materializing effect) */}
+      <div className="absolute left-1/2 -translate-x-1/2 top-[186px] w-[160px] flex flex-col gap-[3px] items-center text-center opacity-0 blur-[4px] transition-all duration-200 ease-out group-hover:opacity-100 group-hover:blur-0">
         <div className="font-sans font-normal text-[18px] text-foreground">
           <p className="leading-[22px] text-balance">{book.title}</p>
         </div>
@@ -130,11 +130,11 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-40 bg-black/50 animate-modal-backdrop-in" />
-        <Dialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 content-stretch flex flex-col gap-[24px] sm:gap-[32px] md:gap-[40px] items-start p-[24px] sm:p-[40px] md:p-[60px] lg:p-[80px] xl:p-[100px] rounded-lg w-[calc(100vw-32px)] sm:w-[calc(100vw-80px)] md:w-[min(800px,90vw)] max-h-[calc(100vh-32px)] sm:max-h-[90vh] overflow-y-auto bg-background shadow-lg animate-modal-content-in">
+        <Dialog.Backdrop className="modal-backdrop fixed inset-0 z-40 bg-black/50" />
+        <Dialog.Popup className="modal-content fixed left-1/2 top-1/2 z-50 flex flex-col gap-[24px] sm:gap-[32px] md:gap-[40px] items-start p-[24px] sm:p-[40px] md:p-[60px] lg:p-[80px] xl:p-[100px] rounded-lg w-[calc(100vw-32px)] sm:w-[calc(100vw-80px)] md:w-[min(800px,90vw)] max-h-[calc(100vh-32px)] sm:max-h-[90vh] overflow-y-auto bg-background shadow-lg">
           <div aria-hidden="true" className="absolute border border-border inset-0 pointer-events-none rounded-lg" />
 
-          <div className="content-stretch flex flex-col sm:flex-row gap-[32px] sm:gap-[36px] md:gap-[44px] items-start relative shrink-0 w-full">
+          <div className="flex flex-col sm:flex-row gap-[32px] sm:gap-[36px] md:gap-[44px] items-start relative shrink-0 w-full">
             {book.goodreadsUrl ? (
               <a
                 href={book.goodreadsUrl}
@@ -142,7 +142,7 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
                 rel="noopener noreferrer"
                 className="h-[219px] relative shadow-sm shrink-0 w-[142.004px] group cursor-pointer mx-auto sm:mx-0"
               >
-                <div className="absolute h-[219px] left-0 rounded-md top-0 w-[142.004px] transition-transform duration-200 group-hover:rotate-[2.5deg] overflow-hidden bg-muted">
+                <div className="absolute h-[219px] left-0 rounded-md top-0 w-[142.004px] transition-transform duration-200 ease-out group-hover:rotate-[2.5deg] overflow-hidden bg-muted">
                   {book.coverImage ? (
                     <img alt={book.title} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-md size-full" src={book.coverImage} />
                   ) : (
@@ -170,8 +170,8 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
               </div>
             )}
 
-            <div className="basis-0 content-stretch flex flex-col gap-[24px] sm:gap-[28px] md:gap-[32px] lg:gap-[36px] grow items-start min-h-px min-w-px relative shrink-0 w-full sm:w-auto">
-              <div className="content-stretch flex flex-col gap-[4px] items-start leading-[0] relative shrink-0 text-[24px] sm:text-[26px] md:text-[28px] max-w-full">
+            <div className="basis-0 flex flex-col gap-[24px] sm:gap-[28px] md:gap-[32px] lg:gap-[36px] grow items-start min-h-px min-w-px relative shrink-0 w-full sm:w-auto">
+              <div className="flex flex-col gap-[4px] items-start leading-[0] relative shrink-0 text-[24px] sm:text-[26px] md:text-[28px] max-w-full">
                 <Dialog.Title className="flex flex-col justify-center relative shrink-0 text-foreground font-sans">
                   <p className="leading-[34px] text-balance">{book.title}</p>
                 </Dialog.Title>
@@ -182,9 +182,9 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
                 )}
               </div>
 
-              <div className="content-stretch flex flex-col gap-[12px] sm:gap-[14px] md:gap-[16px] items-start relative shrink-0 w-full">
+              <div className="flex flex-col gap-[12px] sm:gap-[14px] md:gap-[16px] items-start relative shrink-0 w-full">
                 {book.rating > 0 && (
-                  <div className="content-stretch flex flex-col sm:flex-row gap-[8px] sm:gap-[24px] md:gap-[32px] lg:gap-[40px] items-start sm:items-center leading-[0] relative shrink-0 text-nowrap w-full">
+                  <div className="flex flex-col sm:flex-row gap-[8px] sm:gap-[24px] md:gap-[32px] lg:gap-[40px] items-start sm:items-center leading-[0] relative shrink-0 text-nowrap w-full">
                     <div className="flex flex-col font-medium justify-center relative shrink-0 text-muted-foreground text-[15px] sm:text-[16px] md:text-[17px]">
                       <p className="leading-[22px] text-nowrap">{t('rating')}</p>
                     </div>
@@ -195,7 +195,7 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
                 )}
 
                 {book.goodreadsUrl && (
-                  <div className="content-stretch flex flex-col sm:flex-row gap-[8px] sm:gap-[24px] md:gap-[32px] lg:gap-[40px] items-start sm:items-center relative shrink-0 w-full">
+                  <div className="flex flex-col sm:flex-row gap-[8px] sm:gap-[24px] md:gap-[32px] lg:gap-[40px] items-start sm:items-center relative shrink-0 w-full">
                     <a
                       href={book.goodreadsUrl}
                       target="_blank"
@@ -290,7 +290,7 @@ export default function LibraryPage() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-wrap gap-x-[32px] gap-y-[80px]">
+              <div className="flex flex-wrap gap-x-[32px] gap-y-[80px] content-fade-in">
                 {books.map((book) => (
                   <BookCard key={book.id} book={book} onClick={() => setSelectedBook(book)} />
                 ))}

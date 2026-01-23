@@ -214,3 +214,83 @@
 .animate-shimmer {
   animation: shimmer 2s ease-in-out infinite;
 }
+
+/* ==========================================
+   PREFERS-REDUCED-MOTION
+   Accessibility: Disable/reduce animations for users
+   who have indicated motion sensitivity
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================
+   MODAL ANIMATIONS (Base-UI Dialog)
+   Uses @starting-style for enter, data-ending-style for exit
+   ========================================== */
+
+.modal-backdrop {
+  opacity: 1;
+  transition: opacity 0.2s ease-out;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.modal-backdrop[data-ending-style] {
+  opacity: 0;
+}
+
+.modal-content {
+  opacity: 1;
+  transform: scale(1) translateX(-50%) translateY(-50%);
+  filter: blur(0px);
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.25s ease-out,
+    filter 0.25s ease-out;
+
+  @starting-style {
+    opacity: 0;
+    transform: scale(0.96) translateX(-50%) translateY(-50%);
+    filter: blur(4px);
+  }
+}
+
+/* Exit animation - subtler than enter (Jakub's principle) */
+.modal-content[data-ending-style] {
+  opacity: 0;
+  transform: scale(0.98) translateX(-50%) translateY(-50%);
+  filter: blur(2px);
+}
+
+/* ==========================================
+   CONTENT FADE-IN
+   For loading → content state transitions
+   ========================================== */
+
+.content-fade-in {
+  animation: content-fade-in 0.35s ease-out forwards;
+}
+
+@keyframes content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
