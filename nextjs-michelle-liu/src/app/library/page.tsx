@@ -236,6 +236,7 @@ function BookDetailModal({ book, onClose }: { book: Book; onClose: () => void })
         {/* Close button */}
         <button
           onClick={onClose}
+          aria-label="Close"
           className="absolute right-[16px] sm:right-[20px] md:right-[24px] top-[16px] sm:top-[20px] md:top-[24px] content-stretch flex gap-[8px] items-center justify-center rounded-[1000px] size-[32px] sm:size-[34px] md:size-[36px] transition-all hover:bg-[rgba(0,0,0,0.05)]"
         >
           <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-[18px] sm:text-[19px] md:text-[20px] text-[rgba(20,20,20,0.7)] text-center text-nowrap tracking-[-0.26px]" style={{ fontVariationSettings: "'wdth' 100" }}>
