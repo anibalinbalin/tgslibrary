@@ -83,16 +83,16 @@ function BookCard({ book, onClick }: { book: Book; onClick: () => void }) {
   return (
     <div className="relative cursor-pointer group" onClick={onClick}>
       {/* Book cover */}
-      <div className="relative w-[120px] h-[180px] rounded-[4px] shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] transition-all duration-200 ease-out group-hover:scale-[1.025] group-hover:-translate-y-3 group-hover:shadow-none overflow-hidden bg-gray-100">
+      <div className="relative w-[120px] h-[180px] rounded-xl shadow-sm transition-all duration-200 ease-out group-hover:scale-[1.025] group-hover:-translate-y-3 group-hover:shadow-lg overflow-hidden bg-muted">
         {book.coverImage ? (
           <img
             alt={book.title}
-            className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[4px] size-full"
+            className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-xl size-full"
             src={book.coverImage}
           />
         ) : (
-          <div className="absolute inset-0 flex items-center justify-center p-3 text-center bg-gray-100">
-            <span className="font-['SF_Pro:Regular',sans-serif] text-[11px] text-gray-500 leading-tight line-clamp-4" style={{ fontVariationSettings: "'wdth' 100" }}>
+          <div className="absolute inset-0 flex items-center justify-center p-3 text-center bg-muted">
+            <span className="font-sans text-[11px] text-muted-foreground leading-tight line-clamp-4">
               {book.title}
             </span>
           </div>
@@ -100,19 +100,19 @@ function BookCard({ book, onClick }: { book: Book; onClick: () => void }) {
       </div>
 
       {/* Text content - appears on hover, centered below cover */}
-      <div className="absolute left-1/2 -translate-x-1/2 top-[186px] w-[160px] flex flex-col gap-[3px] items-center text-center opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100">
-        <div className="font-['SF_Pro:Regular',sans-serif] font-normal text-[18px] text-black" style={{ fontVariationSettings: "'wdth' 100" }}>
+      <div className="absolute left-1/2 -translate-x-1/2 top-[186px] w-[160px] flex flex-col gap-[3px] items-center text-center opacity-0 transition-all duration-200 ease-out group-hover:opacity-100">
+        <div className="font-sans font-normal text-[18px] text-foreground">
           <p className="leading-[22px] text-balance">{book.title}</p>
         </div>
         {book.author && (
-          <div className="font-['SF_Pro:Regular',sans-serif] font-normal text-[15px] text-[rgba(0,0,0,0.5)]" style={{ fontVariationSettings: "'wdth' 100" }}>
+          <div className="font-sans font-normal text-[15px] text-muted-foreground">
             <p className="leading-[19px]">{book.author}</p>
           </div>
         )}
         {book.rating > 0 && (
-          <p className="font-['DM_Sans:Medium','Noto_Sans_Symbols2:Regular',sans-serif] leading-[1.4] text-[15px] text-nowrap">
-            <span className="text-gray-500">{"★".repeat(book.rating)}</span>
-            <span className="text-gray-300">{"★".repeat(5 - book.rating)}</span>
+          <p className="font-sans leading-[1.4] text-[15px] text-nowrap">
+            <span className="text-muted-foreground">{"★".repeat(book.rating)}</span>
+            <span className="text-muted-foreground/40">{"★".repeat(5 - book.rating)}</span>
           </p>
         )}
       </div>
@@ -222,15 +222,18 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
             </div>
           </div>
 
-          {/* Close button */}
-          <Dialog.Close
-            aria-label="Close"
-            className="absolute right-[16px] sm:right-[20px] md:right-[24px] top-[16px] sm:top-[20px] md:top-[24px] content-stretch flex gap-[8px] items-center justify-center rounded-[1000px] size-[32px] sm:size-[34px] md:size-[36px] transition-colors hover:bg-[rgba(0,0,0,0.05)]"
-          >
-            <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-[18px] sm:text-[19px] md:text-[20px] text-[rgba(20,20,20,0.7)] text-center text-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
-              <p className="leading-[24px] sm:leading-[25px] md:leading-[26px]">×</p>
-            </div>
-          </Dialog.Close>
+          {/* Language toggle and Close button */}
+          <div className="absolute right-[16px] sm:right-[20px] md:right-[24px] top-[16px] sm:top-[20px] md:top-[24px] flex items-center gap-[12px]">
+            <LanguageToggle />
+            <Dialog.Close
+              aria-label="Close"
+              className="content-stretch flex gap-[8px] items-center justify-center rounded-[1000px] size-[32px] sm:size-[34px] md:size-[36px] transition-colors hover:bg-[rgba(0,0,0,0.05)]"
+            >
+              <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-[18px] sm:text-[19px] md:text-[20px] text-[rgba(20,20,20,0.7)] text-center text-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
+                <p className="leading-[24px] sm:leading-[25px] md:leading-[26px]">×</p>
+              </div>
+            </Dialog.Close>
+          </div>
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
