@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Dialog } from "@base-ui/react/dialog";
+import { X } from "lucide-react";
 import { client } from "../../sanity/client";
 import { urlFor } from "../../sanity/image";
 import { useLanguage } from "../../i18n/LanguageContext";
@@ -99,8 +100,8 @@ function BookCard({ book, onClick }: { book: Book; onClick: () => void }) {
         )}
       </div>
 
-      {/* Text content - appears on hover with blur transition (Jakub's materializing effect) */}
-      <div className="absolute left-1/2 -translate-x-1/2 top-[186px] w-[160px] flex flex-col gap-[3px] items-center text-center opacity-0 blur-[4px] transition-all duration-200 ease-out group-hover:opacity-100 group-hover:blur-0">
+      {/* Text content - appears on hover */}
+      <div className="absolute left-1/2 -translate-x-1/2 top-[186px] w-[160px] flex flex-col gap-[3px] items-center text-center opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100">
         <div className="font-sans font-normal text-[18px] text-foreground">
           <p className="leading-[22px] text-balance">{book.title}</p>
         </div>
@@ -225,7 +226,7 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
               aria-label="Close"
               className="flex items-center justify-center rounded-full size-9 transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
             >
-              <span className="text-xl leading-none">×</span>
+              <X className="size-5" />
             </Dialog.Close>
           </div>
         </Dialog.Popup>
