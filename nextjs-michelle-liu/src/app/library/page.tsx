@@ -130,9 +130,9 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-40 bg-black/30" />
-        <Dialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 content-stretch flex flex-col gap-[24px] sm:gap-[32px] md:gap-[40px] items-start p-[24px] sm:p-[40px] md:p-[60px] lg:p-[80px] xl:p-[100px] rounded-[16px] sm:rounded-[18px] md:rounded-[20px] w-[calc(100vw-32px)] sm:w-[calc(100vw-80px)] md:w-[min(800px,90vw)] max-h-[calc(100vh-32px)] sm:max-h-[90vh] overflow-y-auto bg-white">
-          <div aria-hidden="true" className="absolute border border-[rgba(0,0,0,0.1)] border-solid inset-0 pointer-events-none rounded-[16px] sm:rounded-[18px] md:rounded-[20px] shadow-[0px_4px_36px_0px_rgba(0,0,0,0.15)]" />
+        <Dialog.Backdrop className="fixed inset-0 z-40 bg-black/50 animate-modal-backdrop-in" />
+        <Dialog.Popup className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-50 content-stretch flex flex-col gap-[24px] sm:gap-[32px] md:gap-[40px] items-start p-[24px] sm:p-[40px] md:p-[60px] lg:p-[80px] xl:p-[100px] rounded-lg w-[calc(100vw-32px)] sm:w-[calc(100vw-80px)] md:w-[min(800px,90vw)] max-h-[calc(100vh-32px)] sm:max-h-[90vh] overflow-y-auto bg-background shadow-lg animate-modal-content-in">
+          <div aria-hidden="true" className="absolute border border-border inset-0 pointer-events-none rounded-lg" />
 
           <div className="content-stretch flex flex-col sm:flex-row gap-[32px] sm:gap-[36px] md:gap-[44px] items-start relative shrink-0 w-full">
             {book.goodreadsUrl ? (
@@ -140,14 +140,14 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
                 href={book.goodreadsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-[219px] relative shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] shrink-0 w-[142.004px] group cursor-pointer mx-auto sm:mx-0"
+                className="h-[219px] relative shadow-sm shrink-0 w-[142.004px] group cursor-pointer mx-auto sm:mx-0"
               >
-                <div className="absolute h-[219px] left-0 rounded-[6px] top-0 w-[142.004px] transition-transform duration-200 group-hover:rotate-[2.5deg] overflow-hidden bg-gray-100">
+                <div className="absolute h-[219px] left-0 rounded-md top-0 w-[142.004px] transition-transform duration-200 group-hover:rotate-[2.5deg] overflow-hidden bg-muted">
                   {book.coverImage ? (
-                    <img alt={book.title} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={book.coverImage} />
+                    <img alt={book.title} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-md size-full" src={book.coverImage} />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-gray-100 rounded-[6px]">
-                      <span className="font-['SF_Pro:Regular',sans-serif] text-[13px] text-gray-500 leading-tight" style={{ fontVariationSettings: "'wdth' 100" }}>
+                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-muted rounded-md">
+                      <span className="text-[13px] text-muted-foreground leading-tight">
                         {book.title}
                       </span>
                     </div>
@@ -155,13 +155,13 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
                 </div>
               </a>
             ) : (
-              <div className="h-[219px] relative shadow-[0px_4px_12px_0px_rgba(0,0,0,0.1)] shrink-0 w-[142.004px] group mx-auto sm:mx-0">
-                <div className="absolute h-[219px] left-0 rounded-[6px] top-0 w-[142.004px] overflow-hidden bg-gray-100">
+              <div className="h-[219px] relative shadow-sm shrink-0 w-[142.004px] group mx-auto sm:mx-0">
+                <div className="absolute h-[219px] left-0 rounded-md top-0 w-[142.004px] overflow-hidden bg-muted">
                   {book.coverImage ? (
-                    <img alt={book.title} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-[6px] size-full" src={book.coverImage} />
+                    <img alt={book.title} className="absolute inset-0 max-w-none object-cover pointer-events-none rounded-md size-full" src={book.coverImage} />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-gray-100 rounded-[6px]">
-                      <span className="font-['SF_Pro:Regular',sans-serif] text-[13px] text-gray-500 leading-tight" style={{ fontVariationSettings: "'wdth' 100" }}>
+                    <div className="absolute inset-0 flex items-center justify-center p-4 text-center bg-muted rounded-md">
+                      <span className="text-[13px] text-muted-foreground leading-tight">
                         {book.title}
                       </span>
                     </div>
@@ -171,12 +171,12 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
             )}
 
             <div className="basis-0 content-stretch flex flex-col gap-[24px] sm:gap-[28px] md:gap-[32px] lg:gap-[36px] grow items-start min-h-px min-w-px relative shrink-0 w-full sm:w-auto">
-              <div className="content-stretch flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal gap-[4px] items-start leading-[0] relative shrink-0 text-[24px] sm:text-[26px] md:text-[28px] max-w-full">
-                <Dialog.Title style={{ fontVariationSettings: "'wdth' 100" }} className="flex flex-col justify-center relative shrink-0 text-black">
+              <div className="content-stretch flex flex-col gap-[4px] items-start leading-[0] relative shrink-0 text-[24px] sm:text-[26px] md:text-[28px] max-w-full">
+                <Dialog.Title className="flex flex-col justify-center relative shrink-0 text-foreground font-sans">
                   <p className="leading-[34px] text-balance">{book.title}</p>
                 </Dialog.Title>
                 {book.author && (
-                  <div style={{ fontVariationSettings: "'wdth' 100" }} className="flex flex-col justify-center relative shrink-0 text-[rgba(0,0,0,0.4)]">
+                  <div className="flex flex-col justify-center relative shrink-0 text-muted-foreground">
                     <p className="leading-[34px]">{book.author}</p>
                   </div>
                 )}
@@ -185,10 +185,10 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
               <div className="content-stretch flex flex-col gap-[12px] sm:gap-[14px] md:gap-[16px] items-start relative shrink-0 w-full">
                 {book.rating > 0 && (
                   <div className="content-stretch flex flex-col sm:flex-row gap-[8px] sm:gap-[24px] md:gap-[32px] lg:gap-[40px] items-start sm:items-center leading-[0] relative shrink-0 text-nowrap w-full">
-                    <div style={{ fontVariationSettings: "'wdth' 100" }} className="flex flex-col font-['SF_Pro:Medium',sans-serif] font-[510] justify-center relative shrink-0 text-[rgba(0,0,0,0.4)] text-[15px] sm:text-[16px] md:text-[17px]">
+                    <div className="flex flex-col font-medium justify-center relative shrink-0 text-muted-foreground text-[15px] sm:text-[16px] md:text-[17px]">
                       <p className="leading-[22px] text-nowrap">{t('rating')}</p>
                     </div>
-                    <p className="font-['DM_Sans:Medium','Noto_Sans_Symbols2:Regular',sans-serif] leading-[1.4] not-italic relative shrink-0 text-gray-500 text-[18px] sm:text-[19px] md:text-[20px] text-center">
+                    <p className="leading-[1.4] relative shrink-0 text-muted-foreground text-[18px] sm:text-[19px] md:text-[20px] text-center">
                       {"★".repeat(book.rating)}{"☆".repeat(5 - book.rating)}
                     </p>
                   </div>
@@ -200,8 +200,7 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
                       href={book.goodreadsUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-['SF_Pro:Regular',sans-serif] font-normal text-[15px] sm:text-[16px] md:text-[17px] text-[#2883de] hover:underline"
-                      style={{ fontVariationSettings: "'wdth' 100" }}
+                      className="text-[15px] sm:text-[16px] md:text-[17px] text-primary hover:underline"
                     >
                       {t('viewOnBookshop')}
                     </a>
@@ -210,10 +209,7 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
 
                 {review && (
                   <div className="pt-[8px] sm:pt-[12px] w-full">
-                    <p
-                      className="font-['SF_Pro:Regular',sans-serif] font-normal text-[15px] sm:text-[16px] md:text-[17px] text-[rgba(0,0,0,0.7)] leading-[1.5] text-pretty"
-                      style={{ fontVariationSettings: "'wdth' 100" }}
-                    >
+                    <p className="text-[15px] sm:text-[16px] md:text-[17px] text-foreground/70 leading-[1.5] text-pretty">
                       {review}
                     </p>
                   </div>
@@ -223,15 +219,13 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
           </div>
 
           {/* Language toggle and Close button */}
-          <div className="absolute right-[16px] sm:right-[20px] md:right-[24px] top-[16px] sm:top-[20px] md:top-[24px] flex items-center gap-[12px]">
+          <div className="absolute right-4 top-4 flex items-center gap-3">
             <LanguageToggle />
             <Dialog.Close
               aria-label="Close"
-              className="content-stretch flex gap-[8px] items-center justify-center rounded-[1000px] size-[32px] sm:size-[34px] md:size-[36px] transition-colors hover:bg-[rgba(0,0,0,0.05)]"
+              className="flex items-center justify-center rounded-full size-9 transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
             >
-              <div className="flex flex-col font-['SF_Pro:Regular',sans-serif] font-normal justify-center leading-[0] relative shrink-0 text-[18px] sm:text-[19px] md:text-[20px] text-[rgba(20,20,20,0.7)] text-center text-nowrap" style={{ fontVariationSettings: "'wdth' 100" }}>
-                <p className="leading-[24px] sm:leading-[25px] md:leading-[26px]">×</p>
-              </div>
+              <span className="text-xl leading-none">×</span>
             </Dialog.Close>
           </div>
         </Dialog.Popup>
