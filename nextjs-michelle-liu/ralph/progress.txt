@@ -9,6 +9,7 @@ Started: Fri Jan 23 00:24:18 -03 2026
 - lucide-react for icons (Check, ChevronDown, etc)
 - Empty interfaces trigger ESLint error - use type alias instead
 - Import UI components from barrel: `import { Button, Card } from "@/components/ui"`
+- Project uses @base-ui/react for existing dialog (Dialog.Root, Dialog.Portal, Dialog.Backdrop, Dialog.Popup)
 
 ---
 
@@ -200,4 +201,23 @@ Started: Fri Jan 23 00:24:18 -03 2026
   - TGS design tokens: bg-muted for placeholders, text-muted-foreground for secondary text
   - shadow-sm base, shadow-lg hover is TGS pattern for elevated cards
   - Use text-muted-foreground/40 for very subtle text (star outlines)
+---
+
+## 2026-01-23 15:00 - US-018
+- Updated BookDetailModal to use TGS styling patterns
+- Backdrop: bg-black/30 → bg-black/50 + animate-modal-backdrop-in
+- Content: bg-white rounded-[16px] → bg-background rounded-lg shadow-lg animate-modal-content-in
+- Border: border-[rgba(0,0,0,0.1)] shadow-[...] → border-border (shadow moved to content)
+- Cover: shadow-[...] bg-gray-100 → shadow-sm bg-muted, rounded-[6px] → rounded-md
+- Text: text-black → text-foreground, rgba() colors → text-muted-foreground
+- Link: text-[#2883de] → text-primary
+- Review: text-[rgba(0,0,0,0.7)] → text-foreground/70
+- Close button: right-[16px] top-[16px] → right-4 top-4, added hover:bg-muted
+- Dialog.Title: added font-sans for Fugue font
+- Files changed: src/app/library/page.tsx
+- **Learnings for future iterations:**
+  - Project uses @base-ui/react/dialog (not @radix-ui) for Dialog primitives
+  - animate-modal-backdrop-in and animate-modal-content-in are custom animations from globals.css
+  - text-primary is the TGS token for link colors
+  - Use text-foreground/70 for muted body text (preserves foreground color with opacity)
 ---
