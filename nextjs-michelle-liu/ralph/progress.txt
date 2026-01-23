@@ -8,6 +8,7 @@ Started: Fri Jan 23 00:24:18 -03 2026
 - UI components use @radix-ui primitives (react-slot, react-dialog, react-select, etc)
 - lucide-react for icons (Check, ChevronDown, etc)
 - Empty interfaces trigger ESLint error - use type alias instead
+- Import UI components from barrel: `import { Button, Card } from "@/components/ui"`
 
 ---
 
@@ -175,4 +176,14 @@ Started: Fri Jan 23 00:24:18 -03 2026
   - SelectContent uses position="popper" by default for floating positioning
   - Uses data-[state=open/closed] and data-[side=*] for animations
   - SelectScrollUpButton/DownButton auto-included in SelectContent
+---
+
+## 2026-01-23 13:00 - US-016
+- Created barrel export at src/components/ui/index.ts
+- Exports all UI components: Button, Card, Checkbox, Dialog, Input, Label, Select, Textarea
+- Also exports buttonVariants, CardAction, InputProps type
+- Files changed: src/components/ui/index.ts (new)
+- **Learnings for future iterations:**
+  - Import from `@/components/ui` for clean imports: `import { Button, Card } from "@/components/ui"`
+  - Barrel file enables tree-shaking - only used components get bundled
 ---

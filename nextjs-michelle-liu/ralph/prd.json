@@ -249,8 +249,8 @@
         "Typecheck passes"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Also exports CardAction and InputProps type"
     },
     {
       "id": "US-017",
