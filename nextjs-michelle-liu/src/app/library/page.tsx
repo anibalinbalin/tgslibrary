@@ -219,16 +219,13 @@ function BookDetailModal({ book, open, onOpenChange }: { book: Book | null; open
             </div>
           </div>
 
-          {/* Language toggle and Close button */}
-          <div className="absolute right-4 top-4 flex items-center gap-3">
-            <LanguageToggle />
-            <Dialog.Close
-              aria-label="Close"
-              className="flex items-center justify-center rounded-full size-9 transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
-            >
-              <X className="size-5" />
-            </Dialog.Close>
-          </div>
+          {/* Close button */}
+          <Dialog.Close
+            aria-label="Close"
+            className="absolute right-4 top-4 flex items-center justify-center rounded-full size-9 transition-colors hover:bg-muted text-muted-foreground hover:text-foreground"
+          >
+            <X className="size-5" />
+          </Dialog.Close>
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
