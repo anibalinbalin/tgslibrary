@@ -221,3 +221,18 @@ Started: Fri Jan 23 00:24:18 -03 2026
   - text-primary is the TGS token for link colors
   - Use text-foreground/70 for muted body text (preserves foreground color with opacity)
 ---
+
+## 2026-01-23 16:00 - US-019
+- Updated page typography to TGS scale
+- Header h1: font-sans text-3xl md:text-4xl (uses Fugue by default)
+- Subtitle: text-base md:text-lg text-muted-foreground
+- Loading skeleton: rounded-xl bg-muted (was rounded-[4px] bg-gray-100)
+- Empty state: text-lg text-muted-foreground (was SF Pro font)
+- Container: bg-background (was bg-white)
+- Files changed: src/app/library/page.tsx
+- **Learnings for future iterations:**
+  - TGS responsive text sizing pattern: text-3xl md:text-4xl lg:text-5xl
+  - Use text-base or text-lg for body text (not fixed px values)
+  - text-muted-foreground for secondary/subtle text
+  - bg-background over bg-white for theme support
+---
