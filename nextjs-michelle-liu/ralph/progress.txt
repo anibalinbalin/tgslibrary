@@ -163,3 +163,16 @@ Started: Fri Jan 23 00:24:18 -03 2026
   - DialogContent auto-includes overlay via DialogPortal composition
   - Uses data-[state=open/closed] for animation states
 ---
+
+## 2026-01-23 12:00 - US-015
+- Ported Select component from TGS
+- Installed @radix-ui/react-select
+- Implements Select, SelectGroup, SelectValue, SelectTrigger, SelectContent, SelectLabel, SelectItem, SelectSeparator, SelectScrollUpButton, SelectScrollDownButton
+- Uses portal for positioning, zoom-in/fade-in animations, ChevronDown/ChevronUp icons
+- Files changed: src/components/ui/select.tsx (new), package.json, pnpm-lock.yaml
+- **Learnings for future iterations:**
+  - Select uses @radix-ui/react-select for accessibility (keyboard nav, portal, positioning)
+  - SelectContent uses position="popper" by default for floating positioning
+  - Uses data-[state=open/closed] and data-[side=*] for animations
+  - SelectScrollUpButton/DownButton auto-included in SelectContent
+---
